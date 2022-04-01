@@ -4,16 +4,16 @@ improc::ElementDrawer::ElementDrawer()  : drawer_(std::shared_ptr<improc::BaseDr
                                         , rotation_(std::optional<improc::RotationType>()) 
                                         , scale_(std::optional<unsigned int>()) {};
 
-improc::ElementDrawer::ElementDrawer(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json)
+improc::ElementDrawer::ElementDrawer(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json) : improc::ElementDrawer()
 {
     this->Load(factory,element_drawer_json);
 }
 
 improc::ElementDrawer& improc::ElementDrawer::Load(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json) 
 {
+    IMPROC_DRAWER_LOGGER_TRACE("Creating element drawer...");
     static const std::string kRotationKey = "rotation";
     static const std::string kScaleKey    = "scale";
-    this->drawer_ = improc::BaseDrawer::Create(factory,element_drawer_json);
     if (element_drawer_json.isMember(kRotationKey) == true)
     {
         this->rotation_ = improc::json::ReadElement<std::string>(element_drawer_json[kRotationKey]);
@@ -22,11 +22,13 @@ improc::ElementDrawer& improc::ElementDrawer::Load(const improc::DrawerFactory& 
     {
         this->scale_    = improc::ElementDrawer::ParseScale(element_drawer_json[kScaleKey]);
     }
+    this->drawer_ = improc::BaseDrawer::Create(factory,element_drawer_json);
     return (*this);
 }
 
 unsigned int improc::ElementDrawer::ParseScale(const Json::Value& scale_json)
 {
+    IMPROC_DRAWER_LOGGER_TRACE("Parsing scale...");
     unsigned int scale = improc::json::ReadElement<unsigned int>(scale_json);
     if (scale <= 1)
     {
@@ -38,6 +40,7 @@ unsigned int improc::ElementDrawer::ParseScale(const Json::Value& scale_json)
 
 cv::Mat improc::ElementDrawer::Draw() const
 {
+    IMPROC_DRAWER_LOGGER_TRACE("Drawing element...");
     if (this->drawer_ == nullptr)
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Drawer is not defined.");

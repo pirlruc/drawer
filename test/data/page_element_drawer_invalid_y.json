@@ -1,0 +1,13 @@
+{
+    "drawer-type": "test_drawer",
+    "top-left":
+    {
+        "x": 10,
+        "y": 200
+    },
+    "rotation": "90-deg",
+    "scale": 2,
+    "args": 
+    {
+    }
+}

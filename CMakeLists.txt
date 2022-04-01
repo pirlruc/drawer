@@ -54,13 +54,12 @@ message(STATUS "Install Dir: ${CMAKE_INSTALL_PREFIX}")
 add_library(
   ${PROJECT_NAME}
   
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/base_drawer.hpp
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/element_drawer.hpp
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/logger_drawer.hpp
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/rotation_type.hpp
+  ${PROJECT_SOURCE_DIR}/include
 
   ${PROJECT_SOURCE_DIR}/src/base_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/element_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/page_element_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/page_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/rotation_type.cpp
 )
 add_library(improc::drawer ALIAS ${PROJECT_NAME})

@@ -1,9 +1,10 @@
 #ifndef IMPROC_DRAWER_ELEMENT_DRAWER_HPP
 #define IMPROC_DRAWER_ELEMENT_DRAWER_HPP
 
+#include <improc/improc_defs.hpp>
+#include <improc/exception.hpp>
 #include <improc/drawer/rotation_type.hpp>
 #include <improc/drawer/base_drawer.hpp>
-#include <improc/drawer/exception.hpp>
 
 #include <opencv2/imgproc.hpp>
 #include <json/json.h>
@@ -11,7 +12,7 @@
 
 namespace improc 
 {
-    class ElementDrawer
+    class IMPROC_EXPORTS ElementDrawer
     {
         private:
             std::shared_ptr<BaseDrawer> drawer_;

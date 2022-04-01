@@ -1,0 +1,46 @@
+{
+    "page-size":
+    {
+        "width": 500,
+        "height": 400
+    },
+    "elements":
+    [
+        {
+            "drawer-type": "test_drawer",
+            "top-left":
+            {
+                "x": 10,
+                "y": 5
+            },
+            "rotation": "90-deg",
+            "args": 
+            {
+            }
+        },
+        {
+            "drawer-type": "test_drawer",
+            "top-left":
+            {
+                "x": 10,
+                "y": 5
+            },
+            "rotation": "0-deg",
+            "args": 
+            {
+            }
+        },
+        {
+            "drawer-type": "test_drawer",
+            "top-left":
+            {
+                "x": 10,
+                "y": 5
+            },
+            "rotation": "270-deg",
+            "args": 
+            {
+            }
+        }
+    ]
+}

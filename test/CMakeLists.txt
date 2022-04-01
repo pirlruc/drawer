@@ -32,6 +32,9 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/test/test_logger_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_base_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_element_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_page_element_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_page_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_corecv_json_parser.cpp
   ${PROJECT_SOURCE_DIR}/test/test_rotation_type.cpp
 )
 set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD           17)
