@@ -1,0 +1,46 @@
+[
+    {
+        "top-left":
+        {
+            "x": 10,
+            "y": 20
+        },
+        "number":
+        {
+            "x": 2,
+            "y": 4
+        },
+        "spacing":
+        {
+            "x": 20,
+            "y": 10
+        },
+        "cell-content":
+        {
+            "page-size":
+            {
+                "width": 10,
+                "height": 20
+            },
+            "elements":
+            [
+            ]
+        }
+    },
+    {
+        "page-drawer-type": "page-drawer",
+        "top-left":
+        {
+            "x": 10,
+            "y": 200
+        },
+        "page-size":
+        {
+            "width": 10,
+            "height": 10
+        },
+        "elements":
+        [
+        ]    
+    }
+]

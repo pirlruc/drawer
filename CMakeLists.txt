@@ -60,7 +60,10 @@ add_library(
   ${PROJECT_SOURCE_DIR}/src/element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/grid_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/rotation_type.cpp
+  ${PROJECT_SOURCE_DIR}/src/page_drawer_type.cpp
 )
 add_library(improc::drawer ALIAS ${PROJECT_NAME})
 

@@ -1,0 +1,34 @@
+#ifndef IMPROC_DRAWER_LAYOUT_DRAWER_HPP
+#define IMPROC_DRAWER_LAYOUT_DRAWER_HPP
+
+#include <improc/improc_defs.hpp>
+#include <improc/exception.hpp>
+#include <improc/drawer/page_drawer.hpp>
+#include <improc/drawer/grid_drawer.hpp>
+#include <improc/drawer/page_drawer_type.hpp>
+#include <improc/drawer/parsers/corecv_json_parser.hpp>
+
+#include <opencv2/core.hpp>
+#include <json/json.h>
+
+namespace improc 
+{
+    class LayoutDrawer : protected improc::PageDrawer
+    {
+        public:
+            LayoutDrawer();
+            LayoutDrawer(const improc::DrawerFactory& factory, const Json::Value& grid_drawer_json);
+
+            LayoutDrawer&       Load    (const improc::DrawerFactory& factory, const Json::Value& layout_drawer_json);
+            LayoutDrawer&       Allocate();
+            LayoutDrawer&       Draw    ();
+
+        private:
+            LayoutDrawer&       ParsePageTypeDrawer (const improc::DrawerFactory& factory, const Json::Value& page_drawer_type_json);
+            LayoutDrawer&       CorrectLayoutSize   (const cv::Point& top_left, const cv::Size& page_drawer_size);
+            static cv::Point    ParsePoint          (const Json::Value& point_json);
+            static bool         IsPixelPositionValid(int pixel_position);
+    };
+}
+
+#endif

@@ -1,0 +1,23 @@
+{
+    "number":
+    {
+        "x": 2,
+        "y": 4
+    },
+    "spacing":
+    {
+        "x": -1,
+        "y": 10
+    },
+    "cell-content":
+    {
+        "page-size":
+        {
+            "width": 10,
+            "height": 20
+        },
+        "elements":
+        [
+        ]
+    }
+}

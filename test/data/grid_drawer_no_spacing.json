@@ -1,0 +1,18 @@
+{
+    "number":
+    {
+        "x": 2,
+        "y": 4
+    },
+    "cell-content":
+    {
+        "page-size":
+        {
+            "width": 10,
+            "height": 20
+        },
+        "elements":
+        [
+        ]
+    }
+}
