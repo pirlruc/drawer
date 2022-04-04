@@ -120,16 +120,25 @@ TEST(PageDrawer,TestDrawOutsidePage) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    EXPECT_THROW(drawer.Draw(),cv::Exception);
+    EXPECT_THROW(drawer.Allocate().Draw(),cv::Exception);
 }
 
-TEST(PageDrawer,TestDraw) {
+TEST(PageDrawer,TestDrawWithoutAllocation) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_multiple_elem.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    EXPECT_NO_THROW(drawer.Draw());
+    EXPECT_THROW(drawer.Draw(),cv::Exception);
+}
+
+TEST(PageDrawer,TestDrawWithAllocation) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_multiple_elem.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
+    improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
+    EXPECT_NO_THROW(drawer.Allocate().Draw());
 }
 
 TEST(PageDrawer,TestOverlayedDraw) {
@@ -138,5 +147,5 @@ TEST(PageDrawer,TestOverlayedDraw) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    EXPECT_NO_THROW(drawer.Draw());
+    EXPECT_NO_THROW(drawer.Allocate().Draw());
 }

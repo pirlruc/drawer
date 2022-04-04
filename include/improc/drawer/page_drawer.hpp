@@ -13,20 +13,25 @@ namespace improc
 {
     class PageDrawer
     {
-        private:
+        protected:
             std::vector<PageElementDrawer>  elements_;
+            cv::Size                        page_size_;
             cv::Mat                         page_image_;
 
         public:
             PageDrawer();
             PageDrawer(const improc::DrawerFactory& factory, const Json::Value& page_drawer_json);
 
-            PageDrawer&         Load    (const improc::DrawerFactory& factory, const Json::Value& page_drawer_json);
-            PageDrawer&         Draw    ();
+            PageDrawer&                     Load    (const improc::DrawerFactory& factory, const Json::Value& page_drawer_json);
+            PageDrawer&                     Allocate();
+            PageDrawer&                     Draw    ();
+
+            cv::Size                        get_page_size()     const;
+            std::vector<PageElementDrawer>  get_page_elements() const;
 
         private:
-            static cv::Size     ParseSize    (const Json::Value& size_json);
-            static bool         IsLengthValid(int length);
+            static cv::Size                 ParseSize    (const Json::Value& size_json);
+            static bool                     IsLengthValid(int length);
     };
 }
 

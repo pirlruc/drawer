@@ -111,16 +111,42 @@ TEST(PageElementDrawer,TestDrawOutsidePage) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
-    EXPECT_THROW(drawer.Draw(page),cv::Exception);
+    EXPECT_THROW(drawer.Allocate().Draw(page),cv::Exception);
 }
 
-TEST(PageElementDrawer,TestDraw) {
+TEST(PageElementDrawer,TestDrawWithoutAllocation) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
-    drawer.Draw(page);
+    EXPECT_THROW(drawer.Draw(page),cv::Exception);
+}
+
+TEST(PageElementDrawer,TestDrawWithAllocation) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
+    improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
+    drawer.Allocate().Draw(page);
     EXPECT_EQ(cv::countNonZero(page),50*100);
+}
+
+TEST(PageElementDrawer,TestIncrementTopLeft) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    cv::Mat page_1 = cv::Mat::zeros(200,100,CV_8UC1);
+    cv::Mat page_2 = cv::Mat::zeros(200,100,CV_8UC1);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
+    improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page_1.size());
+    drawer.Allocate().Draw(page_1);
+    EXPECT_EQ(page_1.at<uint8_t>(cv::Point(10,5)),255);
+    drawer.IncrementTopLeftBy(cv::Point(5,5),page_2.size());
+    drawer.Allocate().Draw(page_2);
+    EXPECT_EQ(page_2.at<uint8_t>(cv::Point(10,5)),0);
+    EXPECT_EQ(page_2.at<uint8_t>(cv::Point(15,10)),255);
 }
