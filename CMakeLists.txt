@@ -64,6 +64,8 @@ add_library(
   ${PROJECT_SOURCE_DIR}/src/layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/rotation_type.cpp
   ${PROJECT_SOURCE_DIR}/src/page_drawer_type.cpp
+  ${PROJECT_SOURCE_DIR}/src/metric_pixel_converter.cpp
+  ${PROJECT_SOURCE_DIR}/src/metric_pixel_json_converter.cpp
 )
 add_library(improc::drawer ALIAS ${PROJECT_NAME})
 

@@ -39,6 +39,8 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/test/test_corecv_json_parser.cpp
   ${PROJECT_SOURCE_DIR}/test/test_rotation_type.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_drawer_type.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_metric_pixel_converter.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_metric_pixel_json_converter.cpp
 )
 set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD           17)
 set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD_REQUIRED  TRUE)

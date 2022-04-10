@@ -1,0 +1,56 @@
+{
+    "printing-resolution-dpi": 500,
+    "layout":
+    [
+        {
+            "page-drawer-type": "grid-drawer",
+            "top-left":
+            {
+                "x": 0.0508,
+                "y": 0.1016,
+                "metric-unit": "cm"
+            },
+            "number":
+            {
+                "x": 2,
+                "y": 4
+            },
+            "spacing":
+            {
+                "x": 0.1016,
+                "y": 0.0508,
+                "metric-unit": "cm"
+            },
+            "cell-content":
+            {
+                "page-size":
+                {
+                    "width": 0.0508,
+                    "height": 0.1016,
+                    "metric-unit": "cm"
+                },
+                "elements":
+                [
+                ]
+            }
+        },
+        {
+            "page-drawer-type": "page-drawer",
+            "top-left":
+            {
+                "x": 0.0508,
+                "y": 1.016,
+                "metric-unit": "cm"
+            },
+            "page-size":
+            {
+                "width": 0.0508,
+                "height": 0.0508,
+                "metric-unit": "cm"
+            },
+            "elements":
+            [
+            ]    
+        }
+    ]    
+}
