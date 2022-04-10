@@ -28,25 +28,6 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   add_subdirectory(${PROJECT_SOURCE_DIR}/../services       ${CMAKE_BINARY_DIR}/services)
 endif()
 
-# Add external dependencies
-# QR-Code Generator
-FetchContent_Declare(
-  qrcodegen
-  GIT_REPOSITORY  https://github.com/nayuki/QR-Code-generator
-  GIT_TAG         v1.7.0
-  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/qrcodegen
-)
-FetchContent_MakeAvailable(qrcodegen)
-
-# Data Matrix
-FetchContent_Declare(
-  libdmtx
-  GIT_REPOSITORY  https://github.com/dmtx/libdmtx
-  GIT_TAG         v0.7.5
-  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/libdmtx
-)
-FetchContent_MakeAvailable(libdmtx)
-
 message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 message(STATUS "Install Dir: ${CMAKE_INSTALL_PREFIX}")
