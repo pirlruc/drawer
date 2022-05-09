@@ -60,13 +60,32 @@ TEST(ElementDrawer,TestInvalidRotation) {
     EXPECT_THROW(drawer.Load(factory,json_content),std::out_of_range);
 }
 
+TEST(ElementDrawer,TestInvalidWidth) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/element_drawer_invalid_size_width.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
+    improc::ElementDrawer drawer {};
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+}
+
+TEST(ElementDrawer,TestInvalidHeight) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/element_drawer_invalid_size_height.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
+    improc::ElementDrawer drawer {};
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+}
+
 TEST(ElementDrawer,TestInvalidScale) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/element_drawer_invalid_scale.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
     improc::ElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    drawer.Load(factory,json_content);
+    EXPECT_THROW(drawer.Draw(),improc::file_processing_error);
 }
 
 TEST(ElementDrawer,TestDrawWithoutTransforms) {

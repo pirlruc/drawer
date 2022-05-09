@@ -28,10 +28,6 @@ namespace improc
 
             cv::Size                        get_page_size()     const;
             std::vector<PageElementDrawer>  get_page_elements() const;
-
-        private:
-            static cv::Size                 ParseSize    (const Json::Value& size_json);
-            static bool                     IsLengthValid(int length);
     };
 }
 

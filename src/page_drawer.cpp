@@ -19,7 +19,7 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Page size missing.");
         throw improc::file_processing_error();
     }
-    this->page_size_ = improc::PageDrawer::ParseSize(page_drawer_json[kPageSizeKey]);
+    this->page_size_ = improc::ElementDrawer::ParseSize(page_drawer_json[kPageSizeKey]);
 
     if (page_drawer_json.isMember(kElementsKey) == true)
     {
@@ -36,34 +36,6 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
         }
     }
     return (*this);
-}
-
-cv::Size improc::PageDrawer::ParseSize(const Json::Value& size_json)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Parsing page size...");
-    cv::Size size = improc::json::ReadElement<cv::Size>(size_json);
-    if (improc::PageDrawer::IsLengthValid(size.width) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Width should be greater than zero");
-        throw improc::file_processing_error();
-    }
-    if (improc::PageDrawer::IsLengthValid(size.height) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height should be greater than zero");
-        throw improc::file_processing_error();
-    }
-    return size;
-}
-
-bool improc::PageDrawer::IsLengthValid(int length)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Validating size length...");
-    bool result = true;
-    if (length <= 0)
-    {
-        result = false;
-    }
-    return result;
 }
 
 improc::PageDrawer& improc::PageDrawer::Allocate()

@@ -5,7 +5,11 @@
         "x": 10
     },
     "rotation": "90-deg",
-    "scale": 2,
+    "drawer-size":
+    {
+        "width": 100,
+        "height": 200
+    },
     "args": 
     {
     }

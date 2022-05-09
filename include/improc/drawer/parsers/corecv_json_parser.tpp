@@ -1,3 +1,4 @@
+        // TODO: Prepare point and size parser to allow other types beside int. See metric_pixel_json_converter.hpp
         template<>
         inline cv::Point improc::json::ReadElement(const Json::Value& json_elem)
         {

@@ -1,7 +1,11 @@
 {
     "drawer-type": "test_drawer",
     "rotation": "invalid",
-    "scale": 2,
+    "drawer-size": 
+    {
+        "width": 40,
+        "height": 20
+    },
     "args": 
     {
     }

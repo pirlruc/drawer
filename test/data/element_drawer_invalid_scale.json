@@ -1,7 +1,11 @@
 {
     "drawer-type": "test_drawer",
     "rotation": "90-deg",
-    "scale": 1,
+    "drawer-size": 
+    {
+        "width": 20,
+        "height": 10
+    },
     "args": 
     {
     }

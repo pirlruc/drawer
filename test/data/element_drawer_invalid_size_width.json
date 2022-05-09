@@ -3,7 +3,7 @@
     "rotation": "90-deg",
     "drawer-size": 
     {
-        "width": 20,
+        "width": -1,
         "height": 40
     },
     "args": 

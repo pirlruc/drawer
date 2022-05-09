@@ -35,13 +35,12 @@ Json::Value improc::MetricPixelJsonConverter::Convert(const Json::Value& metric_
 void improc::MetricPixelJsonConverter::ParseObject(const improc::MetricPixelConverter& pixel_converter, const std::string& object_name, Json::Value& object_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Parsing json object...");
-    static const std::string kScaleKey              = "scale";      // Element drawer
-    static const std::string kGridSpacingKey        = "spacing";    // Grid drawer
-    static const std::string kTopLeftKey            = "top-left";   // Layout + Page element drawers
-    static const std::string kPageSizeKey           = "page-size";  // Page drawer
+    static const std::string kElemSizeKey           = "drawer-size"; // Element drawer
+    static const std::string kGridSpacingKey        = "spacing";     // Grid drawer
+    static const std::string kTopLeftKey            = "top-left";    // Layout + Page element drawers
+    static const std::string kPageSizeKey           = "page-size";   // Page drawer
     static const std::string kMetricUnitKey         = "metric-unit";
     
-    // TODO: Implement scale conversion to pixels
     if (object_name == kGridSpacingKey || object_name == kTopLeftKey || object_name == kPageSizeKey)
     {
         if (object_json.isMember(kMetricUnitKey) == false)
@@ -57,7 +56,7 @@ void improc::MetricPixelJsonConverter::ParseObject(const improc::MetricPixelConv
             object_json["x"] = pixel_converter.Metric2Pixel(point.x,metric);
             object_json["y"] = pixel_converter.Metric2Pixel(point.y,metric);
         }
-        else if (object_name == kPageSizeKey)
+        else if (object_name == kPageSizeKey || object_name == kElemSizeKey)
         {
             cv::Size2d  size   = improc::MetricPixelJsonConverter::ParseSize(object_json);
             object_json.removeMember(kMetricUnitKey);

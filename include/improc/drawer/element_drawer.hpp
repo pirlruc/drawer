@@ -17,7 +17,7 @@ namespace improc
         private:
             std::shared_ptr<BaseDrawer> drawer_;
             std::optional<RotationType> rotation_;
-            std::optional<unsigned int> scale_;
+            std::optional<cv::Size>     size_;
 
         public:
             ElementDrawer();
@@ -27,7 +27,12 @@ namespace improc
             cv::Mat                     Draw() const;
 
         private:
-            static unsigned int         ParseScale(const Json::Value& scale_json);
+            static unsigned int         GetScale(const cv::Size& current_size, const cv::Size& max_size);
+
+        public:
+            // TODO: Move ParseSize and IsLengthValid to a common parsing structure
+            static cv::Size             ParseSize    (const Json::Value& size_json);
+            static bool                 IsLengthValid(int length);
     };
 }
 
