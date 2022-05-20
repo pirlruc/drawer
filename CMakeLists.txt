@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14-3.18)
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 
 if(NOT DEFINED IMPROC_SUPERPROJECT_VERSION)
   set(IMPROC_SUPERPROJECT_VERSION 1.0.0)
@@ -26,6 +26,7 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
 
   add_subdirectory(${PROJECT_SOURCE_DIR}/../infrastructure ${CMAKE_BINARY_DIR}/infrastructure)
   add_subdirectory(${PROJECT_SOURCE_DIR}/../services       ${CMAKE_BINARY_DIR}/services)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/../corecv         ${CMAKE_BINARY_DIR}/corecv)
 endif()
 
 message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
@@ -61,12 +62,12 @@ target_include_directories  (${PROJECT_NAME}   INTERFACE $<BUILD_INTERFACE:${PRO
                                                $<INSTALL_INTERFACE:include> )
 
 # Link dependencies
-find_package(PkgConfig REQUIRED) 
-pkg_check_modules(lib_opencv REQUIRED IMPORTED_TARGET opencv4)
-target_link_libraries       (${PROJECT_NAME}   PRIVATE   	PkgConfig::lib_opencv)
+SET(OpenCV_DIR ${CMAKE_INSTALL_PREFIX})
+find_package(OpenCV REQUIRED)
+target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::services)
-target_link_libraries       (${PROJECT_NAME}   INTERFACE 	PkgConfig::lib_opencv)
+target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::services)
 
