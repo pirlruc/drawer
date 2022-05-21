@@ -36,8 +36,6 @@ improc::GridDrawer& improc::GridDrawer::Load(const improc::DrawerFactory& factor
     cv::Size grid_size = cv::Size   ( grid_number.x * cell_size.width  + (grid_number.x - 1) * grid_spacing.x
                                     , grid_number.y * cell_size.height + (grid_number.y - 1) * grid_spacing.y );
     this->page_size_   = grid_size;
-
-    std::vector<improc::PageElementDrawer> cell_elements = cell.get_page_elements();
     this->elements_.clear();
     for (size_t cell_idx_x = 0; cell_idx_x < grid_number.x; cell_idx_x++)
     {
@@ -45,7 +43,7 @@ improc::GridDrawer& improc::GridDrawer::Load(const improc::DrawerFactory& factor
         for (size_t cell_idx_y = 0; cell_idx_y < grid_number.y; cell_idx_y++)
         {
             int top_left_y = cell_idx_y * cell_size.height + cell_idx_y * grid_spacing.y;
-            std::vector<improc::PageElementDrawer> grid_elements = improc::PageElementDrawer::IncrementTopLeftBy(cell_elements,cv::Point(top_left_x,top_left_y),grid_size);
+            std::vector<improc::PageElementDrawer> grid_elements = improc::PageElementDrawer::IncrementTopLeftBy(cell.get_page_elements(),cv::Point(top_left_x,top_left_y),grid_size);
             this->elements_.insert(this->elements_.end(),grid_elements.begin(),grid_elements.end());
         }
     }

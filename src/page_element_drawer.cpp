@@ -83,15 +83,14 @@ improc::PageElementDrawer& improc::PageElementDrawer::IncrementTopLeftBy(const c
     return (*this);
 }
 
-std::vector<improc::PageElementDrawer> improc::PageElementDrawer::IncrementTopLeftBy(const std::vector<improc::PageElementDrawer>& page_elements, const cv::Point& increment_top_left, const cv::Size& page_size)
+std::vector<improc::PageElementDrawer> improc::PageElementDrawer::IncrementTopLeftBy(std::vector<improc::PageElementDrawer>&& page_elements, const cv::Point& increment_top_left, const cv::Size& page_size)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Incrementing top left position on page elements...");
-    std::vector<improc::PageElementDrawer> increment_page_elements {page_elements.size()};
-    std::transform  ( page_elements.begin(),page_elements.end(),increment_page_elements.begin()
-                    , [&increment_top_left,&page_size] (improc::PageElementDrawer elem) -> improc::PageElementDrawer
+    std::for_each   ( page_elements.begin(),page_elements.end()
+                    , [&increment_top_left,&page_size] (improc::PageElementDrawer& elem)
                         {
-                            return elem.IncrementTopLeftBy(increment_top_left,page_size);
+                            elem.IncrementTopLeftBy(increment_top_left,page_size);
                         }
                     );
-    return increment_page_elements;
+    return page_elements;
 }

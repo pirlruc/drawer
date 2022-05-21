@@ -27,7 +27,7 @@ namespace improc
 
             PageElementDrawer&  IncrementTopLeftBy(const cv::Point& increment_top_left, const cv::Size& page_size);
 
-            static std::vector<PageElementDrawer> IncrementTopLeftBy( const std::vector<PageElementDrawer>& page_elements
+            static std::vector<PageElementDrawer> IncrementTopLeftBy( std::vector<PageElementDrawer>&& page_elements
                                                                     , const cv::Point& increment_top_left
                                                                     , const cv::Size& page_size );
 
