@@ -2,7 +2,9 @@
 
 improc::PageElementDrawer::PageElementDrawer()  : improc::ElementDrawer()
                                                 , top_left_(cv::Point())
-                                                , element_box_(cv::Rect()) {};
+                                                , element_box_(cv::Rect()) 
+                                                , static_(true) 
+                                                , content_(std::optional<std::string>()) {};
 
 improc::PageElementDrawer::PageElementDrawer(const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size) : improc::PageElementDrawer()
 {
@@ -12,12 +14,31 @@ improc::PageElementDrawer::PageElementDrawer(const improc::DrawerFactory& factor
 improc::PageElementDrawer& improc::PageElementDrawer::Load(const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size) 
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating page element drawer...");
-    static const std::string kTopLeftKey = "top-left";
+    static const std::string kTopLeftKey      = "top-left";
+    static const std::string kStaticTextKey   = "content-static";
+    static const std::string kDynamicFieldKey = "content-field-id";
     if (page_element_drawer_json.isMember(kTopLeftKey) == false)
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Top left position missing.");
         throw improc::file_processing_error();
     }
+    if (page_element_drawer_json.isMember(kStaticTextKey) == true && page_element_drawer_json.isMember(kDynamicFieldKey) == true)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Page element content cannot be static and dynamic simultaneously.");
+        throw improc::file_processing_error();
+    }
+    
+    if (page_element_drawer_json.isMember(kStaticTextKey) == true)
+    {
+        this->content_ = improc::json::ReadElement<std::string>(page_element_drawer_json[kStaticTextKey]);
+    }
+
+    if (page_element_drawer_json.isMember(kDynamicFieldKey) == true)
+    {
+        this->static_  = false;
+        this->content_ = improc::json::ReadElement<std::string>(page_element_drawer_json[kDynamicFieldKey]);
+    }
+
     this->improc::ElementDrawer::Load(factory,page_element_drawer_json);
     this->top_left_ = improc::PageElementDrawer::ParsePoint(page_element_drawer_json[kTopLeftKey],page_size);
     return (*this);
@@ -93,4 +114,10 @@ std::vector<improc::PageElementDrawer> improc::PageElementDrawer::IncrementTopLe
                         }
                     );
     return page_elements;
+}
+
+bool improc::PageElementDrawer::is_element_static() const
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Checking if element is static...");
+    return this->static_;
 }

@@ -27,6 +27,7 @@ class TestPageElemDrawer : public improc::BaseDrawer
 
 TEST(PageElementDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::PageElementDrawer());
+    EXPECT_TRUE(improc::PageElementDrawer().is_element_static());
 }
 
 TEST(PageElementDrawer,TestEmptyDraw) {
@@ -41,17 +42,19 @@ TEST(PageElementDrawer,TestConstructorWithLoad) {
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
-    EXPECT_NO_THROW(improc::PageElementDrawer(factory,json_content,page.size()));
+    improc::PageElementDrawer drawer {factory,json_content,page.size()};
+    EXPECT_FALSE(drawer.is_element_static());
 }
 
 TEST(PageElementDrawer,TestLoading) {
-    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config.json";
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config_static.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
     EXPECT_NO_THROW(drawer.Load(factory,json_content,page.size()));
+    EXPECT_TRUE(drawer.is_element_static());
 }
 
 TEST(PageElementDrawer,TestNoTopLeft) {
@@ -96,6 +99,16 @@ TEST(PageElementDrawer,TestInvalidTopLeftX) {
 
 TEST(PageElementDrawer,TestInvalidTopLeftY) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_invalid_y.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
+    improc::PageElementDrawer drawer {};
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+}
+
+TEST(PageElementDrawer,TestInvalidStaticDynamic) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_invalid_static_dynamic.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};

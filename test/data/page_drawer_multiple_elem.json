@@ -8,6 +8,7 @@
     [
         {
             "drawer-type": "test_drawer",
+            "content-field-id": "field_a",
             "top-left":
             {
                 "x": 10,
@@ -20,6 +21,7 @@
         },
         {
             "drawer-type": "test_drawer",
+            "content-static": "text_a",
             "top-left":
             {
                 "x": 200,

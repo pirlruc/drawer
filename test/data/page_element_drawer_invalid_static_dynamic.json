@@ -1,6 +1,7 @@
 {
     "drawer-type": "test_drawer",
     "content-field-id": "field_a",
+    "content-static": "test_b",
     "top-left":
     {
         "x": 10,

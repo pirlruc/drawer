@@ -28,7 +28,7 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
         {
             this->elements_ = std::vector<improc::PageElementDrawer>(page_drawer_json[kElementsKey].size());
             std::transform  ( page_drawer_json[kElementsKey].begin(), page_drawer_json[kElementsKey].end(), this->elements_.begin()
-                            , [this,&factory] (const Json::Value& elem) -> improc::PageElementDrawer {return improc::PageElementDrawer(factory,elem,this->page_size_);} );
+                            , [this,&factory] (const Json::Value& json_elem) -> improc::PageElementDrawer {return improc::PageElementDrawer(factory,json_elem,this->page_size_);} );
         }
         else
         {
@@ -43,7 +43,15 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
     IMPROC_DRAWER_LOGGER_TRACE("Allocating page...");
     this->page_image_ = 255 * cv::Mat::ones(this->page_size_.height,this->page_size_.width,CV_8UC1);
     std::for_each   ( this->elements_.begin(),this->elements_.end()
-                    , [] (improc::PageElementDrawer& elem) {elem.Allocate();} );
+                    , [this] (improc::PageElementDrawer& elem) 
+                        {
+                            elem.Allocate();
+                            if (elem.is_element_static() == true)
+                            {
+                                elem.Draw(this->page_image_);
+                            }
+                        } 
+                    );
     return (*this);
 }
 
@@ -51,7 +59,14 @@ improc::PageDrawer& improc::PageDrawer::Draw()
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page...");
     std::for_each   ( this->elements_.begin(),this->elements_.end()
-                    , [this] (const improc::PageElementDrawer& elem) {elem.Draw(this->page_image_);} );
+                    , [this] (const improc::PageElementDrawer& elem) 
+                        {
+                            if (elem.is_element_static() == false)
+                            {
+                                elem.Draw(this->page_image_);
+                            }
+                        } 
+                    );
     return (*this);
 }
 
