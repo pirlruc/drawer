@@ -10,6 +10,7 @@
 #include <opencv2/core.hpp>
 #include <json/json.h>
 #include <functional>
+#include <optional>
 
 namespace improc 
 {
@@ -22,7 +23,7 @@ namespace improc
             BaseDrawer(const Json::Value& drawer_json);
 
             virtual BaseDrawer& Load(const Json::Value& drawer_json) = 0;
-            virtual cv::Mat     Draw() const = 0;
+            virtual cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) const = 0;
 
             static std::shared_ptr<BaseDrawer> Create(const DrawerFactory& factory, const Json::Value& drawer_json);
     };

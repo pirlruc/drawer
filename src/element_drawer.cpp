@@ -68,7 +68,7 @@ unsigned int improc::ElementDrawer::GetScale(const cv::Size& current_size, const
     return scaling;
 }
 
-cv::Mat improc::ElementDrawer::Draw() const
+cv::Mat improc::ElementDrawer::Draw(const std::optional<std::string>& message) const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing element...");
     if (this->drawer_ == nullptr)
@@ -77,7 +77,7 @@ cv::Mat improc::ElementDrawer::Draw() const
         throw improc::drawer_not_defined();
     }
 
-    cv::Mat drawer_output = this->drawer_->Draw();
+    cv::Mat drawer_output = this->drawer_->Draw(message);
     if (this->rotation_.has_value() == true)
     {
         drawer_output = this->rotation_.value().Apply(drawer_output);

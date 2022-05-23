@@ -8,6 +8,7 @@
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
+#include <execution>
 
 namespace improc 
 {
@@ -25,7 +26,7 @@ namespace improc
 
             PageElementDrawer&          Load    (const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size);
             PageElementDrawer&          Allocate();
-            void                        Draw    (cv::Mat& page_image) const;
+            void                        Draw    (cv::Mat& page_image, const std::optional<std::string>& message = std::optional<std::string>()) const;
 
             PageElementDrawer&          IncrementTopLeftBy(const cv::Point& increment_top_left, const cv::Size& page_size);
 
@@ -34,6 +35,7 @@ namespace improc
                                                                     , const cv::Size& page_size );
 
             bool                        is_element_static() const;
+            std::string                 get_field_id()      const;
 
         private:
             static cv::Point            ParsePoint          (const Json::Value& point_json, const cv::Size& page_size);

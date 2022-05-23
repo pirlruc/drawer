@@ -19,7 +19,7 @@ class TestPageElemDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw()  const
+        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())  const
         {
             return 255 * cv::Mat::ones(50,100,CV_8UC1);
         }
@@ -28,6 +28,7 @@ class TestPageElemDrawer : public improc::BaseDrawer
 TEST(PageElementDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::PageElementDrawer());
     EXPECT_TRUE(improc::PageElementDrawer().is_element_static());
+    EXPECT_THROW(improc::PageElementDrawer().get_field_id(),improc::no_field_id_drawer_static);
 }
 
 TEST(PageElementDrawer,TestEmptyDraw) {

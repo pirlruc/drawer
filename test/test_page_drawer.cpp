@@ -19,7 +19,7 @@ class TestPageDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw()  const
+        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())  const
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }
@@ -105,6 +105,16 @@ TEST(PageDrawer,TestLoadSingle) {
     EXPECT_NO_THROW(drawer.Load(factory,json_content));
 }
 
+TEST(PageDrawer,TestDrawWithoutContext) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_single_elem.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    improc::DrawerFactory factory {};
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
+    improc::PageDrawer drawer {};
+    drawer.Load(factory,json_content);
+    EXPECT_THROW(drawer.Draw(),std::out_of_range);
+}
+
 TEST(PageDrawer,TestLoadMultiple) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_multiple_elem.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
@@ -129,7 +139,9 @@ TEST(PageDrawer,TestDrawWithoutAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    EXPECT_THROW(drawer.Draw(),cv::Exception);
+    std::unordered_map<std::string,std::string> context {};
+    context["field_a"] = "test_a";
+    EXPECT_THROW(drawer.Draw(context),cv::Exception);
 }
 
 TEST(PageDrawer,TestDrawWithAllocation) {
@@ -138,7 +150,9 @@ TEST(PageDrawer,TestDrawWithAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    EXPECT_NO_THROW(drawer.Allocate().Draw());
+    std::unordered_map<std::string,std::string> context {};
+    context["field_a"] = "test_a";
+    EXPECT_NO_THROW(drawer.Allocate().Draw(context));
 }
 
 TEST(PageDrawer,TestOverlayedDraw) {
@@ -147,5 +161,7 @@ TEST(PageDrawer,TestOverlayedDraw) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    EXPECT_NO_THROW(drawer.Allocate().Draw());
+    std::unordered_map<std::string,std::string> context {};
+    context["field_a"] = "test_a";
+    EXPECT_NO_THROW(drawer.Allocate().Draw(context));
 }

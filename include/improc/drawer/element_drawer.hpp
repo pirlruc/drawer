@@ -24,7 +24,7 @@ namespace improc
             ElementDrawer(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json);
 
             ElementDrawer&              Load(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json);
-            cv::Mat                     Draw() const;
+            cv::Mat                     Draw(const std::optional<std::string>& message = std::optional<std::string>()) const;
 
         private:
             static unsigned int         GetScale(const cv::Size& current_size, const cv::Size& max_size);

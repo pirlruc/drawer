@@ -27,8 +27,8 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
         if (page_drawer_json[kElementsKey].isArray() == true)
         {
             this->elements_ = std::vector<improc::PageElementDrawer>(page_drawer_json[kElementsKey].size());
-            std::transform  ( page_drawer_json[kElementsKey].begin(), page_drawer_json[kElementsKey].end(), this->elements_.begin()
-                            , [this,&factory] (const Json::Value& json_elem) -> improc::PageElementDrawer {return improc::PageElementDrawer(factory,json_elem,this->page_size_);} );
+            std::transform  ( std::execution::seq, page_drawer_json[kElementsKey].begin(), page_drawer_json[kElementsKey].end(), this->elements_.begin()
+                            , [this,&factory] (const Json::Value& json_elem) -> improc::PageElementDrawer {return improc::PageElementDrawer(factory,json_elem,this->page_size_);});
         }
         else
         {
@@ -41,7 +41,7 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
 improc::PageDrawer& improc::PageDrawer::Allocate()
 {
     IMPROC_DRAWER_LOGGER_TRACE("Allocating page...");
-    this->page_image_ = 255 * cv::Mat::ones(this->page_size_.height,this->page_size_.width,CV_8UC1);
+    this->page_image_ = 255 * cv::Mat::ones(this->page_size_.height,this->page_size_.width,improc::PageDrawer::kImageDataType);
     std::for_each   ( this->elements_.begin(),this->elements_.end()
                     , [this] (improc::PageElementDrawer& elem) 
                         {
@@ -55,15 +55,15 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
     return (*this);
 }
 
-improc::PageDrawer& improc::PageDrawer::Draw()
+improc::PageDrawer& improc::PageDrawer::Draw(const std::unordered_map<std::string,std::string>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page...");
     std::for_each   ( this->elements_.begin(),this->elements_.end()
-                    , [this] (const improc::PageElementDrawer& elem) 
+                    , [this,&context] (const improc::PageElementDrawer& elem) 
                         {
                             if (elem.is_element_static() == false)
                             {
-                                elem.Draw(this->page_image_);
+                                elem.Draw(this->page_image_,context.at(elem.get_field_id()));
                             }
                         } 
                     );

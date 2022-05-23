@@ -81,6 +81,7 @@ bool improc::PageElementDrawer::IsPixelPositionValid(int pixel_position, int max
 improc::PageElementDrawer& improc::PageElementDrawer::Allocate()
 {
     IMPROC_DRAWER_LOGGER_TRACE("Allocating page element...");
+    // TODO: String may be necessary to get the actual size
     cv::Size element_size     = this->ElementDrawer::Draw().size();
     this->element_box_.x      = this->top_left_.x;
     this->element_box_.y      = this->top_left_.y;
@@ -89,10 +90,17 @@ improc::PageElementDrawer& improc::PageElementDrawer::Allocate()
     return (*this);
 }
 
-void improc::PageElementDrawer::Draw(cv::Mat& page_image) const
+void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<std::string>& message) const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page element...");
-    this->ElementDrawer::Draw().copyTo(page_image(this->element_box_));
+    if (this->static_ == false)
+    {
+        this->ElementDrawer::Draw(message).copyTo(page_image(this->element_box_));
+    }
+    else
+    {
+        this->ElementDrawer::Draw(this->content_).copyTo(page_image(this->element_box_));
+    }
 }
 
 improc::PageElementDrawer& improc::PageElementDrawer::IncrementTopLeftBy(const cv::Point& increment_top_left, const cv::Size& page_size)
@@ -107,7 +115,7 @@ improc::PageElementDrawer& improc::PageElementDrawer::IncrementTopLeftBy(const c
 std::vector<improc::PageElementDrawer> improc::PageElementDrawer::IncrementTopLeftBy(std::vector<improc::PageElementDrawer>&& page_elements, const cv::Point& increment_top_left, const cv::Size& page_size)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Incrementing top left position on page elements...");
-    std::for_each   ( page_elements.begin(),page_elements.end()
+    std::for_each   ( std::execution::par, page_elements.begin(),page_elements.end()
                     , [&increment_top_left,&page_size] (improc::PageElementDrawer& elem)
                         {
                             elem.IncrementTopLeftBy(increment_top_left,page_size);
@@ -120,4 +128,15 @@ bool improc::PageElementDrawer::is_element_static() const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Checking if element is static...");
     return this->static_;
+}
+
+std::string improc::PageElementDrawer::get_field_id() const
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Obtaining field id...");
+    if (this->static_ == true)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: No context field id available for static drawer element.");
+        throw improc::no_field_id_drawer_static();
+    }
+    return this->content_.value();
 }

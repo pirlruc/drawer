@@ -14,6 +14,7 @@ namespace improc
     class PageDrawer
     {
         protected:
+            static constexpr int            kImageDataType = CV_8UC1;
             std::vector<PageElementDrawer>  elements_;
             cv::Size                        page_size_;
             cv::Mat                         page_image_;
@@ -24,7 +25,7 @@ namespace improc
 
             PageDrawer&                     Load    (const improc::DrawerFactory& factory, const Json::Value& page_drawer_json);
             PageDrawer&                     Allocate();
-            PageDrawer&                     Draw    ();
+            PageDrawer&                     Draw    (const std::unordered_map<std::string,std::string>& context = std::unordered_map<std::string,std::string>());
 
             cv::Size                        get_page_size()     const;
             std::vector<PageElementDrawer>  get_page_elements() const;

@@ -19,7 +19,7 @@ class TestLayoutDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw()  const
+        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())  const
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }
