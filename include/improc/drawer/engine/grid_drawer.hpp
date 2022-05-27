@@ -3,7 +3,7 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
-#include <improc/drawer/page_drawer.hpp>
+#include <improc/drawer/engine/page_drawer.hpp>
 #include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
@@ -19,7 +19,7 @@ namespace improc
 
             GridDrawer&         Load    (const improc::DrawerFactory& factory, const Json::Value& grid_drawer_json);
             GridDrawer&         Allocate();
-            GridDrawer&         Draw    ();
+            GridDrawer&         Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
 
         private:
             static cv::Point    ParseGridNumber (const Json::Value& grid_number_json);

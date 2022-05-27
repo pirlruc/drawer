@@ -19,6 +19,7 @@
         "elements":
         {
             "drawer-type": "test_drawer",
+            "static": true,
             "top-left":
             {
                 "x": 99,

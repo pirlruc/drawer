@@ -13,6 +13,7 @@ improc::LayoutDrawer& improc::LayoutDrawer::Load(const improc::DrawerFactory& fa
     this->elements_.clear();
     if (layout_drawer_json.isArray() == true)
     {
+        //TODO: Increase performance using execution policy
         std::for_each   ( layout_drawer_json.begin(), layout_drawer_json.end()
                         , [this,&factory] (const Json::Value& elem) {this->ParsePageTypeDrawer(factory,elem);} );
     }
@@ -57,7 +58,7 @@ improc::LayoutDrawer& improc::LayoutDrawer::ParsePageTypeDrawer(const improc::Dr
 
     cv::Point top_left    = improc::LayoutDrawer::ParsePoint(page_drawer_type_json[kTopLeftKey]);
     this->CorrectLayoutSize(top_left,page_drawer->get_page_size());
-    std::vector<improc::PageElementDrawer> page_elements = improc::PageElementDrawer::IncrementTopLeftBy(page_drawer->get_page_elements(),top_left,this->page_size_);
+    std::list<improc::PageElementDrawer> page_elements = improc::PageElementDrawer::IncrementTopLeftBy(page_drawer->get_page_elements(),top_left,this->page_size_);
     this->elements_.insert(this->elements_.end(),page_elements.begin(),page_elements.end());
     return (*this);
 }
@@ -112,9 +113,9 @@ improc::LayoutDrawer& improc::LayoutDrawer::Allocate()
     return (*this);
 }
 
-improc::LayoutDrawer& improc::LayoutDrawer::Draw()
+improc::LayoutDrawer& improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing layout...");
-    this->improc::PageDrawer::Draw();
+    this->improc::PageDrawer::Draw(context);
     return (*this);
 }

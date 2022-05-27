@@ -57,7 +57,6 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
     return (*this);
 }
 
-#include <iostream>
 improc::PageDrawer& improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page...");
@@ -74,7 +73,6 @@ improc::PageDrawer& improc::PageDrawer::Draw(const std::list<std::optional<std::
     std::transform  ( this->elements_.begin(),this->elements_.end(),context.begin(),dummy.begin()
                     , [this,&context] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
                         {
-                            std::cout << message.value_or("empty") << std::endl;
                             if (elem.is_element_static() == false)
                             {
                                 elem.Draw(this->page_image_,message);

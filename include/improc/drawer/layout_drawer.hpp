@@ -3,9 +3,9 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
-#include <improc/drawer/page_drawer.hpp>
-#include <improc/drawer/grid_drawer.hpp>
-#include <improc/drawer/page_drawer_type.hpp>
+#include <improc/drawer/engine/page_drawer.hpp>
+#include <improc/drawer/engine/grid_drawer.hpp>
+#include <improc/drawer/engine/page_drawer_type.hpp>
 #include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
@@ -21,7 +21,7 @@ namespace improc
 
             LayoutDrawer&       Load    (const improc::DrawerFactory& factory, const Json::Value& layout_drawer_json);
             LayoutDrawer&       Allocate();
-            LayoutDrawer&       Draw    ();
+            LayoutDrawer&       Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
 
         private:
             LayoutDrawer&       ParsePageTypeDrawer (const improc::DrawerFactory& factory, const Json::Value& page_drawer_type_json);

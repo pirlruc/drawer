@@ -1,4 +1,4 @@
-#include <improc/drawer/grid_drawer.hpp>
+#include <improc/drawer/engine/grid_drawer.hpp>
 
 improc::GridDrawer::GridDrawer(): improc::PageDrawer() {};
 
@@ -37,13 +37,14 @@ improc::GridDrawer& improc::GridDrawer::Load(const improc::DrawerFactory& factor
                                     , grid_number.y * cell_size.height + (grid_number.y - 1) * grid_spacing.y );
     this->page_size_   = grid_size;
     this->elements_.clear();
+    //TODO: Increase performance using execution policy
     for (size_t cell_idx_x = 0; cell_idx_x < grid_number.x; cell_idx_x++)
     {
         int top_left_x = cell_idx_x * cell_size.width + cell_idx_x * grid_spacing.x;
         for (size_t cell_idx_y = 0; cell_idx_y < grid_number.y; cell_idx_y++)
         {
             int top_left_y = cell_idx_y * cell_size.height + cell_idx_y * grid_spacing.y;
-            std::vector<improc::PageElementDrawer> grid_elements = improc::PageElementDrawer::IncrementTopLeftBy(cell.get_page_elements(),cv::Point(top_left_x,top_left_y),grid_size);
+            std::list<improc::PageElementDrawer> grid_elements = improc::PageElementDrawer::IncrementTopLeftBy(cell.get_page_elements(),cv::Point(top_left_x,top_left_y),grid_size);
             this->elements_.insert(this->elements_.end(),grid_elements.begin(),grid_elements.end());
         }
     }
@@ -113,9 +114,9 @@ improc::GridDrawer& improc::GridDrawer::Allocate()
     return (*this);
 }
 
-improc::GridDrawer& improc::GridDrawer::Draw()
+improc::GridDrawer& improc::GridDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing grid...");
-    this->improc::PageDrawer::Draw();
+    this->improc::PageDrawer::Draw(context);
     return (*this);
 }

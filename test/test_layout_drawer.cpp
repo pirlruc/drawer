@@ -111,7 +111,17 @@ TEST(LayoutDrawer,TestDrawWithoutAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestLayoutDrawer>});
     improc::LayoutDrawer drawer = improc::LayoutDrawer(factory,json_content);
-    EXPECT_THROW(drawer.Draw(),cv::Exception);
+    std::list<std::optional<std::string>> context {};
+    for (size_t idx = 0; idx < 8; idx++)
+    {
+        context.emplace_back("example");
+        context.emplace_back();
+        context.emplace_back();
+    }
+    context.emplace_back();
+    context.emplace_back("example");
+    context.emplace_back();
+    EXPECT_THROW(drawer.Draw(context),cv::Exception);
 }
 
 TEST(LayoutDrawer,TestDrawWithAllocation) {
@@ -120,5 +130,15 @@ TEST(LayoutDrawer,TestDrawWithAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestLayoutDrawer>});
     improc::LayoutDrawer drawer = improc::LayoutDrawer(factory,json_content);
-    EXPECT_NO_THROW(drawer.Allocate().Draw());
+    std::list<std::optional<std::string>> context {};
+    for (size_t idx = 0; idx < 8; idx++)
+    {
+        context.emplace_back("example");
+        context.emplace_back();
+        context.emplace_back();
+    }
+    context.emplace_back();
+    context.emplace_back("example");
+    context.emplace_back();
+    EXPECT_NO_THROW(drawer.Allocate().Draw(context));
 }
