@@ -3,8 +3,8 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
-#include <improc/drawer/rotation_type.hpp>
-#include <improc/drawer/base_drawer.hpp>
+#include <improc/drawer/parsers/rotation_type.hpp>
+#include <improc/drawer/engine/base_drawer.hpp>
 
 #include <opencv2/imgproc.hpp>
 #include <json/json.h>

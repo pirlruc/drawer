@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <improc/drawer/rotation_type.hpp>
+#include <improc/drawer/parsers/rotation_type.hpp>
 
 TEST(RotationType,TestEmptyConstructor) {
     improc::RotationType rotation {};

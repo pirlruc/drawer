@@ -7,6 +7,7 @@
 
 #include <opencv2/core.hpp>
 
+// TODO: Move to core_cv
 namespace improc 
 {
     class IMPROC_EXPORTS RotationType

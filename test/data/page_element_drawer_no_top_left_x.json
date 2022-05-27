@@ -1,5 +1,6 @@
 {
     "drawer-type": "test_drawer",
+    "static": false,
     "top-left":
     {
         "y": 5

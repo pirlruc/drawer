@@ -5,7 +5,7 @@
 #include <improc/exception.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 #include <improc/infrastructure/context/application_context.hpp>
-#include <improc/drawer/base_drawer.hpp>
+#include <improc/drawer/engine/base_drawer.hpp>
 
 #include <opencv2/imgcodecs.hpp>
 #include <json/json.h>
@@ -16,7 +16,7 @@ namespace improc
     {
         private:
             static constexpr int    kImageReadMode = cv::IMREAD_GRAYSCALE;
-            cv::Mat                 outline_;
+            cv::Mat                 image_data_;
 
         public:
             ImageFileDrawer();

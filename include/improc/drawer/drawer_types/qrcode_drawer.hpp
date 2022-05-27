@@ -6,7 +6,7 @@
 #include <improc/infrastructure/filesystem/file.hpp>
 #include <improc/infrastructure/context/application_context.hpp>
 #include <improc/infrastructure/string.hpp>
-#include <improc/drawer/base_drawer.hpp>
+#include <improc/drawer/engine/base_drawer.hpp>
 
 #include <qrcodegen/cpp/qrcodegen.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -14,6 +14,7 @@
 
 namespace improc 
 {
+    // TODO: Include this in a QR-Code class
     class IMPROC_EXPORTS ErrorCorrectionLevel
     {
         public:

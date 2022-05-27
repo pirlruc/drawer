@@ -1,6 +1,7 @@
 {
     "drawer-type": "test_drawer",
     "static": false,
+    "content": "example",
     "top-left":
     {
         "x": 10,

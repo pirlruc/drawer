@@ -2,7 +2,7 @@
 
 #include <improc_drawer_test_config.hpp>
 
-#include <improc/drawer/element_drawer.hpp>
+#include <improc/drawer/engine/element_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 
 class TestDrawer : public improc::BaseDrawer

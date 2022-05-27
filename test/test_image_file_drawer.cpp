@@ -2,7 +2,7 @@
 
 #include <improc_drawer_test_config.hpp>
 
-#include <improc/drawer/image_file_drawer.hpp>
+#include <improc/drawer/drawer_types/image_file_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 #include <improc/infrastructure/context/application_context.hpp>
 

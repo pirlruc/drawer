@@ -2,7 +2,7 @@
 
 #include <improc_drawer_test_config.hpp>
 
-#include <improc/drawer/qrcode_drawer.hpp>
+#include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 
 TEST(ErrorCorrectionLevel,TestEmptyConstructor) {

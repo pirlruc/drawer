@@ -3,12 +3,11 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
-#include <improc/drawer/element_drawer.hpp>
+#include <improc/drawer/engine/element_drawer.hpp>
 #include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
-#include <execution>
 
 namespace improc 
 {
@@ -30,12 +29,11 @@ namespace improc
 
             PageElementDrawer&          IncrementTopLeftBy(const cv::Point& increment_top_left, const cv::Size& page_size);
 
-            static std::vector<PageElementDrawer> IncrementTopLeftBy( std::vector<PageElementDrawer>&& page_elements
+            static std::list<PageElementDrawer> IncrementTopLeftBy  ( std::list<PageElementDrawer>&& page_elements
                                                                     , const cv::Point& increment_top_left
                                                                     , const cv::Size& page_size );
 
             bool                        is_element_static() const;
-            std::string                 get_field_id()      const;
 
         private:
             static cv::Point            ParsePoint          (const Json::Value& point_json, const cv::Size& page_size);

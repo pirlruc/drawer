@@ -1,4 +1,4 @@
-#include <improc/drawer/rotation_type.hpp>
+#include <improc/drawer/parsers/rotation_type.hpp>
 
 improc::RotationType::RotationType() : value_(improc::RotationType::k0Deg) {};
 

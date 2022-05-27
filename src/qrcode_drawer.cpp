@@ -1,4 +1,4 @@
-#include <improc/drawer/qrcode_drawer.hpp>
+#include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 
 improc::ErrorCorrectionLevel::ErrorCorrectionLevel() : value_(improc::ErrorCorrectionLevel::kLow) {};
 
@@ -38,6 +38,7 @@ cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message) co
     qrcodegen::QrCode qrcode_data = qrcodegen::QrCode::encodeText(message.value().c_str(),this->error_correction_level_.ToQrCodeGen());
     int qrcode_size = qrcode_data.getSize();
     cv::Mat qrcode = 255 * cv::Mat::ones(qrcode_size,qrcode_size,improc::QrCodeDrawer::kImageDataType);
+    // TODO: Improve method to draw qr-code using threads
     for (size_t pixel_x = 0; pixel_x < qrcode_size; pixel_x++)
     {
         for (size_t pixel_y = 0; pixel_y < qrcode_size; pixel_y++)
