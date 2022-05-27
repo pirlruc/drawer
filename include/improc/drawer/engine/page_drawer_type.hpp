@@ -5,8 +5,6 @@
 #include <improc/drawer/logger_drawer.hpp>
 #include <improc/infrastructure/string.hpp>
 
-#define IMPROC_ENUM_KEY_TYPE unsigned int
-
 #include <opencv2/core.hpp>
 
 namespace improc 

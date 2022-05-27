@@ -1,8 +1,7 @@
-#include <improc/drawer/metric_pixel_json_converter.hpp>
+#include <improc/drawer/engine/metric_pixel_json_converter.hpp>
 
 improc::MetricPixelJsonConverter::MetricPixelJsonConverter() {};
 
-#include <iostream>
 Json::Value improc::MetricPixelJsonConverter::Convert(const Json::Value& metric_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Converting metric json to pixel json...");
@@ -73,6 +72,7 @@ void improc::MetricPixelJsonConverter::ParseObject(const improc::MetricPixelConv
 void improc::MetricPixelJsonConverter::ParseArray(const improc::MetricPixelConverter& pixel_converter, Json::Value& array_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Parsing json array...");
+    //TODO: Increase performance using execution policy
     for (Json::Value::iterator item_json = array_json.begin(); item_json != array_json.end(); item_json++)
     {
         if(item_json->isArray() == true)

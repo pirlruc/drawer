@@ -7,7 +7,7 @@
     "elements":
     {
         "drawer-type": "test_drawer",
-        "content-field-id": "field_a",
+        "static": false,
         "top-left":
         {
             "x": 10,

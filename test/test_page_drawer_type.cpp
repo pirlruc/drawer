@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <improc/drawer/page_drawer_type.hpp>
+#include <improc/drawer/engine/page_drawer_type.hpp>
 
 TEST(PageDrawerType,TestEmptyConstructor) {
     improc::PageDrawerType drawer_type {};

@@ -1,4 +1,4 @@
-#include <improc/drawer/metric_pixel_converter.hpp>
+#include <improc/drawer/engine/metric_pixel_converter.hpp>
 
 improc::MetricUnit::MetricUnit() : value_(improc::MetricUnit::kMilimiter) {};
 
@@ -13,7 +13,6 @@ improc::MetricUnit::MetricUnit(const std::string& metric_unit_str)
     this->value_ = kToElemType.at(improc::String::ToLower(metric_unit_str));
 }
 
-#include <iostream>
 double improc::MetricUnit::GetConversionFactor(const improc::MetricUnit& to_metric_unit) const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining conversion factor from {} to {}...",this->ToString(),to_metric_unit.ToString());

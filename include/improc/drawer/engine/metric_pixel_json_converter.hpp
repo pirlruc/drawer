@@ -4,7 +4,7 @@
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
 #include <improc/drawer/logger_drawer.hpp>
-#include <improc/drawer/metric_pixel_converter.hpp>
+#include <improc/drawer/engine/metric_pixel_converter.hpp>
 #include <improc/infrastructure/parsers/json_parser.hpp>
 
 #include <opencv2/core.hpp>

@@ -1,6 +1,6 @@
-#include <improc/drawer/page_drawer.hpp>
+#include <improc/drawer/engine/page_drawer.hpp>
 
-improc::PageDrawer::PageDrawer(): elements_(std::vector<improc::PageElementDrawer>()) 
+improc::PageDrawer::PageDrawer(): elements_(std::list<improc::PageElementDrawer>()) 
                                 , page_size_(cv::Size())
                                 , page_image_(cv::Mat()) {};
 
@@ -26,8 +26,9 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
         this->elements_.clear();
         if (page_drawer_json[kElementsKey].isArray() == true)
         {
-            this->elements_ = std::vector<improc::PageElementDrawer>(page_drawer_json[kElementsKey].size());
-            std::transform  ( std::execution::seq, page_drawer_json[kElementsKey].begin(), page_drawer_json[kElementsKey].end(), this->elements_.begin()
+            //TODO: Increase performance using execution policy
+            this->elements_ = std::list<improc::PageElementDrawer>(page_drawer_json[kElementsKey].size());
+            std::transform  ( page_drawer_json[kElementsKey].begin(), page_drawer_json[kElementsKey].end(), this->elements_.begin()
                             , [this,&factory] (const Json::Value& json_elem) -> improc::PageElementDrawer {return improc::PageElementDrawer(factory,json_elem,this->page_size_);});
         }
         else
@@ -42,6 +43,7 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
 {
     IMPROC_DRAWER_LOGGER_TRACE("Allocating page...");
     this->page_image_ = 255 * cv::Mat::ones(this->page_size_.height,this->page_size_.width,improc::PageDrawer::kImageDataType);
+    //TODO: Increase performance using execution policy
     std::for_each   ( this->elements_.begin(),this->elements_.end()
                     , [this] (improc::PageElementDrawer& elem) 
                         {
@@ -55,16 +57,29 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
     return (*this);
 }
 
-improc::PageDrawer& improc::PageDrawer::Draw(const std::unordered_map<std::string,std::string>& context)
+#include <iostream>
+improc::PageDrawer& improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page...");
-    std::for_each   ( this->elements_.begin(),this->elements_.end()
-                    , [this,&context] (const improc::PageElementDrawer& elem) 
+    if (this->elements_.size() != context.size())
+    {
+        IMPROC_DRAWER_LOGGER_ERROR  ( "ERROR_02: Number of elements in context ({}) different than the number of elements in page ({})."
+                                    , context.size(), this->elements_.size() );
+        throw improc::context_elem_diff_page_elem();
+    }
+
+    std::vector<bool> dummy = std::vector<bool>(this->elements_.size());
+    // TODO: Increase performance using execution policy
+    // TODO: Implement with foreach whenever the second iterator is available on STL
+    std::transform  ( this->elements_.begin(),this->elements_.end(),context.begin(),dummy.begin()
+                    , [this,&context] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
                         {
+                            std::cout << message.value_or("empty") << std::endl;
                             if (elem.is_element_static() == false)
                             {
-                                elem.Draw(this->page_image_,context.at(elem.get_field_id()));
+                                elem.Draw(this->page_image_,message);
                             }
+                            return true;
                         } 
                     );
     return (*this);
@@ -76,7 +91,7 @@ cv::Size improc::PageDrawer::get_page_size() const
     return this->page_size_;
 }
 
-std::vector<improc::PageElementDrawer> improc::PageDrawer::get_page_elements() const
+std::list<improc::PageElementDrawer> improc::PageDrawer::get_page_elements() const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining page elements...");
     return this->elements_;

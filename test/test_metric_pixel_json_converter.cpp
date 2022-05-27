@@ -2,7 +2,7 @@
 
 #include <improc_drawer_test_config.hpp>
 
-#include <improc/drawer/metric_pixel_json_converter.hpp>
+#include <improc/drawer/engine/metric_pixel_json_converter.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 
 TEST(MetricPixelJsonConverter,TestEmptyConstructor) {
