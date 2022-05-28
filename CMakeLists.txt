@@ -82,6 +82,7 @@ add_library(
   ${PROJECT_SOURCE_DIR}/src/image_file_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/qrcode_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/barcode_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/data_matrix_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_drawer_type.cpp
