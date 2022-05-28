@@ -38,6 +38,7 @@ add_executable(
   ${PROJECT_SOURCE_DIR}/test/test_corecv_json_parser.cpp
   ${PROJECT_SOURCE_DIR}/test/test_image_file_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_qrcode_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_barcode_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_drawer_type.cpp

@@ -53,9 +53,17 @@ set_target_properties(qrcodegen PROPERTIES LINKER_LANGUAGE        CXX)
 set_target_properties(qrcodegen PROPERTIES VERSION                1.8.0)
 set_target_properties(qrcodegen PROPERTIES DEBUG_POSTFIX          ${CMAKE_DEBUG_POSTFIX})
 
-target_include_directories  (qrcodegen   INTERFACE  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen>
-                                                    $<INSTALL_INTERFACE:include> )
+target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen>
+                                                  $<INSTALL_INTERFACE:include> )
 
+# zxing-cpp
+FetchContent_Declare(
+  zxingcpp
+  GIT_REPOSITORY  https://github.com/nu-book/zxing-cpp
+  GIT_TAG         v1.3.0
+  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
+)
+FetchContent_MakeAvailable(zxingcpp)
 message(STATUS "Build qrcodegen Version: 1.8.0")
 message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
@@ -73,6 +81,7 @@ add_library(
   ${PROJECT_SOURCE_DIR}/src/rotation_type.cpp
   ${PROJECT_SOURCE_DIR}/src/image_file_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/qrcode_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/barcode_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_drawer_type.cpp
@@ -95,10 +104,12 @@ target_include_directories  (${PROJECT_NAME}   INTERFACE $<BUILD_INTERFACE:${PRO
 # Link dependencies
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    qrcodegen)
+target_link_libraries       (${PROJECT_NAME}   PRIVATE    ZXing)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::services)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  qrcodegen)
+target_link_libraries       (${PROJECT_NAME}   INTERFACE  ZXing)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::services)
 
