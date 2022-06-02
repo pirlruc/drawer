@@ -93,6 +93,13 @@ TEST(QrCodeDrawer,TestLoading) {
     EXPECT_NO_THROW(drawer.Load(json_content));
 }
 
+TEST(QrCodeDrawer,TestNoErrorCorrectionLevel) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/qrcode_drawer_no_error_correction_level.json";
+    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
+    improc::QrCodeDrawer drawer {};
+    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+}
+
 TEST(QrCodeDrawer,TestDraw) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/qrcode_drawer_config.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);

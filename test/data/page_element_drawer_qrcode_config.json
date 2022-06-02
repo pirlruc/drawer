@@ -10,5 +10,6 @@
     "rotation": "90-deg",
     "args": 
     {
+        "error-correction-level": "medium"
     }
 }

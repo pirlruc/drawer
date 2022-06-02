@@ -18,7 +18,7 @@ improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value& draw
 
 cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message) const
 {
-    IMPROC_DRAWER_LOGGER_TRACE("Drawing barcode...");
+    IMPROC_DRAWER_LOGGER_TRACE("Drawing data matrix...");
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
     ZXing::BitMatrix matrix_data = this->writer_.encode ( converter.from_bytes(message.value())
                                                         , improc::DataMatrixDrawer::kMinWidth

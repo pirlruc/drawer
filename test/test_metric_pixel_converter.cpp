@@ -81,6 +81,11 @@ TEST(MetricPixelConverter,TestSetPrintingResolution) {
     EXPECT_EQ(converter.Metric2Pixel(25.4),500);
 }
 
+TEST(MetricPixelConverter,TestInvalidPrintingResolution) {
+    improc::MetricPixelConverter converter {};
+    EXPECT_THROW(converter.set_printing_resolution(0),improc::printing_resolution_not_positive);
+}
+
 TEST(MetricPixelConverter,TestConverters) {
     improc::MetricPixelConverter converter {};
     converter.set_printing_resolution(500);

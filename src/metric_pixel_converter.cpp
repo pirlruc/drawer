@@ -29,6 +29,12 @@ improc::MetricPixelConverter::MetricPixelConverter(unsigned int printing_resolut
 improc::MetricPixelConverter& improc::MetricPixelConverter::set_printing_resolution(unsigned int printing_resolution_dpi)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Setting printing resolution...");
+    if (printing_resolution_dpi == 0)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR("Printing resolution should be positive");
+        throw improc::printing_resolution_not_positive();
+    }
+
     this->metric_to_pixel_factor_ = static_cast<double>(printing_resolution_dpi) / MetricPixelConverter::kInchToMilimeter;
     return (*this);
 }

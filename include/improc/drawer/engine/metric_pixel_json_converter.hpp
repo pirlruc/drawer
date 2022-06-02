@@ -25,6 +25,9 @@ namespace improc
 
             // TODO: Remove these methods and add them to json parsers
             static cv::Point2d  ParsePoint  (const Json::Value& point_json);
+
+        public:
+            // TODO: Remove these methods and add them to json parsers
             static cv::Size2d   ParseSize   (const Json::Value& size_json);
     };
 }
