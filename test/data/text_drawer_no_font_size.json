@@ -6,6 +6,5 @@
         "height": 10
     },
     "font-filepath": ["test","data","PublicSans-Regular.ttf"],
-    "font-spacing": 6,
-    "render-mode": "grayscale"
+    "font-spacing": 6
 }

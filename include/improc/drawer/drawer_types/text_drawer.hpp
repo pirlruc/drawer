@@ -13,35 +13,6 @@
 
 namespace improc 
 {
-    // TODO: Include this in a Text drawer class
-    class IMPROC_EXPORTS TextRenderMode
-    {
-        public:
-            enum Value : IMPROC_ENUM_KEY_TYPE
-            {
-                    kBinary    = 0
-                ,   kGrayscale = 1
-            };
-
-        private:
-            Value                           value_;
-
-        public:
-            TextRenderMode();                              
-            TextRenderMode(const std::string& text_render_mode_str);
-            constexpr                       TextRenderMode(Value text_render_mode_value): value_(text_render_mode_value) {}
-            constexpr operator              Value()     const {return this->value_;}
-
-            constexpr std::string_view      ToString()  const
-            {
-                switch (this->value_)
-                {
-                    case TextRenderMode::Value::kBinary     : return "Binary rendering";     break;
-                    case TextRenderMode::Value::kGrayscale  : return "Grayscale rendering";  break;
-                }
-            }
-    };
-
     class IMPROC_EXPORTS TextDrawer : public improc::BaseDrawer
     {
         private:
@@ -55,7 +26,6 @@ namespace improc
             unsigned int                    printing_resolution_;
             unsigned int                    font_size_;
             unsigned int                    font_spacing_;
-            TextRenderMode                  render_mode_;
             
         public:
             TextDrawer();

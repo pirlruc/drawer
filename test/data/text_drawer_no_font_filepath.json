@@ -6,6 +6,5 @@
         "height": 10
     },
     "font-size": 16,
-    "font-spacing": 6,
-    "render-mode": "grayscale"
+    "font-spacing": 6
 }

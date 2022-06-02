@@ -5,46 +5,6 @@
 #include <improc/drawer/drawer_types/text_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 
-TEST(TextRenderMode,TestEmptyConstructor) {
-    improc::TextRenderMode render {};
-    EXPECT_EQ(render,improc::TextRenderMode::Value::kGrayscale);
-}
-
-TEST(TextRenderMode,TestConstructorFromValue) {
-    improc::TextRenderMode render {improc::TextRenderMode::Value::kBinary};
-    EXPECT_EQ(render,improc::TextRenderMode::Value::kBinary);
-}
-
-TEST(TextRenderMode,TestConstructorFromLowerString) {
-    improc::TextRenderMode render_binary      {"binary"};
-    improc::TextRenderMode render_grayscale   {"grayscale"};
-    EXPECT_EQ(render_binary   ,improc::TextRenderMode::Value::kBinary);
-    EXPECT_EQ(render_grayscale,improc::TextRenderMode::Value::kGrayscale);
-}
-
-TEST(TextRenderMode,TestConstructorFromUpperString) {
-    improc::TextRenderMode render_binary      {"BINARY"};
-    improc::TextRenderMode render_grayscale   {"GRAYSCALE"};
-    EXPECT_EQ(render_binary   ,improc::TextRenderMode::Value::kBinary);
-    EXPECT_EQ(render_grayscale,improc::TextRenderMode::Value::kGrayscale);
-}
-
-TEST(TextRenderMode,TestInvalidTextRenderModeConstructor) {
-    EXPECT_THROW(improc::TextRenderMode render {"invalid"},std::out_of_range);
-}
-
-TEST(TextRenderMode,TestConstructorFromClass) {
-    EXPECT_EQ(improc::TextRenderMode::kBinary   ,improc::TextRenderMode::Value::kBinary);
-    EXPECT_EQ(improc::TextRenderMode::kGrayscale,improc::TextRenderMode::Value::kGrayscale);
-}
-
-TEST(TextRenderMode,TestToString) {
-    improc::TextRenderMode render_binary      {"binary"};
-    improc::TextRenderMode render_grayscale   {"grayscale"};
-    EXPECT_EQ(render_binary.ToString()     ,"Binary rendering");
-    EXPECT_EQ(render_grayscale.ToString()  ,"Grayscale rendering");
-}
-
 TEST(TextDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::TextDrawer());
 }
@@ -98,13 +58,6 @@ TEST(TextDrawer,TestNoFontSize) {
 
 TEST(TextDrawer,TestNoFontSpacing) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_font_spacing.json";
-    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
-}
-
-TEST(TextDrawer,TestNoRenderMode) {
-    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_render_mode.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
     EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);

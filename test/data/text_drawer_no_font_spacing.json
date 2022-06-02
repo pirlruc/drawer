@@ -6,6 +6,5 @@
         "height": 10
     },
     "font-filepath": ["test","data","PublicSans-Regular.ttf"],
-    "font-size": 16,
-    "render-mode": "grayscale"
+    "font-size": 16
 }

@@ -1,23 +1,11 @@
 #include <improc/drawer/drawer_types/text_drawer.hpp>
 
-improc::TextRenderMode::TextRenderMode() : value_(improc::TextRenderMode::kGrayscale) {};
-
-improc::TextRenderMode::TextRenderMode(const std::string& text_render_mode_str)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Obtaining text render mode from string {}...",text_render_mode_str);
-    static const std::unordered_map<std::string,TextRenderMode::Value> kToElemType =    { {"binary"     ,TextRenderMode::Value::kBinary     }
-                                                                                        , {"grayscale"  ,TextRenderMode::Value::kGrayscale  }
-                                                                                        };
-    this->value_ = kToElemType.at(improc::String::ToLower(text_render_mode_str));
-}
-
 improc::TextDrawer::TextDrawer(): improc::BaseDrawer()
                                 , font_loaded_(false)
                                 , image_text_size_(cv::Size())
                                 , printing_resolution_(0)
                                 , font_size_(0)
                                 , font_spacing_(0)
-                                , render_mode_(improc::TextRenderMode())
 {
     IMPROC_DRAWER_LOGGER_TRACE("Initializing FreeType library...");
     FT_Error error = FT_Init_FreeType(&this->library_);
@@ -41,7 +29,6 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     static const std::string kFontPathKey           = "font-filepath";
     static const std::string kFontSizeKey           = "font-size";
     static const std::string kFontSpacingKey        = "font-spacing";
-    static const std::string kRenderModeKey         = "render-mode";    
     if (drawer_json.isMember(kPrintingResolutionKey) == false) 
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Printing resolution missing.");
@@ -65,11 +52,6 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     if (drawer_json.isMember(kFontSpacingKey) == false) 
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_05: Font spacing missing.");
-        throw improc::file_processing_error();
-    }
-    if (drawer_json.isMember(kRenderModeKey) == false) 
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_06: Text render mode missing.");
         throw improc::file_processing_error();
     }
     this->printing_resolution_ = improc::json::ReadElement<unsigned int>(drawer_json[kPrintingResolutionKey]);
@@ -103,7 +85,6 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
         throw improc::file_processing_error();
     }
     this->font_spacing_ = font_spacing;
-    this->render_mode_  = improc::json::ReadElement<std::string>(drawer_json[kRenderModeKey]);
     
     FT_Error error_char_size = FT_Set_Char_Size ( this->face_
                                                 , this->font_size_ * improc::TextDrawer::kFontSizePointFraction
