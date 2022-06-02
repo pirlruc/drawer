@@ -64,6 +64,16 @@ FetchContent_Declare(
   SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
 )
 FetchContent_MakeAvailable(zxingcpp)
+
+# FreeType
+FetchContent_Declare(
+  freetype
+  GIT_REPOSITORY  https://gitlab.freedesktop.org/freetype/freetype
+  GIT_TAG         VER-2-12-1
+  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
+)
+FetchContent_MakeAvailable(freetype)
+
 message(STATUS "Build qrcodegen Version: 1.8.0")
 message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
@@ -83,6 +93,7 @@ add_library(
   ${PROJECT_SOURCE_DIR}/src/qrcode_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/barcode_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/data_matrix_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/src/text_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_drawer_type.cpp
@@ -90,7 +101,7 @@ add_library(
   ${PROJECT_SOURCE_DIR}/src/metric_pixel_json_converter.cpp
 )
 add_library(improc::drawer ALIAS ${PROJECT_NAME})
-add_dependencies(${PROJECT_NAME} improc::infrastructure improc::services ${OpenCV_LIBS} qrcodegen)
+add_dependencies(${PROJECT_NAME} improc::infrastructure improc::services ${OpenCV_LIBS} qrcodegen ZXing freetype)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD           17)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
@@ -106,11 +117,13 @@ target_include_directories  (${PROJECT_NAME}   INTERFACE $<BUILD_INTERFACE:${PRO
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    qrcodegen)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    ZXing)
+target_link_libraries       (${PROJECT_NAME}   PRIVATE    freetype)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::services)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  qrcodegen)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  ZXing)
+target_link_libraries       (${PROJECT_NAME}   INTERFACE  freetype)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::services)
 

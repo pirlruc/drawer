@@ -1,0 +1,12 @@
+{
+    "printing-resolution-dpi": 500,
+    "image-text-size":
+    {
+        "width": 10.2,
+        "height": 20.4
+    },
+    "font-filepath": ["test","data","PublicSans-Regular.ttf"],
+    "font-size": 16,
+    "font-spacing": 6,
+    "render-mode": "grayscale"
+}
