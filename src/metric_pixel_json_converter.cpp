@@ -40,7 +40,7 @@ void improc::MetricPixelJsonConverter::ParseObject(const improc::MetricPixelConv
     static const std::string kPageSizeKey           = "page-size";   // Page drawer
     static const std::string kMetricUnitKey         = "metric-unit";
     
-    if (object_name == kGridSpacingKey || object_name == kTopLeftKey || object_name == kPageSizeKey)
+    if (object_name == kElemSizeKey || object_name == kGridSpacingKey || object_name == kTopLeftKey || object_name == kPageSizeKey)
     {
         if (object_json.isMember(kMetricUnitKey) == false)
         {

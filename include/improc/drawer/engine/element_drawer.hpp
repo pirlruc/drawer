@@ -5,6 +5,7 @@
 #include <improc/exception.hpp>
 #include <improc/drawer/parsers/rotation_type.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
+#include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/imgproc.hpp>
 #include <json/json.h>
@@ -27,7 +28,7 @@ namespace improc
             cv::Mat                     Draw(const std::optional<std::string>& message = std::optional<std::string>()) const;
 
         private:
-            static unsigned int         GetScale(const cv::Size& current_size, const cv::Size& max_size);
+            static unsigned int         GetScale(const cv::Size& current_size, const cv::Size& expected_size);
 
         public:
             // TODO: Move ParseSize and IsLengthValid to a common parsing structure

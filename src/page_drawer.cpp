@@ -57,7 +57,7 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
     return (*this);
 }
 
-improc::PageDrawer& improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& context)
+cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page...");
     if (this->elements_.size() != context.size())
@@ -80,7 +80,7 @@ improc::PageDrawer& improc::PageDrawer::Draw(const std::list<std::optional<std::
                             return true;
                         } 
                     );
-    return (*this);
+    return this->page_image_;
 }
 
 cv::Size improc::PageDrawer::get_page_size() const

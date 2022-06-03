@@ -114,9 +114,8 @@ improc::GridDrawer& improc::GridDrawer::Allocate()
     return (*this);
 }
 
-improc::GridDrawer& improc::GridDrawer::Draw(const std::list<std::optional<std::string>>& context)
+cv::Mat improc::GridDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing grid...");
-    this->improc::PageDrawer::Draw(context);
-    return (*this);
+    return this->improc::PageDrawer::Draw(context);
 }

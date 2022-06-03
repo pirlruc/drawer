@@ -113,9 +113,8 @@ improc::LayoutDrawer& improc::LayoutDrawer::Allocate()
     return (*this);
 }
 
-improc::LayoutDrawer& improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& context)
+cv::Mat improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing layout...");
-    this->improc::PageDrawer::Draw(context);
-    return (*this);
+    return this->improc::PageDrawer::Draw(context);
 }

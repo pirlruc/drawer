@@ -54,11 +54,11 @@ bool improc::ElementDrawer::IsLengthValid(int length)
     return result;
 }
 
-unsigned int improc::ElementDrawer::GetScale(const cv::Size& current_size, const cv::Size& max_size)
+unsigned int improc::ElementDrawer::GetScale(const cv::Size& current_size, const cv::Size& expected_size)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining scale factor...");
-    double scaling_width  = static_cast<double>(max_size.width)  / static_cast<double>(current_size.width);
-    double scaling_height = static_cast<double>(max_size.height) / static_cast<double>(current_size.height);
+    double scaling_width  = static_cast<double>(expected_size.width)  / static_cast<double>(current_size.width);
+    double scaling_height = static_cast<double>(expected_size.height) / static_cast<double>(current_size.height);
     unsigned int scaling  = std::min(std::round(scaling_width),std::round(scaling_height)); 
     if (scaling <= 1)
     {

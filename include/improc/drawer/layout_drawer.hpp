@@ -21,7 +21,7 @@ namespace improc
 
             LayoutDrawer&       Load    (const improc::DrawerFactory& factory, const Json::Value& layout_drawer_json);
             LayoutDrawer&       Allocate();
-            LayoutDrawer&       Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
+            cv::Mat             Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
 
         private:
             LayoutDrawer&       ParsePageTypeDrawer (const improc::DrawerFactory& factory, const Json::Value& page_drawer_type_json);

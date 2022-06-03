@@ -25,7 +25,7 @@ namespace improc
 
             PageDrawer&                     Load    (const improc::DrawerFactory& factory, const Json::Value& page_drawer_json);
             PageDrawer&                     Allocate();
-            PageDrawer&                     Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
+            cv::Mat                         Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
 
             cv::Size                        get_page_size()     const;
             std::list<PageElementDrawer>    get_page_elements() const;
