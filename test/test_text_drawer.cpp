@@ -56,13 +56,6 @@ TEST(TextDrawer,TestNoFontSize) {
     EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
 }
 
-TEST(TextDrawer,TestNoFontSpacing) {
-    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_font_spacing.json";
-    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
-}
-
 TEST(TextDrawer,TestNoMetricUnit) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_metric_unit.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
@@ -93,13 +86,6 @@ TEST(TextDrawer,TestInvalidFontFilepath) {
 
 TEST(TextDrawer,TestInvalidFontSize) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_invalid_font_size.json";
-    Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
-}
-
-TEST(TextDrawer,TestInvalidFontSpacing) {
-    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_invalid_font_spacing.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
     EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);

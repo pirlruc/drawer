@@ -25,7 +25,6 @@ namespace improc
             cv::Size                        image_text_size_;
             unsigned int                    printing_resolution_;
             unsigned int                    font_size_;
-            unsigned int                    font_spacing_;
             
         public:
             TextDrawer();

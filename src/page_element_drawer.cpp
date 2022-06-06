@@ -85,7 +85,9 @@ improc::PageElementDrawer& improc::PageElementDrawer::Allocate()
 
 void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<std::string>& message) const
 {
-    IMPROC_DRAWER_LOGGER_TRACE("Drawing page element...");
+    IMPROC_DRAWER_LOGGER_TRACE  ( "Drawing page element..." );
+    IMPROC_DRAWER_LOGGER_DEBUG  ( "Drawing element in x = {}, y = {} with size width = {}, height = {}"
+                                , this->element_box_.x, this->element_box_.y, this->element_box_.width, this->element_box_.width);
     if (this->static_ == false)
     {
         this->ElementDrawer::Draw(message).copyTo(page_image(this->element_box_));

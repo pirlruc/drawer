@@ -7,6 +7,5 @@
         "metric-unit": "mm"
     },
     "font-filepath": ["test","data","PublicSans-Regular.ttf"],
-    "font-size": 0,
-    "font-spacing": 6
+    "font-size": 0
 }

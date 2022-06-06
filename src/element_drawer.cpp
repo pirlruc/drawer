@@ -87,5 +87,6 @@ cv::Mat improc::ElementDrawer::Draw(const std::optional<std::string>& message) c
         unsigned int scale = improc::ElementDrawer::GetScale(drawer_output.size(),this->size_.value());
         cv::resize(drawer_output,drawer_output,cv::Size(),scale,scale,cv::INTER_NEAREST);
     }
+    IMPROC_DRAWER_LOGGER_DEBUG("Drawing element with size width = {}, height = {}", drawer_output.cols, drawer_output.rows);
     return drawer_output;
 }

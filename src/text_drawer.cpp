@@ -5,7 +5,6 @@ improc::TextDrawer::TextDrawer(): improc::BaseDrawer()
                                 , image_text_size_(cv::Size())
                                 , printing_resolution_(0)
                                 , font_size_(0)
-                                , font_spacing_(0)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Initializing FreeType library...");
     FT_Error error = FT_Init_FreeType(&this->library_);
@@ -28,7 +27,6 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     static const std::string kImageTextSizeKey      = "image-text-size";
     static const std::string kFontPathKey           = "font-filepath";
     static const std::string kFontSizeKey           = "font-size";
-    static const std::string kFontSpacingKey        = "font-spacing";
     if (drawer_json.isMember(kPrintingResolutionKey) == false) 
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Printing resolution missing.");
@@ -47,11 +45,6 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     if (drawer_json.isMember(kFontSizeKey) == false) 
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_04: Font size missing.");
-        throw improc::file_processing_error();
-    }
-    if (drawer_json.isMember(kFontSpacingKey) == false) 
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_05: Font spacing missing.");
         throw improc::file_processing_error();
     }
     this->printing_resolution_ = improc::json::ReadElement<unsigned int>(drawer_json[kPrintingResolutionKey]);
@@ -78,14 +71,6 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     }
     this->font_size_ = font_size;
 
-    unsigned int font_spacing = improc::json::ReadElement<unsigned int>(drawer_json[kFontSpacingKey]);
-    if (font_spacing <= 0)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_09: Font size should be greater than zero");
-        throw improc::file_processing_error();
-    }
-    this->font_spacing_ = font_spacing;
-    
     FT_Error error_char_size = FT_Set_Char_Size ( this->face_
                                                 , this->font_size_ * improc::TextDrawer::kFontSizePointFraction
                                                 , this->font_size_ * improc::TextDrawer::kFontSizePointFraction
@@ -133,6 +118,7 @@ cv::Mat improc::TextDrawer::Draw(const std::optional<std::string>& message) cons
     }
 
     cv::Mat text_image = 255 * cv::Mat::ones(this->image_text_size_,improc::TextDrawer::kImageDataType);
+    IMPROC_DRAWER_LOGGER_DEBUG("Text image with size width = {}, height = {}", text_image.cols, text_image.rows);
     std::string message_data = message.value();
     FT_Pos position_x = 0;
     //TODO: Use threads to improve performance of for loop
@@ -146,8 +132,13 @@ cv::Mat improc::TextDrawer::Draw(const std::optional<std::string>& message) cons
         }
 
         cv::Mat char_image = this->Bitmap2Mat(this->face_->glyph->bitmap);
-        char_image.copyTo(text_image(cv::Rect(position_x,this->image_text_size_.height - char_image.rows,char_image.cols,char_image.rows)));
-        position_x += this->face_->glyph->advance.x >> this->font_spacing_;
+        IMPROC_DRAWER_LOGGER_DEBUG  ( "Drawing char in x = {}, y = {} with size width = {}, height = {}"
+                                    , position_x, this->image_text_size_.height - char_image.rows, char_image.cols, char_image.rows);
+        if (char_image.empty() == false)
+        {
+            char_image.copyTo(text_image(cv::Rect(position_x,this->image_text_size_.height - char_image.rows,char_image.cols,char_image.rows)));
+        }
+        position_x += this->face_->glyph->advance.x / static_cast<signed long>(improc::TextDrawer::kFontSizePointFraction);
     }
     return text_image;
 };

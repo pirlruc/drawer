@@ -5,6 +5,5 @@
         "width": 10,
         "height": 10
     },
-    "font-filepath": ["test","data","PublicSans-Regular.ttf"],
-    "font-spacing": 6
+    "font-filepath": ["test","data","PublicSans-Regular.ttf"]
 }
