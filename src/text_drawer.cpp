@@ -50,11 +50,7 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     this->printing_resolution_ = improc::json::ReadElement<unsigned int>(drawer_json[kPrintingResolutionKey]);
     this->image_text_size_     = improc::TextDrawer::ParseMetricSize(drawer_json[kImageTextSizeKey],improc::MetricPixelConverter(this->printing_resolution_));
     
-    // TODO: Move filepath parsing to a file parsing structure
-    std::filesystem::path font_filepath = improc::ApplicationContext::get()->get_application_folder();
-    std::vector<std::string> json_file  = improc::json::ReadVector<std::string>(drawer_json[kFontPathKey]);
-    std::for_each(json_file.begin(),json_file.end(), [&font_filepath] (const std::string& directory) {font_filepath /= directory;});
-    improc::File font_file {std::move(font_filepath)};
+    improc::File font_file {drawer_json[kFontPathKey],improc::ApplicationContext::get()->get_application_folder()};
     FT_Error error_font = FT_New_Face(this->library_,font_file.get_filepath().c_str(),improc::TextDrawer::kLoadFirstFont,&this->face_);
     if (error_font != FT_Err_Ok)
     {

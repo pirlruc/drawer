@@ -17,11 +17,7 @@ improc::ImageFileDrawer& improc::ImageFileDrawer::Load(const Json::Value& drawer
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Image filepath missing.");
         throw improc::file_processing_error();
     }
-    // TODO: Move filepath parsing to a file parsing structure
-    std::filesystem::path image_filepath = improc::ApplicationContext::get()->get_application_folder();
-    std::vector<std::string> json_file   = improc::json::ReadVector<std::string>(drawer_json[kImageFileKey]);
-    std::for_each(json_file.begin(),json_file.end(), [&image_filepath] (const std::string& directory) {image_filepath /= directory;});
-    improc::File image_file {std::move(image_filepath)};
+    improc::File image_file {drawer_json[kImageFileKey],improc::ApplicationContext::get()->get_application_folder()};
     this->image_data_ = cv::imread(image_file.get_filepath(),improc::ImageFileDrawer::kImageReadMode);
     return (*this);
 };
