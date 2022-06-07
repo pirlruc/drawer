@@ -23,6 +23,8 @@ namespace improc
             LayoutDrawer&       Allocate();
             cv::Mat             Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
 
+            cv::Size            get_page_size()     const;
+
         private:
             LayoutDrawer&       ParsePageTypeDrawer (const improc::DrawerFactory& factory, const Json::Value& page_drawer_type_json);
             LayoutDrawer&       CorrectLayoutSize   (const cv::Point& top_left, const cv::Size& page_drawer_size);

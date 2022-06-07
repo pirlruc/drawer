@@ -118,3 +118,9 @@ cv::Mat improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& 
     IMPROC_DRAWER_LOGGER_TRACE("Drawing layout...");
     return this->improc::PageDrawer::Draw(context);
 }
+
+cv::Size improc::LayoutDrawer::get_page_size() const
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Obtaining page size...");
+    return this->improc::PageDrawer::get_page_size();
+}
