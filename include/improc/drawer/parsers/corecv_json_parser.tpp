@@ -35,8 +35,8 @@ inline cv::Point2d improc::json::ReadElement(const Json::Value& json_elem)
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: y-position missing.");
         throw improc::file_processing_error();
     }
-    return cv::Point( improc::json::ReadElement<double>(json_elem[kXPositionKey])
-                    , improc::json::ReadElement<double>(json_elem[kYPositionKey]) );
+    return cv::Point2d( improc::json::ReadElement<double>(json_elem[kXPositionKey])
+                      , improc::json::ReadElement<double>(json_elem[kYPositionKey]) );
 }
 
 template<>
@@ -75,8 +75,8 @@ inline cv::Size2d improc::json::ReadElement(const Json::Value& json_elem)
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height missing.");
         throw improc::file_processing_error();
     }
-    return cv::Size ( improc::json::ReadElement<double>(json_elem[kWidthKey])
-                    , improc::json::ReadElement<double>(json_elem[kHeightKey]) );
+    return cv::Size2d( improc::json::ReadElement<double>(json_elem[kWidthKey])
+                     , improc::json::ReadElement<double>(json_elem[kHeightKey]) );
 }
 
 template<typename KeyType>
