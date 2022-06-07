@@ -19,7 +19,7 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Page size missing.");
         throw improc::file_processing_error();
     }
-    this->page_size_ = improc::ElementDrawer::ParseSize(page_drawer_json[kPageSizeKey]);
+    this->page_size_ = improc::json::ReadPositiveSize<cv::Size>(page_drawer_json[kPageSizeKey]);
 
     if (page_drawer_json.isMember(kElementsKey) == true)
     {

@@ -34,7 +34,6 @@ namespace improc
             cv::Mat                         Draw(const std::optional<std::string>& message = std::optional<std::string>()) const;
 
         private:
-            // TODO: Move parsing of metric size to common json parser structure
             static cv::Size                 ParseMetricSize(const Json::Value& size_json, const improc::MetricPixelConverter& pixel_converter);
             cv::Mat                         Bitmap2Mat(const FT_Bitmap& char_bitmap) const;
     };

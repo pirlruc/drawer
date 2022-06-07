@@ -29,11 +29,6 @@ namespace improc
 
         private:
             static unsigned int         GetScale(const cv::Size& current_size, const cv::Size& expected_size);
-
-        public:
-            // TODO: Move ParseSize and IsLengthValid to a common parsing structure
-            static cv::Size             ParseSize    (const Json::Value& size_json);
-            static bool                 IsLengthValid(int length);
     };
 }
 

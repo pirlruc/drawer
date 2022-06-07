@@ -1,8 +1,8 @@
 #include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 
-improc::ErrorCorrectionLevel::ErrorCorrectionLevel() : value_(improc::ErrorCorrectionLevel::kLow) {};
+improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel() : value_(improc::qrcode::ErrorCorrectionLevel::kLow) {};
 
-improc::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& error_correction_level_str)
+improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& error_correction_level_str)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining error correction level from string {}...",error_correction_level_str);
     static const std::unordered_map<std::string,ErrorCorrectionLevel::Value> kToElemType =  { {"low"     ,ErrorCorrectionLevel::Value::kLow     }
@@ -14,7 +14,7 @@ improc::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& error_corr
 }
 
 improc::QrCodeDrawer::QrCodeDrawer(): improc::BaseDrawer()
-                                    , error_correction_level_(improc::ErrorCorrectionLevel()) {}
+                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) {}
 
 improc::QrCodeDrawer::QrCodeDrawer(const Json::Value& drawer_json) : improc::QrCodeDrawer() 
 {
@@ -30,7 +30,7 @@ improc::QrCodeDrawer& improc::QrCodeDrawer::Load(const Json::Value& drawer_json)
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Error correction level missing for qr-code.");
         throw improc::file_processing_error();
     }
-    this->error_correction_level_ = improc::ErrorCorrectionLevel(improc::json::ReadElement<std::string>(drawer_json[kErrorCorrectionKey]));
+    this->error_correction_level_ = improc::qrcode::ErrorCorrectionLevel(improc::json::ReadElement<std::string>(drawer_json[kErrorCorrectionKey]));
     return (*this);
 };
 

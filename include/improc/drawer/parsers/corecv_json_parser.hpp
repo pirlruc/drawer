@@ -9,6 +9,15 @@
 #include <opencv2/core.hpp>
 #include <json/json.h>
 
+namespace improc
+{
+    namespace json
+    {
+        template<typename KeyType>
+        IMPROC_EXPORTS KeyType                  ReadPositiveSize (const Json::Value& json_size);
+    }
+}
+
 #include <improc/drawer/parsers/corecv_json_parser.tpp>
 
 #endif

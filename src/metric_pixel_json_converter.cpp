@@ -39,34 +39,55 @@ void improc::MetricPixelJsonConverter::ParseObject(const improc::MetricPixelConv
     static const std::string kTopLeftKey            = "top-left";    // Layout + Page element drawers
     static const std::string kPageSizeKey           = "page-size";   // Page drawer
     static const std::string kMetricUnitKey         = "metric-unit";
-    
     if (object_name == kElemSizeKey || object_name == kGridSpacingKey || object_name == kTopLeftKey || object_name == kPageSizeKey)
     {
-        if (object_json.isMember(kMetricUnitKey) == false)
-        {
-            IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: Metric units for {} missing.",object_name);
-            throw improc::file_processing_error();
-        }
-        improc::MetricUnit metric = improc::json::ReadElement<std::string>(object_json[kMetricUnitKey]);
         if (object_name == kGridSpacingKey || object_name == kTopLeftKey)
         {
-            cv::Point2d point  = improc::MetricPixelJsonConverter::ParsePoint(object_json);
+            cv::Point point  = improc::MetricPixelJsonConverter::MetricPoint2PixelPoint(object_json,pixel_converter);
             object_json.removeMember(kMetricUnitKey);
-            object_json["x"] = pixel_converter.Metric2Pixel(point.x,metric);
-            object_json["y"] = pixel_converter.Metric2Pixel(point.y,metric);
+            object_json["x"] = point.x;
+            object_json["y"] = point.y;
         }
         else if (object_name == kPageSizeKey || object_name == kElemSizeKey)
         {
-            cv::Size2d  size   = improc::MetricPixelJsonConverter::ParseSize(object_json);
+            cv::Size size         = improc::MetricPixelJsonConverter::MetricSize2PixelSize(object_json,pixel_converter);
             object_json.removeMember(kMetricUnitKey);
-            object_json["width"]  = pixel_converter.Metric2Pixel(size.width,metric);
-            object_json["height"] = pixel_converter.Metric2Pixel(size.height,metric);
+            object_json["width"]  = size.width;
+            object_json["height"] = size.height;
         }
     }
     else
     {
         improc::MetricPixelJsonConverter::ParseArray(pixel_converter,object_json);
     }
+}
+
+cv::Size improc::MetricPixelJsonConverter::MetricSize2PixelSize(const Json::Value& metric_size_json, const improc::MetricPixelConverter& pixel_converter)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Parsing metric size json object...");
+    static const std::string kMetricUnitKey         = "metric-unit";
+    if (metric_size_json.isMember(kMetricUnitKey) == false)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric size missing.");
+        throw improc::file_processing_error();
+    }
+    improc::MetricUnit metric = improc::json::ReadElement<std::string>(metric_size_json[kMetricUnitKey]);
+    cv::Size2d metric_size    = improc::json::ReadElement<cv::Size2d>(metric_size_json);
+    return cv::Size(pixel_converter.Metric2Pixel(metric_size.width,metric),pixel_converter.Metric2Pixel(metric_size.height,metric));
+}
+
+cv::Point improc::MetricPixelJsonConverter::MetricPoint2PixelPoint(const Json::Value& metric_point_json, const improc::MetricPixelConverter& pixel_converter)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Parsing metric point json object...");
+    static const std::string kMetricUnitKey         = "metric-unit";
+    if (metric_point_json.isMember(kMetricUnitKey) == false)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric point missing.");
+        throw improc::file_processing_error();
+    }
+    improc::MetricUnit metric = improc::json::ReadElement<std::string>(metric_point_json[kMetricUnitKey]);
+    cv::Point2d metric_point  = improc::json::ReadElement<cv::Point2d>(metric_point_json);
+    return cv::Point(pixel_converter.Metric2Pixel(metric_point.x,metric),pixel_converter.Metric2Pixel(metric_point.y,metric));
 }
 
 void improc::MetricPixelJsonConverter::ParseArray(const improc::MetricPixelConverter& pixel_converter, Json::Value& array_json)
@@ -84,42 +105,4 @@ void improc::MetricPixelJsonConverter::ParseArray(const improc::MetricPixelConve
             improc::MetricPixelJsonConverter::ParseObject(pixel_converter,item_json.name(),*item_json);
         }
     }
-}
-
-cv::Point2d improc::MetricPixelJsonConverter::ParsePoint(const Json::Value& json_elem)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Reading cv::Point json element...");
-    static const std::string kXPositionKey = "x";
-    static const std::string kYPositionKey = "y";
-    if (json_elem.isMember(kXPositionKey) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: x-position missing.");
-        throw improc::file_processing_error();
-    }
-    if (json_elem.isMember(kYPositionKey) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: y-position missing.");
-        throw improc::file_processing_error();
-    }
-    return cv::Point2d( improc::json::ReadElement<double>(json_elem[kXPositionKey])
-                      , improc::json::ReadElement<double>(json_elem[kYPositionKey]) );
-}
-
-cv::Size2d improc::MetricPixelJsonConverter::ParseSize(const Json::Value& json_elem)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Reading cv::Size json element...");
-    static const std::string kWidthKey  = "width";
-    static const std::string kHeightKey = "height";
-    if (json_elem.isMember(kWidthKey) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Width missing.");
-        throw improc::file_processing_error();
-    }
-    if (json_elem.isMember(kHeightKey) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height missing.");
-        throw improc::file_processing_error();
-    }
-    return cv::Size2d( improc::json::ReadElement<double>(json_elem[kWidthKey])
-                     , improc::json::ReadElement<double>(json_elem[kHeightKey]) );
 }

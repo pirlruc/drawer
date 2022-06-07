@@ -20,38 +20,10 @@ improc::ElementDrawer& improc::ElementDrawer::Load(const improc::DrawerFactory& 
     }
     if (element_drawer_json.isMember(kElemSizeKey) == true)
     {
-        this->size_     = improc::ElementDrawer::ParseSize(element_drawer_json[kElemSizeKey]);
+        this->size_     = improc::json::ReadPositiveSize<cv::Size>(element_drawer_json[kElemSizeKey]);
     }
     this->drawer_ = improc::BaseDrawer::Create(factory,element_drawer_json);
     return (*this);
-}
-
-cv::Size improc::ElementDrawer::ParseSize(const Json::Value& size_json)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Parsing size...");
-    cv::Size size = improc::json::ReadElement<cv::Size>(size_json);
-    if (improc::ElementDrawer::IsLengthValid(size.width) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Width should be greater than zero");
-        throw improc::file_processing_error();
-    }
-    if (improc::ElementDrawer::IsLengthValid(size.height) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height should be greater than zero");
-        throw improc::file_processing_error();
-    }
-    return size;
-}
-
-bool improc::ElementDrawer::IsLengthValid(int length)
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Validating size length...");
-    bool result = true;
-    if (length <= 0)
-    {
-        result = false;
-    }
-    return result;
 }
 
 unsigned int improc::ElementDrawer::GetScale(const cv::Size& current_size, const cv::Size& expected_size)

@@ -5,7 +5,7 @@
 #include <improc/exception.hpp>
 #include <improc/drawer/logger_drawer.hpp>
 #include <improc/drawer/engine/metric_pixel_converter.hpp>
-#include <improc/infrastructure/parsers/json_parser.hpp>
+#include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
@@ -18,17 +18,12 @@ namespace improc
             MetricPixelJsonConverter();
 
             static Json::Value  Convert(const Json::Value& metric_json);
+            static cv::Size     MetricSize2PixelSize  (const Json::Value& metric_size_json , const improc::MetricPixelConverter& pixel_converter);
+            static cv::Point    MetricPoint2PixelPoint(const Json::Value& metric_point_json, const improc::MetricPixelConverter& pixel_converter);
 
         private:
             static void         ParseObject (const improc::MetricPixelConverter& pixel_converter, const std::string& object_name, Json::Value& object_json);
             static void         ParseArray  (const improc::MetricPixelConverter& pixel_converter, Json::Value& array_json);
-
-            // TODO: Remove these methods and add them to json parsers
-            static cv::Point2d  ParsePoint  (const Json::Value& point_json);
-
-        public:
-            // TODO: Remove these methods and add them to json parsers
-            static cv::Size2d   ParseSize   (const Json::Value& size_json);
     };
 }
 

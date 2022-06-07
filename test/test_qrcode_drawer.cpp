@@ -6,53 +6,53 @@
 #include <improc/infrastructure/filesystem/file.hpp>
 
 TEST(ErrorCorrectionLevel,TestEmptyConstructor) {
-    improc::ErrorCorrectionLevel ecc {};
-    EXPECT_EQ(ecc,improc::ErrorCorrectionLevel::Value::kLow);
+    improc::qrcode::ErrorCorrectionLevel ecc {};
+    EXPECT_EQ(ecc,improc::qrcode::ErrorCorrectionLevel::Value::kLow);
 }
 
 TEST(ErrorCorrectionLevel,TestConstructorFromValue) {
-    improc::ErrorCorrectionLevel ecc {improc::ErrorCorrectionLevel::Value::kHigh};
-    EXPECT_EQ(ecc,improc::ErrorCorrectionLevel::Value::kHigh);
+    improc::qrcode::ErrorCorrectionLevel ecc {improc::qrcode::ErrorCorrectionLevel::Value::kHigh};
+    EXPECT_EQ(ecc,improc::qrcode::ErrorCorrectionLevel::Value::kHigh);
 }
 
 TEST(ErrorCorrectionLevel,TestConstructorFromLowerString) {
-    improc::ErrorCorrectionLevel ecc_low      {"low"};
-    improc::ErrorCorrectionLevel ecc_medium   {"medium"};
-    improc::ErrorCorrectionLevel ecc_quartile {"quartile"};
-    improc::ErrorCorrectionLevel ecc_high     {"high"};
-    EXPECT_EQ(ecc_low     ,improc::ErrorCorrectionLevel::Value::kLow);
-    EXPECT_EQ(ecc_medium  ,improc::ErrorCorrectionLevel::Value::kMedium);
-    EXPECT_EQ(ecc_quartile,improc::ErrorCorrectionLevel::Value::kQuartile);
-    EXPECT_EQ(ecc_high    ,improc::ErrorCorrectionLevel::Value::kHigh);
+    improc::qrcode::ErrorCorrectionLevel ecc_low      {"low"};
+    improc::qrcode::ErrorCorrectionLevel ecc_medium   {"medium"};
+    improc::qrcode::ErrorCorrectionLevel ecc_quartile {"quartile"};
+    improc::qrcode::ErrorCorrectionLevel ecc_high     {"high"};
+    EXPECT_EQ(ecc_low     ,improc::qrcode::ErrorCorrectionLevel::Value::kLow);
+    EXPECT_EQ(ecc_medium  ,improc::qrcode::ErrorCorrectionLevel::Value::kMedium);
+    EXPECT_EQ(ecc_quartile,improc::qrcode::ErrorCorrectionLevel::Value::kQuartile);
+    EXPECT_EQ(ecc_high    ,improc::qrcode::ErrorCorrectionLevel::Value::kHigh);
 }
 
 TEST(ErrorCorrectionLevel,TestConstructorFromUpperString) {
-    improc::ErrorCorrectionLevel ecc_low      {"LOW"};
-    improc::ErrorCorrectionLevel ecc_medium   {"MEDIUM"};
-    improc::ErrorCorrectionLevel ecc_quartile {"QUARTILE"};
-    improc::ErrorCorrectionLevel ecc_high     {"HIGH"};
-    EXPECT_EQ(ecc_low     ,improc::ErrorCorrectionLevel::Value::kLow);
-    EXPECT_EQ(ecc_medium  ,improc::ErrorCorrectionLevel::Value::kMedium);
-    EXPECT_EQ(ecc_quartile,improc::ErrorCorrectionLevel::Value::kQuartile);
-    EXPECT_EQ(ecc_high    ,improc::ErrorCorrectionLevel::Value::kHigh);
+    improc::qrcode::ErrorCorrectionLevel ecc_low      {"LOW"};
+    improc::qrcode::ErrorCorrectionLevel ecc_medium   {"MEDIUM"};
+    improc::qrcode::ErrorCorrectionLevel ecc_quartile {"QUARTILE"};
+    improc::qrcode::ErrorCorrectionLevel ecc_high     {"HIGH"};
+    EXPECT_EQ(ecc_low     ,improc::qrcode::ErrorCorrectionLevel::Value::kLow);
+    EXPECT_EQ(ecc_medium  ,improc::qrcode::ErrorCorrectionLevel::Value::kMedium);
+    EXPECT_EQ(ecc_quartile,improc::qrcode::ErrorCorrectionLevel::Value::kQuartile);
+    EXPECT_EQ(ecc_high    ,improc::qrcode::ErrorCorrectionLevel::Value::kHigh);
 }
 
 TEST(ErrorCorrectionLevel,TestInvalidErrorCorrectionLevelConstructor) {
-    EXPECT_THROW(improc::ErrorCorrectionLevel ecc {"invalid"},std::out_of_range);
+    EXPECT_THROW(improc::qrcode::ErrorCorrectionLevel ecc {"invalid"},std::out_of_range);
 }
 
 TEST(ErrorCorrectionLevel,TestConstructorFromClass) {
-    EXPECT_EQ(improc::ErrorCorrectionLevel::kLow     ,improc::ErrorCorrectionLevel::Value::kLow);
-    EXPECT_EQ(improc::ErrorCorrectionLevel::kMedium  ,improc::ErrorCorrectionLevel::Value::kMedium);
-    EXPECT_EQ(improc::ErrorCorrectionLevel::kQuartile,improc::ErrorCorrectionLevel::Value::kQuartile);
-    EXPECT_EQ(improc::ErrorCorrectionLevel::kHigh    ,improc::ErrorCorrectionLevel::Value::kHigh);
+    EXPECT_EQ(improc::qrcode::ErrorCorrectionLevel::kLow     ,improc::qrcode::ErrorCorrectionLevel::Value::kLow);
+    EXPECT_EQ(improc::qrcode::ErrorCorrectionLevel::kMedium  ,improc::qrcode::ErrorCorrectionLevel::Value::kMedium);
+    EXPECT_EQ(improc::qrcode::ErrorCorrectionLevel::kQuartile,improc::qrcode::ErrorCorrectionLevel::Value::kQuartile);
+    EXPECT_EQ(improc::qrcode::ErrorCorrectionLevel::kHigh    ,improc::qrcode::ErrorCorrectionLevel::Value::kHigh);
 }
 
 TEST(ErrorCorrectionLevel,TestToString) {
-    improc::ErrorCorrectionLevel ecc_low      {"low"};
-    improc::ErrorCorrectionLevel ecc_medium   {"medium"};
-    improc::ErrorCorrectionLevel ecc_quartile {"quartile"};
-    improc::ErrorCorrectionLevel ecc_high     {"high"};
+    improc::qrcode::ErrorCorrectionLevel ecc_low      {"low"};
+    improc::qrcode::ErrorCorrectionLevel ecc_medium   {"medium"};
+    improc::qrcode::ErrorCorrectionLevel ecc_quartile {"quartile"};
+    improc::qrcode::ErrorCorrectionLevel ecc_high     {"high"};
     EXPECT_EQ(ecc_low.ToString()     ,"Low     : The QR Code can tolerate about  7% erroneous codewords");
     EXPECT_EQ(ecc_medium.ToString()  ,"Medium  : The QR Code can tolerate about 15% erroneous codewords");
     EXPECT_EQ(ecc_quartile.ToString(),"Quartile: The QR Code can tolerate about 25% erroneous codewords");
@@ -60,10 +60,10 @@ TEST(ErrorCorrectionLevel,TestToString) {
 }
 
 TEST(ErrorCorrectionLevel,TestToQrCodeGen) {
-    improc::ErrorCorrectionLevel ecc_low      {"low"};
-    improc::ErrorCorrectionLevel ecc_medium   {"medium"};
-    improc::ErrorCorrectionLevel ecc_quartile {"quartile"};
-    improc::ErrorCorrectionLevel ecc_high     {"high"};
+    improc::qrcode::ErrorCorrectionLevel ecc_low      {"low"};
+    improc::qrcode::ErrorCorrectionLevel ecc_medium   {"medium"};
+    improc::qrcode::ErrorCorrectionLevel ecc_quartile {"quartile"};
+    improc::qrcode::ErrorCorrectionLevel ecc_high     {"high"};
     EXPECT_EQ(ecc_low.ToQrCodeGen()     ,qrcodegen::QrCode::Ecc::LOW);
     EXPECT_EQ(ecc_medium.ToQrCodeGen()  ,qrcodegen::QrCode::Ecc::MEDIUM);
     EXPECT_EQ(ecc_quartile.ToQrCodeGen(),qrcodegen::QrCode::Ecc::QUARTILE);

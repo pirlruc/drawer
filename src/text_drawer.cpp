@@ -82,15 +82,7 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
 cv::Size improc::TextDrawer::ParseMetricSize(const Json::Value& size_json, const improc::MetricPixelConverter& pixel_converter)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Parsing metric size...");
-    static const std::string kMetricUnitKey         = "metric-unit";
-    if (size_json.isMember(kMetricUnitKey) == false)
-    {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric size missing.");
-        throw improc::file_processing_error();
-    }
-    improc::MetricUnit metric = improc::json::ReadElement<std::string>(size_json[kMetricUnitKey]);
-    cv::Size2d text_size      = improc::MetricPixelJsonConverter::ParseSize(size_json);
-    cv::Size image_text_size  = cv::Size(pixel_converter.Metric2Pixel(text_size.width,metric),pixel_converter.Metric2Pixel(text_size.height,metric));
+    cv::Size image_text_size = improc::MetricPixelJsonConverter::MetricSize2PixelSize(size_json,pixel_converter);
     if (image_text_size.width <= 0)
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Width should be greater than zero");
