@@ -19,7 +19,7 @@ class TestPageDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())  const
+        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) 
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }

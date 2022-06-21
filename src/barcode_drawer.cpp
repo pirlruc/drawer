@@ -15,7 +15,7 @@ improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value& drawer_jso
     return (*this);
 };
 
-cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message) const
+cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing barcode...");
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};

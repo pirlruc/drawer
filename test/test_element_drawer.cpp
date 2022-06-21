@@ -19,7 +19,7 @@ class TestDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())  const
+        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())
         {
             return cv::Mat::ones(10,20,CV_8UC1);
         }

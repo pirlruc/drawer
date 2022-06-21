@@ -96,7 +96,7 @@ cv::Size improc::TextDrawer::ParseMetricSize(const Json::Value& size_json, const
     return image_text_size;
 }
 
-cv::Mat improc::TextDrawer::Draw(const std::optional<std::string>& message) const
+cv::Mat improc::TextDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing text...");
     if (this->font_loaded_ == false)

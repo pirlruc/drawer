@@ -34,7 +34,7 @@ improc::QrCodeDrawer& improc::QrCodeDrawer::Load(const Json::Value& drawer_json)
     return (*this);
 };
 
-cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message) const
+cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing qrcode...");
     qrcodegen::QrCode qrcode_data = qrcodegen::QrCode::encodeText(message.value().c_str(),this->error_correction_level_.ToQrCodeGen());

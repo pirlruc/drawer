@@ -66,7 +66,7 @@ namespace improc
             QrCodeDrawer(const Json::Value& drawer_json);
 
             QrCodeDrawer&                           Load(const Json::Value& drawer_json);
-            cv::Mat                                 Draw(const std::optional<std::string>& message = std::optional<std::string>()) const;
+            cv::Mat                                 Draw(const std::optional<std::string>& message = std::optional<std::string>());
     };
 }
 

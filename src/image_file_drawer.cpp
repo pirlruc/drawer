@@ -22,7 +22,7 @@ improc::ImageFileDrawer& improc::ImageFileDrawer::Load(const Json::Value& drawer
     return (*this);
 };
 
-cv::Mat improc::ImageFileDrawer::Draw(const std::optional<std::string>& message) const
+cv::Mat improc::ImageFileDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing image file content...");
     return this->image_data_;

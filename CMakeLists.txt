@@ -184,7 +184,7 @@ target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${IMPROC_DRAWER_EXTRA_
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::services)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${OpenCV_LIBS})
-target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${IMPROC_DRAWER_EXTRA_LIBS})
+target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${IMPROC_DRAWER_EXTRA_LIBS})
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::infrastructure)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::services)
 

@@ -31,7 +31,7 @@ namespace improc
             TextDrawer(const Json::Value& drawer_json);
 
             TextDrawer&                     Load(const Json::Value& drawer_json);
-            cv::Mat                         Draw(const std::optional<std::string>& message = std::optional<std::string>()) const;
+            cv::Mat                         Draw(const std::optional<std::string>& message = std::optional<std::string>());
 
         private:
             static cv::Size                 ParseMetricSize(const Json::Value& size_json, const improc::MetricPixelConverter& pixel_converter);

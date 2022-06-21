@@ -16,7 +16,7 @@ improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value& draw
     return (*this);
 };
 
-cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message) const
+cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing data matrix...");
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
