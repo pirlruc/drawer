@@ -27,3 +27,21 @@ cv::Mat improc::ImageFileDrawer::Draw(const std::optional<std::string>& message)
     IMPROC_DRAWER_LOGGER_TRACE("Drawing image file content...");
     return this->image_data_;
 };
+
+bool improc::ImageFileDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying image file content...");
+    // TODO: Move this logic to an image class object
+    if (drawer_output.size() != this->image_data_.size())
+    {
+        return false;
+    }
+    else if (drawer_output.empty() == true && this->image_data_.empty() == true)
+    {
+        return true;
+    }
+    else
+    {
+        return cv::norm(drawer_output,this->image_data_,improc::ImageFileDrawer::kImageNorm) == 0;
+    }
+};

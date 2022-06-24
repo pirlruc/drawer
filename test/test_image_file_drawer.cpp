@@ -13,6 +13,7 @@ TEST(ImageFileDrawer,TestConstructor) {
 TEST(ImageFileDrawer,TestEmptyDraw) {
     improc::ImageFileDrawer drawer {};
     EXPECT_NO_THROW(drawer.Draw());
+    EXPECT_TRUE(drawer.Verify(cv::Mat()));
 }
 
 TEST(ImageFileDrawer,TestConstructorWithLoad) {
@@ -52,7 +53,12 @@ TEST(ImageFileDrawer,TestDraw) {
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::ImageFileDrawer drawer {};
     drawer.Load(json_content);
-    cv::Mat test_mat = drawer.Draw();
+    cv::Mat test_mat   = drawer.Draw();
+    cv::Mat false_mat1 = cv::Mat::zeros(317,382,CV_8UC1);
+    cv::Mat false_mat2 = cv::Mat::zeros(300,300,CV_8UC1);
     EXPECT_EQ(test_mat.rows,317);
     EXPECT_EQ(test_mat.cols,382);
+    EXPECT_TRUE(drawer.Verify(test_mat));
+    EXPECT_FALSE(drawer.Verify(false_mat1));
+    EXPECT_FALSE(drawer.Verify(false_mat2));
 }

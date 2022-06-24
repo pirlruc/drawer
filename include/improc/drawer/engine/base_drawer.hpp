@@ -16,14 +16,17 @@ namespace improc
 {
     class DrawerFactory;
 
+    // TODO: Add verify as a policy
+    // TODO: Allow to use cv::MatExpr in the verify method
     class IMPROC_EXPORTS BaseDrawer
     {
         public:
             BaseDrawer();
             BaseDrawer(const Json::Value& drawer_json);
 
-            virtual BaseDrawer& Load(const Json::Value& drawer_json) = 0;
-            virtual cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) = 0;
+            virtual BaseDrawer& Load    (const Json::Value& drawer_json) = 0;
+            virtual cv::Mat     Draw    (const std::optional<std::string>& message = std::optional<std::string>()) = 0;
+            virtual bool        Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>()) = 0;
 
             static std::shared_ptr<BaseDrawer> Create(const DrawerFactory& factory, const Json::Value& drawer_json);
     };

@@ -13,6 +13,7 @@ TEST(TextDrawer,TestEmptyDraw) {
     improc::TextDrawer drawer {};
     EXPECT_THROW(drawer.Draw(),improc::freetype_lib_error);
     EXPECT_THROW(drawer.Draw("test_message"),improc::freetype_lib_error);
+    EXPECT_TRUE(drawer.Verify(cv::Mat()));
 }
 
 TEST(TextDrawer,TestConstructorWithLoad) {
@@ -97,6 +98,7 @@ TEST(TextDrawer,TestDrawOutsideImage) {
     improc::TextDrawer drawer {};
     drawer.Load(json_content);
     EXPECT_THROW(drawer.Draw("test"),cv::Exception);
+    EXPECT_TRUE(drawer.Verify(cv::Mat()));
 }
 
 TEST(TextDrawer,TestDrawGrayscale) {
@@ -107,4 +109,5 @@ TEST(TextDrawer,TestDrawGrayscale) {
     cv::Mat test_mat = drawer.Draw("test");
     EXPECT_EQ(test_mat.rows,118);
     EXPECT_EQ(test_mat.cols,197);
+    EXPECT_TRUE(drawer.Verify(test_mat));
 }

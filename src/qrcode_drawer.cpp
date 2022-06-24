@@ -1,6 +1,6 @@
 #include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 
-improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel() : value_(improc::qrcode::ErrorCorrectionLevel::kLow) {};
+improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(): value_(improc::qrcode::ErrorCorrectionLevel::kLow) {};
 
 improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& error_correction_level_str)
 {
@@ -14,7 +14,8 @@ improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& er
 }
 
 improc::QrCodeDrawer::QrCodeDrawer(): improc::BaseDrawer()
-                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) {}
+                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) 
+                                    , hints_(ZXing::DecodeHints()) {};
 
 improc::QrCodeDrawer::QrCodeDrawer(const Json::Value& drawer_json) : improc::QrCodeDrawer() 
 {
@@ -53,3 +54,25 @@ cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message)
     }
     return qrcode;
 };
+
+bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying qr-code content...");
+    std::unique_ptr<ZXing::BinaryBitmap> data_matrix_bitmap = 
+        std::make_unique<ZXing::ThresholdBinarizer> ( ZXing::ImageView  ( drawer_output.data
+                                                                        , drawer_output.cols
+                                                                        , drawer_output.rows
+                                                                        , improc::QrCodeDrawer::kImageFormat
+                                                    ), 0 );
+    ZXing::DecoderResult result = ZXing::QRCode::Decode(*(data_matrix_bitmap->getBitMatrix()),this->hints_.characterSet());
+    if (result.isValid() == true)
+    {
+        // TODO: Add functionality to convert strings in string object
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
+        return converter.to_bytes(result.text()) == message.value();
+    }
+    else
+    {
+        return false;
+    }
+}

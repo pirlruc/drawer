@@ -16,14 +16,16 @@ namespace improc
     {
         private:
             static constexpr int    kImageReadMode = cv::IMREAD_GRAYSCALE;
+            static constexpr int    kImageNorm     = cv::NORM_L1;
             cv::Mat                 image_data_;
 
         public:
             ImageFileDrawer();
             ImageFileDrawer(const Json::Value& drawer_json);
 
-            ImageFileDrawer&        Load(const Json::Value& drawer_json);
-            cv::Mat                 Draw(const std::optional<std::string>& message = std::optional<std::string>());
+            ImageFileDrawer&        Load    (const Json::Value& drawer_json);
+            cv::Mat                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());
+            bool                    Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>());
     };
 }
 

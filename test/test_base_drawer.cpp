@@ -23,6 +23,11 @@ class TestDrawer : public improc::BaseDrawer
         {
             return cv::Mat::ones(10,20,CV_8UC1);
         }
+
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        {
+            return drawer_output.rows == 10 && drawer_output.cols == 20;
+        }
 };
 
 TEST(BaseDrawer,TestConstructor) {
@@ -46,6 +51,8 @@ TEST(BaseDrawer,TestDraw) {
     cv::Mat test_mat = test.Draw();
     EXPECT_EQ(test_mat.rows,10);
     EXPECT_EQ(test_mat.cols,20);
+    EXPECT_TRUE(test.Verify(test_mat));
+    EXPECT_FALSE(test.Verify(cv::Mat::ones(20,20,CV_8UC1)));
 }
 
 TEST(DrawerFactory,TestConstructor) {
@@ -60,6 +67,8 @@ TEST(DrawerFactory,TestRegister) {
     cv::Mat test_mat = drawer->Draw();
     EXPECT_EQ(test_mat.rows,10);
     EXPECT_EQ(test_mat.cols,20);
+    EXPECT_TRUE(drawer->Verify(test_mat));
+    EXPECT_FALSE(drawer->Verify(cv::Mat::ones(20,20,CV_8UC1)));
 }
 
 TEST(BaseDrawer,TestNoDrawerType)

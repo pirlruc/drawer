@@ -78,6 +78,8 @@ TEST(QrCodeDrawer,TestEmptyDraw) {
     improc::QrCodeDrawer drawer {};
     EXPECT_THROW(drawer.Draw(),std::bad_optional_access);
     EXPECT_NO_THROW(drawer.Draw("test_message"));
+    EXPECT_FALSE(drawer.Verify(cv::Mat()));
+    EXPECT_FALSE(drawer.Verify(cv::Mat(), "test_message"));
 }
 
 TEST(QrCodeDrawer,TestConstructorWithLoad) {
@@ -105,7 +107,10 @@ TEST(QrCodeDrawer,TestDraw) {
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::QrCodeDrawer drawer {};
     drawer.Load(json_content);
-    cv::Mat test_mat = drawer.Draw("test_message");
+    cv::Mat test_mat  = drawer.Draw("test_message");
+    cv::Mat false_mat = cv::Mat::zeros(test_mat.rows,test_mat.cols,test_mat.type());
     EXPECT_EQ(test_mat.rows,21);
     EXPECT_EQ(test_mat.cols,21);
+    EXPECT_TRUE(drawer.Verify(test_mat,"test_message"));
+    EXPECT_FALSE(drawer.Verify(false_mat,"test_message"));
 }
