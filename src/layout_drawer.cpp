@@ -119,6 +119,18 @@ cv::Mat improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& 
     return this->improc::PageDrawer::Draw(context);
 }
 
+bool improc::LayoutDrawer::Verify(const std::list<std::optional<std::string>>& context)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying layout...");
+    return this->improc::PageDrawer::Verify(context);
+}
+
+bool improc::LayoutDrawer::Verify(const cv::Mat& page_image,const std::list<std::optional<std::string>>& context)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying layout given as input...");
+    return this->improc::PageDrawer::Verify(page_image,context);
+}
+
 cv::Size improc::LayoutDrawer::get_page_size() const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining page size...");

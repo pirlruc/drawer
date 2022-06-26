@@ -25,7 +25,8 @@ namespace improc
 
             PageElementDrawer&          Load    (const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size);
             PageElementDrawer&          Allocate();
-            void                        Draw    (cv::Mat& page_image, const std::optional<std::string>& message = std::optional<std::string>()) const;
+            void                        Draw    (cv::Mat& page_image        , const std::optional<std::string>& message = std::optional<std::string>()) const;
+            bool                        Verify  (const cv::Mat& page_image  , const std::optional<std::string>& message = std::optional<std::string>()) const;
 
             PageElementDrawer&          IncrementTopLeftBy(const cv::Point& increment_top_left, const cv::Size& page_size);
 

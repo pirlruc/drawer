@@ -19,7 +19,6 @@ namespace improc
 
             GridDrawer&         Load    (const improc::DrawerFactory& factory, const Json::Value& grid_drawer_json);
             GridDrawer&         Allocate();
-            cv::Mat             Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
 
         private:
             static cv::Point    ParseGridNumber (const Json::Value& grid_number_json);

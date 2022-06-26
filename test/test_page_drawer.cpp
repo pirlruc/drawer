@@ -23,6 +23,11 @@ class TestPageDrawer : public improc::BaseDrawer
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }
+
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        {
+            return drawer_output.rows == 50 && drawer_output.cols == 100;
+        }
 };
 
 TEST(PageDrawer,TestConstructor) {
@@ -32,6 +37,7 @@ TEST(PageDrawer,TestConstructor) {
 TEST(PageDrawer,TestEmptyDraw) {
     improc::PageDrawer drawer {};
     EXPECT_NO_THROW(drawer.Draw());
+    EXPECT_TRUE(drawer.Verify());
 }
 
 TEST(PageDrawer,TestConstructorWithLoad) {
@@ -113,6 +119,7 @@ TEST(PageDrawer,TestDrawWithoutContext) {
     improc::PageDrawer drawer {};
     drawer.Load(factory,json_content);
     EXPECT_THROW(drawer.Allocate().Draw(),improc::context_elem_diff_page_elem);
+    EXPECT_THROW(drawer.Allocate().Verify(),improc::context_elem_diff_page_elem);
 }
 
 TEST(PageDrawer,TestLoadMultiple) {
@@ -131,6 +138,7 @@ TEST(PageDrawer,TestDrawOutsidePage) {
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
     EXPECT_THROW(drawer.Allocate().Draw(),cv::Exception);
+    EXPECT_THROW(drawer.Allocate().Verify(),cv::Exception);
 }
 
 TEST(PageDrawer,TestDrawWithoutAllocation) {
@@ -144,6 +152,8 @@ TEST(PageDrawer,TestDrawWithoutAllocation) {
     context.emplace_back();
     context.emplace_back();    
     EXPECT_THROW(drawer.Draw(context),cv::Exception);
+    EXPECT_FALSE(drawer.Verify(context));
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::page_drawer_not_allocated);
 }
 
 TEST(PageDrawer,TestDrawWithAllocation) {
@@ -157,6 +167,9 @@ TEST(PageDrawer,TestDrawWithAllocation) {
     context.emplace_back();
     context.emplace_back();    
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
+    EXPECT_TRUE(drawer.Verify(context));
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::invalid_page_image);
+    EXPECT_TRUE(drawer.Verify(drawer.Allocate().Draw(context),context));
 }
 
 TEST(PageDrawer,TestOverlayedDraw) {
@@ -170,4 +183,5 @@ TEST(PageDrawer,TestOverlayedDraw) {
     context.emplace_back();
     context.emplace_back();    
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
+    EXPECT_TRUE(drawer.Verify(context));
 }

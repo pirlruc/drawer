@@ -37,3 +37,28 @@ cv::Mat improc::RotationType::Apply(const cv::Mat& image) const
     }
     return rotated_image;
 }
+
+cv::Mat improc::RotationType::ApplyInverse(const cv::Mat& rotated_image) const
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Applying inverse rotation...");
+    cv::Mat image {};
+    if (this->value_ == improc::RotationType::Value::k90Deg)
+    {
+        cv::transpose(rotated_image,image);
+        cv::flip(image,image,0); // Flip around x-axis
+    }
+    else if (this->value_ == improc::RotationType::Value::k270Deg)
+    {
+        cv::transpose(rotated_image,image);
+        cv::flip(image,image,+1); // Flip around y-axis
+    }
+    else if (this->value_ == improc::RotationType::Value::k180Deg)
+    {
+        cv::flip(rotated_image,image,-1); // Flip around x- and y-axis
+    }
+    else
+    {
+        image = rotated_image;
+    }
+    return image;
+}

@@ -62,3 +62,35 @@ cv::Mat improc::ElementDrawer::Draw(const std::optional<std::string>& message) c
     IMPROC_DRAWER_LOGGER_DEBUG("Drawing element with size width = {}, height = {}", drawer_output.cols, drawer_output.rows);
     return drawer_output;
 }
+
+bool improc::ElementDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message) const
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying element...");
+    if (this->drawer_ == nullptr)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Drawer is not defined.");
+        throw improc::drawer_not_defined();
+    }
+
+    cv::Mat drawer_transformed = drawer_output.clone();
+    if (this->size_.has_value() == true)
+    {
+        unsigned int scale = 0;
+        if (this->rotation_.has_value() == true)
+        {
+            scale = improc::ElementDrawer::GetScale ( this->rotation_.value().Apply(this->drawer_->Draw(message)).size()
+                                                    , this->size_.value() );
+        }
+        else
+        {
+            scale = improc::ElementDrawer::GetScale(this->drawer_->Draw(message).size(),this->size_.value());
+        }
+        cv::resize(drawer_transformed,drawer_transformed,cv::Size(),1.0/scale,1.0/scale,cv::INTER_NEAREST);
+    }
+    if (this->rotation_.has_value() == true)
+    {
+        drawer_transformed = this->rotation_.value().ApplyInverse(drawer_transformed);
+    }
+    IMPROC_DRAWER_LOGGER_DEBUG("Verifying element with size width = {}, height = {}", drawer_transformed.cols, drawer_transformed.rows);
+    return this->drawer_->Verify(drawer_transformed,message);
+}

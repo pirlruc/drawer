@@ -87,7 +87,7 @@ void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<st
 {
     IMPROC_DRAWER_LOGGER_TRACE  ( "Drawing page element..." );
     IMPROC_DRAWER_LOGGER_DEBUG  ( "Drawing element in x = {}, y = {} with size width = {}, height = {}"
-                                , this->element_box_.x, this->element_box_.y, this->element_box_.width, this->element_box_.width);
+                                , this->element_box_.x, this->element_box_.y, this->element_box_.width, this->element_box_.height);
     if (this->static_ == false)
     {
         this->ElementDrawer::Draw(message).copyTo(page_image(this->element_box_));
@@ -96,6 +96,23 @@ void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<st
     {
         this->ElementDrawer::Draw(this->content_).copyTo(page_image(this->element_box_));
     }
+}
+
+bool improc::PageElementDrawer::Verify(const cv::Mat& page_image, const std::optional<std::string>& message) const
+{
+    IMPROC_DRAWER_LOGGER_TRACE  ( "Verifying page element..." );
+    IMPROC_DRAWER_LOGGER_DEBUG  ( "Verifying element in x = {}, y = {} with size width = {}, height = {}"
+                                , this->element_box_.x, this->element_box_.y, this->element_box_.width, this->element_box_.height);
+    bool is_valid {};
+    if (this->static_ == false)
+    {
+        is_valid = this->ElementDrawer::Verify(page_image(this->element_box_),message);
+    }
+    else
+    {
+        is_valid = this->ElementDrawer::Verify(page_image(this->element_box_),this->content_);
+    }
+    return is_valid;
 }
 
 improc::PageElementDrawer& improc::PageElementDrawer::IncrementTopLeftBy(const cv::Point& increment_top_left, const cv::Size& page_size)

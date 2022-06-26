@@ -41,7 +41,8 @@ namespace improc
                 }
             }
 
-            cv::Mat                     Apply(const cv::Mat& image) const;
+            cv::Mat                     Apply       (const cv::Mat& image)          const;
+            cv::Mat                     ApplyInverse(const cv::Mat& rotated_image)  const;
     };
 }
 

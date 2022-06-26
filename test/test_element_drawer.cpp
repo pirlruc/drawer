@@ -23,6 +23,11 @@ class TestDrawer : public improc::BaseDrawer
         {
             return cv::Mat::ones(10,20,CV_8UC1);
         }
+
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        {
+            return drawer_output.rows == 10 && drawer_output.cols == 20;
+        }
 };
 
 TEST(ElementDrawer,TestConstructor) {
@@ -32,6 +37,7 @@ TEST(ElementDrawer,TestConstructor) {
 TEST(ElementDrawer,TestEmptyDraw) {
     improc::ElementDrawer drawer {};
     EXPECT_THROW(drawer.Draw(),improc::drawer_not_defined);
+    EXPECT_THROW(drawer.Verify(cv::Mat()),improc::drawer_not_defined);
 }
 
 TEST(ElementDrawer,TestConstructorWithLoad) {
@@ -94,9 +100,12 @@ TEST(ElementDrawer,TestDrawWithoutTransforms) {
     improc::DrawerFactory factory {};
     factory.Register("increment",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
     improc::ElementDrawer drawer = improc::ElementDrawer(factory,json_content);
-    cv::Mat test_mat = drawer.Draw();
+    cv::Mat test_mat  = drawer.Draw();
+    cv::Mat false_mat = cv::Mat::zeros(test_mat.rows + 20,test_mat.cols,test_mat.type());
     EXPECT_EQ(test_mat.rows,10);
     EXPECT_EQ(test_mat.cols,20);
+    EXPECT_TRUE(drawer.Verify(test_mat));
+    EXPECT_FALSE(drawer.Verify(false_mat));
 }
 
 TEST(ElementDrawer,TestDrawWithTransforms) {
@@ -105,7 +114,10 @@ TEST(ElementDrawer,TestDrawWithTransforms) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
     improc::ElementDrawer drawer = improc::ElementDrawer(factory,json_content);
-    cv::Mat test_mat = drawer.Draw();
+    cv::Mat test_mat  = drawer.Draw();
+    cv::Mat false_mat = cv::Mat::zeros(test_mat.rows + 20,test_mat.cols,test_mat.type());
     EXPECT_EQ(test_mat.rows,40);
     EXPECT_EQ(test_mat.cols,20);
+    EXPECT_TRUE(drawer.Verify(test_mat));
+    EXPECT_FALSE(drawer.Verify(false_mat));
 }

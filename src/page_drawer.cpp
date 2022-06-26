@@ -71,7 +71,7 @@ cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& co
     // TODO: Increase performance using execution policy
     // TODO: Implement with foreach whenever the second iterator is available on STL
     std::transform  ( this->elements_.begin(),this->elements_.end(),context.begin(),dummy.begin()
-                    , [this,&context] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
+                    , [this] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
                         {
                             if (elem.is_element_static() == false)
                             {
@@ -81,6 +81,52 @@ cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& co
                         } 
                     );
     return this->page_image_;
+}
+
+bool improc::PageDrawer::Verify(const std::list<std::optional<std::string>>& context)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying page...");
+    if (this->elements_.size() != context.size())
+    {
+        IMPROC_DRAWER_LOGGER_ERROR  ( "ERROR_03: Number of elements in context ({}) different than the number of elements in page ({})."
+                                    , context.size(), this->elements_.size() );
+        throw improc::context_elem_diff_page_elem();
+    }
+
+    std::vector<bool> are_valid = std::vector<bool>(this->elements_.size());
+    // TODO: Increase performance using execution policy
+    // TODO: Implement with foreach whenever the second iterator is available on STL
+    std::transform  ( this->elements_.begin(),this->elements_.end(),context.begin(),are_valid.begin()
+                    , [this] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
+                        {
+                            return elem.Verify(this->page_image_,message);
+                        } 
+                    );
+    return std::all_of(are_valid.begin(),are_valid.end(),[] (bool is_valid) {return is_valid;});
+}
+
+bool improc::PageDrawer::Verify(const cv::Mat& page_image,const std::list<std::optional<std::string>>& context)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Verifying page given as input...");
+    return this->set_page_image(page_image).Verify(context);
+}
+
+improc::PageDrawer& improc::PageDrawer::set_page_image(const cv::Mat& page_image)
+{
+    IMPROC_DRAWER_LOGGER_TRACE("Setting page image...");
+    if (this->page_image_.empty() == true)
+    {
+        IMPROC_DRAWER_LOGGER_ERROR  ("ERROR_04: Please allocate page drawer before modifying page image.");
+        throw improc::page_drawer_not_allocated();
+    }
+
+    if (this->page_image_.size() != page_image.size())
+    {
+        IMPROC_DRAWER_LOGGER_ERROR  ("ERROR_05: Page image should have the same size of allocated page image.");
+        throw improc::invalid_page_image();
+    }
+    this->page_image_ = page_image;
+    return (*this);
 }
 
 cv::Size improc::PageDrawer::get_page_size() const

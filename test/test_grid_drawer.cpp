@@ -23,6 +23,11 @@ class TestGridDrawer : public improc::BaseDrawer
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }
+
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        {
+            return drawer_output.rows == 50 && drawer_output.cols == 100;
+        }
 };
 
 TEST(GridDrawer,TestConstructor) {
@@ -32,6 +37,7 @@ TEST(GridDrawer,TestConstructor) {
 TEST(GridDrawer,TestEmptyDraw) {
     improc::GridDrawer drawer {};
     EXPECT_NO_THROW(drawer.Draw());
+    EXPECT_TRUE(drawer.Verify());
 }
 
 TEST(GridDrawer,TestConstructorWithLoad) {
@@ -121,6 +127,7 @@ TEST(GridDrawer,TestDrawOutsidePage) {
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer = improc::GridDrawer(factory,json_content);
     EXPECT_THROW(drawer.Allocate().Draw(),cv::Exception);
+    EXPECT_THROW(drawer.Allocate().Verify(),cv::Exception);
 }
 
 TEST(GridDrawer,TestDrawWithoutAllocation) {
@@ -137,6 +144,8 @@ TEST(GridDrawer,TestDrawWithoutAllocation) {
         context.emplace_back();
     }
     EXPECT_THROW(drawer.Draw(context),cv::Exception);
+    EXPECT_FALSE(drawer.Verify(context));
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::page_drawer_not_allocated);
 }
 
 TEST(GridDrawer,TestDrawWithAllocation) {
@@ -153,4 +162,7 @@ TEST(GridDrawer,TestDrawWithAllocation) {
         context.emplace_back();
     }
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
+    EXPECT_TRUE(drawer.Verify(context));
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::invalid_page_image);
+    EXPECT_TRUE(drawer.Verify(drawer.Allocate().Draw(context),context));
 }

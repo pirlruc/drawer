@@ -24,6 +24,11 @@ class TestPageElemDrawer : public improc::BaseDrawer
         {
             return 255 * cv::Mat::ones(50,100,CV_8UC1);
         }
+
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        {
+            return drawer_output.rows == 50 && drawer_output.cols == 100;
+        }
 };
 
 TEST(PageElementDrawer,TestConstructor) {
@@ -35,6 +40,7 @@ TEST(PageElementDrawer,TestEmptyDraw) {
     improc::PageElementDrawer drawer {};
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     EXPECT_THROW(drawer.Draw(page),improc::drawer_not_defined);
+    EXPECT_THROW(drawer.Verify(page),improc::drawer_not_defined);
 }
 
 TEST(PageElementDrawer,TestConstructorWithLoad) {
@@ -126,6 +132,7 @@ TEST(PageElementDrawer,TestDrawOutsidePage) {
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     EXPECT_THROW(drawer.Allocate().Draw(page),cv::Exception);
+    EXPECT_THROW(drawer.Allocate().Verify(page),cv::Exception);
 }
 
 TEST(PageElementDrawer,TestDrawWithoutAllocation) {
@@ -136,6 +143,7 @@ TEST(PageElementDrawer,TestDrawWithoutAllocation) {
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     EXPECT_THROW(drawer.Draw(page),cv::Exception);
+    EXPECT_FALSE(drawer.Verify(page));
 }
 
 TEST(PageElementDrawer,TestDrawWithAllocation) {
@@ -147,6 +155,7 @@ TEST(PageElementDrawer,TestDrawWithAllocation) {
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     drawer.Allocate().Draw(page);
     EXPECT_EQ(cv::countNonZero(page),50*100);
+    EXPECT_TRUE(drawer.Verify(page));
 }
 
 TEST(PageElementDrawer,TestInvalidAllocationQrCode) {
@@ -179,8 +188,10 @@ TEST(PageElementDrawer,TestIncrementTopLeft) {
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page_1.size());
     drawer.Allocate().Draw(page_1);
     EXPECT_EQ(page_1.at<uint8_t>(cv::Point(10,5)),255);
+    EXPECT_TRUE(drawer.Verify(page_1));
     drawer.IncrementTopLeftBy(cv::Point(5,5),page_2.size());
     drawer.Allocate().Draw(page_2);
     EXPECT_EQ(page_2.at<uint8_t>(cv::Point(10,5)),0);
     EXPECT_EQ(page_2.at<uint8_t>(cv::Point(15,10)),255);
+    EXPECT_TRUE(drawer.Verify(page_2));
 }
