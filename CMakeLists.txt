@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.14-3.18)
 
+set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
+
 if(NOT DEFINED IMPROC_SUPERPROJECT_VERSION)
   set(IMPROC_SUPERPROJECT_VERSION 1.0.0)
 endif()
@@ -19,8 +23,9 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   set(CMAKE_PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin"      CACHE PATH "PDB (MSVC debug symbol)output dir.")
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"      CACHE PATH "Executable/dll output dir.")
   set(CMAKE_DEBUG_POSTFIX d)
-  option(BUILD_SHARED_LIBS           "Building shared libraries"    ON)
-  option(IMPROC_WITH_TESTS 			     "Building library with tests"  ON)
+  option(IMPROC_WITH_TESTS 			     "Building library with tests"          OFF)
+  option(IMPROC_WITH_COVERAGE  	     "Building library with code coverage"  OFF)
+  option(BUILD_SHARED_LIBS           "Building shared libraries"            ON)
 
   add_subdirectory(${PROJECT_SOURCE_DIR}/../infrastructure ${CMAKE_BINARY_DIR}/infrastructure)
   add_subdirectory(${PROJECT_SOURCE_DIR}/../services       ${CMAKE_BINARY_DIR}/services)
@@ -190,9 +195,25 @@ target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::services)
 
 # Tests configuration
 if(IMPROC_WITH_TESTS)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/test     ${CMAKE_BINARY_DIR}/drawer_test)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/test     ${CMAKE_BINARY_DIR}/improc_drawer_test)
 endif()
 
-if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/version  ${CMAKE_BINARY_DIR}/version)
-endif()
+# # Install configuration
+# set(${PROJECT_NAME}_libs ${PROJECT_NAME} improc_infrastructure improc_services ${OpenCV_LIBS} ${IMPROC_DRAWER_EXTRA_LIBS})
+# install(
+#   TARGETS     ${${PROJECT_NAME}_libs}
+#   DESTINATION lib
+#   EXPORT      ${PROJECT_NAME}_target 
+# )
+# if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+#   # install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/LICENSE  DESTINATION share/licenses/improc/qrcodegen)
+# endif()
+
+# if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
+#   install(FILES     ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE         DESTINATION share/licenses/improc/ZXing)
+# endif()
+
+# if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
+#   install(FILES     ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT  DESTINATION share/licenses/improc/freetype)
+# endif()
+# install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                      DESTINATION include)

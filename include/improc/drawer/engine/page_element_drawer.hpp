@@ -8,10 +8,11 @@
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
+#include <list>
 
 namespace improc 
 {
-    class IMPROC_EXPORTS PageElementDrawer : private improc::ElementDrawer
+    class IMPROC_API PageElementDrawer : private improc::ElementDrawer
     {
         private:
             cv::Point                   top_left_;

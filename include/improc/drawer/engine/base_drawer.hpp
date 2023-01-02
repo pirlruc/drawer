@@ -18,7 +18,7 @@ namespace improc
 
     // TODO: Add verify as a policy
     // TODO: Allow to use cv::MatExpr in the verify method
-    class IMPROC_EXPORTS BaseDrawer
+    class IMPROC_API BaseDrawer
     {
         public:
             BaseDrawer();
@@ -31,7 +31,7 @@ namespace improc
             static std::shared_ptr<BaseDrawer> Create(const DrawerFactory& factory, const Json::Value& drawer_json);
     };
 
-    class IMPROC_EXPORTS DrawerFactory : public improc::FactoryPattern  < improc::BaseDrawer
+    class IMPROC_API DrawerFactory : public improc::FactoryPattern  < improc::BaseDrawer
                                                                         , std::string
                                                                         , std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)>>
     {
@@ -43,7 +43,7 @@ namespace improc
     };
 
     template<class DrawerType>
-    IMPROC_EXPORTS std::shared_ptr<improc::BaseDrawer> CreateDrawer(const Json::Value& drawer_json)
+    IMPROC_API std::shared_ptr<improc::BaseDrawer> CreateDrawer(const Json::Value& drawer_json)
     {
         IMPROC_DRAWER_LOGGER_TRACE  ( "Creating shared pointer for drawer {}...", typeid(DrawerType).name() );
         std::shared_ptr<improc::BaseDrawer> drawer 

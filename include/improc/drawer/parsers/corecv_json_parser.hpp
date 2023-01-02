@@ -14,7 +14,7 @@ namespace improc
     namespace json
     {
         template<typename KeyType>
-        IMPROC_EXPORTS KeyType                  ReadPositiveSize (const Json::Value& json_size);
+        IMPROC_API KeyType                  ReadPositiveSize (const Json::Value& json_size);
     }
 }
 

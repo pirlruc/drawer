@@ -10,7 +10,7 @@
 // TODO: Move to core_cv
 namespace improc 
 {
-    class IMPROC_EXPORTS RotationType
+    class IMPROC_API RotationType
     {
         public:
             enum Value : IMPROC_ENUM_KEY_TYPE

@@ -8,6 +8,7 @@
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
+#include <list>
 
 namespace improc 
 {

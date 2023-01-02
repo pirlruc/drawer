@@ -12,7 +12,7 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS ImageFileDrawer : public improc::BaseDrawer
+    class IMPROC_API ImageFileDrawer : public improc::BaseDrawer
     {
         private:
             static constexpr int    kImageReadMode = cv::IMREAD_GRAYSCALE;

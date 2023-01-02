@@ -6,12 +6,11 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS DrawerLogger : public LoggerSingleton<DrawerLogger>
+    class IMPROC_API DrawerLogger : public LoggerSingleton<DrawerLogger>
     {
         friend std::shared_ptr<DrawerLogger> LoggerSingleton::get(const std::string& logger_name);
         private:
             DrawerLogger(std::shared_ptr<spdlog::logger>&&      logger) : LoggerSingleton(std::move(logger)) {}
-            DrawerLogger(const std::shared_ptr<spdlog::logger>& logger) : LoggerSingleton(std::move(logger)) {}
 
         public:
             DrawerLogger(DrawerLogger&  that) = delete;

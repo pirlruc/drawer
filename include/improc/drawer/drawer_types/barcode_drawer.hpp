@@ -16,7 +16,7 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS BarcodeDrawer : public improc::BaseDrawer
+    class IMPROC_API BarcodeDrawer : public improc::BaseDrawer
     {
         private:
             static constexpr int                    kImageDataType = CV_8UC1;

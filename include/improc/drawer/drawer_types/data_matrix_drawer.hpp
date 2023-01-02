@@ -17,7 +17,7 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS DataMatrixDrawer : public improc::BaseDrawer
+    class IMPROC_API DataMatrixDrawer : public improc::BaseDrawer
     {
         private:
             static constexpr ZXing::ImageFormat             kImageFormat        = ZXing::ImageFormat::Lum;

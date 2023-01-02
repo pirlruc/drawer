@@ -13,7 +13,7 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS ElementDrawer
+    class IMPROC_API ElementDrawer
     {
         private:
             std::shared_ptr<BaseDrawer> drawer_;

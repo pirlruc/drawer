@@ -12,7 +12,7 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS MetricPixelJsonConverter
+    class IMPROC_API MetricPixelJsonConverter
     {
         public:
             MetricPixelJsonConverter();

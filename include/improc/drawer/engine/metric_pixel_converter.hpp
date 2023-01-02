@@ -9,7 +9,7 @@
 
 namespace improc 
 {
-    class IMPROC_EXPORTS MetricUnit
+    class IMPROC_API MetricUnit
     {
         public:
             enum Value : int
@@ -43,7 +43,7 @@ namespace improc
             double                      GetConversionFactor(const MetricUnit& to_metric_unit) const;
     };
 
-    class IMPROC_EXPORTS MetricPixelConverter
+    class IMPROC_API MetricPixelConverter
     {
         private:
             static constexpr double     kInchToMilimeter = 25.4;
