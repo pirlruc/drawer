@@ -44,9 +44,6 @@ if(NOT DEFINED IMPROC_DRAWER_WITH_TEXT_SUPPORT)
   set(IMPROC_DRAWER_WITH_TEXT_SUPPORT ON)
 endif()
 
-SET(OpenCV_DIR ${CMAKE_INSTALL_PREFIX})
-find_package(OpenCV REQUIRED)
-
 # Add external dependencies
 # qrcodegen
 FetchContent_Declare(
@@ -85,6 +82,8 @@ FetchContent_Declare(
   SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
 )
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+  set(BUILD_EXAMPLES        OFF)
+  set(BUILD_BLACKBOX_TESTS  OFF)
   FetchContent_MakeAvailable(zxingcpp)
   list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
 endif()
@@ -171,7 +170,7 @@ endif()
 
 add_library(${PROJECT_NAME} SHARED ${IMPROC_DRAWER_LIB_FILES})
 add_library(improc::drawer ALIAS ${PROJECT_NAME})
-add_dependencies(${PROJECT_NAME} improc::infrastructure improc::services ${OpenCV_LIBS} ${IMPROC_DRAWER_EXTRA_LIBS})
+add_dependencies(${PROJECT_NAME} improc::corecv ${IMPROC_DRAWER_EXTRA_LIBS})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD           17)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
@@ -184,36 +183,32 @@ target_include_directories  (${PROJECT_NAME}   INTERFACE $<BUILD_INTERFACE:${PRO
                                                $<INSTALL_INTERFACE:include> )
 
 # Link dependencies
-target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${OpenCV_LIBS})
 target_link_libraries       (${PROJECT_NAME}   PRIVATE    ${IMPROC_DRAWER_EXTRA_LIBS})
-target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::infrastructure)
-target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::services)
-target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${OpenCV_LIBS})
+target_link_libraries       (${PROJECT_NAME}   PRIVATE    improc::corecv)
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${IMPROC_DRAWER_EXTRA_LIBS})
-target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::infrastructure)
-target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::services)
+target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::corecv)
 
 # Tests configuration
 if(IMPROC_WITH_TESTS)
   add_subdirectory(${PROJECT_SOURCE_DIR}/test     ${CMAKE_BINARY_DIR}/improc_drawer_test)
 endif()
 
-# # Install configuration
-# set(${PROJECT_NAME}_libs ${PROJECT_NAME} improc_infrastructure improc_services ${OpenCV_LIBS} ${IMPROC_DRAWER_EXTRA_LIBS})
-# install(
-#   TARGETS     ${${PROJECT_NAME}_libs}
-#   DESTINATION lib
-#   EXPORT      ${PROJECT_NAME}_target 
-# )
-# if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-#   # install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/LICENSE  DESTINATION share/licenses/improc/qrcodegen)
-# endif()
+# Install configuration
+set(${PROJECT_NAME}_libs ${PROJECT_NAME} improc_corecv ${IMPROC_DRAWER_EXTRA_LIBS})
+install(
+  TARGETS     ${${PROJECT_NAME}_libs}
+  DESTINATION lib
+  EXPORT      ${PROJECT_NAME}_target 
+)
+if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+  # install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/LICENSE  DESTINATION share/licenses/improc/qrcodegen)
+endif()
 
-# if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
-#   install(FILES     ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE         DESTINATION share/licenses/improc/ZXing)
-# endif()
+if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
+  install(FILES     ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE         DESTINATION share/licenses/improc/ZXing)
+endif()
 
-# if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
-#   install(FILES     ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT  DESTINATION share/licenses/improc/freetype)
-# endif()
-# install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                      DESTINATION include)
+if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
+  install(FILES     ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT  DESTINATION share/licenses/improc/freetype)
+endif()
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                      DESTINATION include)
