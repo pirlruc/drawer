@@ -26,22 +26,13 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   option(IMPROC_WITH_TESTS 			     "Building library with tests"          OFF)
   option(IMPROC_WITH_COVERAGE  	     "Building library with code coverage"  OFF)
   option(BUILD_SHARED_LIBS           "Building shared libraries"            ON)
+  option(IMPROC_DRAWER_WITH_QRCODE_SUPPORT              "Building drawer module with QR-Code support"                 ON)
+  option(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT "Building drawer module with barcode and data matrix support" ON)
+  option(IMPROC_DRAWER_WITH_TEXT_SUPPORT                "Building drawer module with text generation support"         ON)
 
   add_subdirectory(${PROJECT_SOURCE_DIR}/../infrastructure ${CMAKE_BINARY_DIR}/infrastructure)
   add_subdirectory(${PROJECT_SOURCE_DIR}/../services       ${CMAKE_BINARY_DIR}/services)
   add_subdirectory(${PROJECT_SOURCE_DIR}/../corecv         ${CMAKE_BINARY_DIR}/corecv)
-endif()
-
-if(NOT DEFINED IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  set(IMPROC_DRAWER_WITH_QRCODE_SUPPORT ON)
-endif()
-
-if(NOT DEFINED IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
-  set(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT ON)
-endif()
-
-if(NOT DEFINED IMPROC_DRAWER_WITH_TEXT_SUPPORT)
-  set(IMPROC_DRAWER_WITH_TEXT_SUPPORT ON)
 endif()
 
 # Add external dependencies
@@ -69,7 +60,6 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
   target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen>
                                                     $<INSTALL_INTERFACE:include> )
   message(STATUS "Build qrcodegen Version: 1.8.0")
-  message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
 
   list(APPEND IMPROC_DRAWER_EXTRA_LIBS qrcodegen)
 endif()
@@ -100,6 +90,7 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
   list(APPEND IMPROC_DRAWER_EXTRA_LIBS freetype)
 endif()
 
+message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 message(STATUS "Install Dir: ${CMAKE_INSTALL_PREFIX}")
 
