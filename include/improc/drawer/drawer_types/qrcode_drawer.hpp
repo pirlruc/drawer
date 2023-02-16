@@ -35,8 +35,8 @@ namespace improc
 
             public:
                 ErrorCorrectionLevel();                              
-                ErrorCorrectionLevel(const std::string& error_correction_level_str);
-                constexpr                           ErrorCorrectionLevel(Value error_correction_level_value): value_(error_correction_level_value) {}
+                explicit ErrorCorrectionLevel(const std::string& error_correction_level_str);
+                constexpr explicit                  ErrorCorrectionLevel(Value error_correction_level_value): value_(error_correction_level_value) {}
                 constexpr operator                  Value()     const {return this->value_;}
 
                 constexpr std::string_view          ToString()  const
@@ -73,7 +73,7 @@ namespace improc
             
         public:
             QrCodeDrawer();
-            QrCodeDrawer(const Json::Value& drawer_json);
+            explicit QrCodeDrawer(const Json::Value& drawer_json);
 
             QrCodeDrawer&                           Load    (const Json::Value& drawer_json);
             cv::Mat                                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());

@@ -28,7 +28,7 @@ namespace improc
             
         public:
             TextDrawer();
-            TextDrawer(const Json::Value& drawer_json);
+            explicit TextDrawer(const Json::Value& drawer_json);
 
             TextDrawer&                     Load    (const Json::Value& drawer_json);
             cv::Mat                         Draw    (const std::optional<std::string>& message = std::optional<std::string>());

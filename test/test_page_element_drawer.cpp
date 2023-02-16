@@ -1,35 +1,10 @@
 #include <gtest/gtest.h>
 
 #include <improc_drawer_test_config.hpp>
-
+#include <base_drawers_def.hpp>
 #include <improc/drawer/engine/page_element_drawer.hpp>
 #include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
-
-class TestPageElemDrawer : public improc::BaseDrawer
-{
-    public:
-        TestPageElemDrawer() {};
-        TestPageElemDrawer(const Json::Value& drawer_json)
-        {
-            this->Load(drawer_json);
-        }
-
-        TestPageElemDrawer& Load(const Json::Value& drawer_json)
-        {
-            return (*this);
-        }
-
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return 255 * cv::Mat::ones(50,100,CV_8UC1);
-        }
-
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return drawer_output.rows == 50 && drawer_output.cols == 100;
-        }
-};
 
 TEST(PageElementDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::PageElementDrawer());

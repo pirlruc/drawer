@@ -23,8 +23,8 @@ namespace improc
 
         public:
             PageDrawerType();                              
-            PageDrawerType(const std::string& page_drawer_type_str);
-            constexpr                   PageDrawerType(Value page_drawer_type_value): value_(page_drawer_type_value) {}
+            explicit PageDrawerType(const std::string& page_drawer_type_str);
+            constexpr explicit          PageDrawerType(Value page_drawer_type_value): value_(page_drawer_type_value) {}
             constexpr operator          Value()     const {return this->value_;}
 
             constexpr std::string_view  ToString()  const

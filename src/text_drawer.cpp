@@ -60,7 +60,7 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     this->font_loaded_  = true;
 
     unsigned int font_size = improc::json::ReadElement<unsigned int>(drawer_json[kFontSizeKey]);
-    if (font_size <= 0)
+    if (font_size == 0)
     {
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_08: Font size should be greater than zero");
         throw improc::file_processing_error();

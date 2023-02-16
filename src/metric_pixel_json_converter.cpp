@@ -71,7 +71,7 @@ cv::Size improc::MetricPixelJsonConverter::MetricSize2PixelSize(const Json::Valu
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric size missing.");
         throw improc::file_processing_error();
     }
-    improc::MetricUnit metric = improc::json::ReadElement<std::string>(metric_size_json[kMetricUnitKey]);
+    improc::MetricUnit metric = improc::MetricUnit(improc::json::ReadElement<std::string>(metric_size_json[kMetricUnitKey]));
     cv::Size2d metric_size    = improc::json::ReadElement<cv::Size2d>(metric_size_json);
     return cv::Size(pixel_converter.Metric2Pixel(metric_size.width,metric),pixel_converter.Metric2Pixel(metric_size.height,metric));
 }
@@ -85,7 +85,7 @@ cv::Point improc::MetricPixelJsonConverter::MetricPoint2PixelPoint(const Json::V
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric point missing.");
         throw improc::file_processing_error();
     }
-    improc::MetricUnit metric = improc::json::ReadElement<std::string>(metric_point_json[kMetricUnitKey]);
+    improc::MetricUnit metric = improc::MetricUnit(improc::json::ReadElement<std::string>(metric_point_json[kMetricUnitKey]));
     cv::Point2d metric_point  = improc::json::ReadElement<cv::Point2d>(metric_point_json);
     return cv::Point(pixel_converter.Metric2Pixel(metric_point.x,metric),pixel_converter.Metric2Pixel(metric_point.y,metric));
 }
@@ -94,7 +94,7 @@ void improc::MetricPixelJsonConverter::ParseArray(const improc::MetricPixelConve
 {
     IMPROC_DRAWER_LOGGER_TRACE("Parsing json array...");
     //TODO: Increase performance using execution policy
-    for (Json::Value::iterator item_json = array_json.begin(); item_json != array_json.end(); item_json++)
+    for (Json::Value::iterator item_json = array_json.begin(); item_json != array_json.end(); ++item_json)
     {
         if(item_json->isArray() == true)
         {

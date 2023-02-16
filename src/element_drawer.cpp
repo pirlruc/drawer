@@ -16,7 +16,7 @@ improc::ElementDrawer& improc::ElementDrawer::Load(const improc::DrawerFactory& 
     static const std::string kElemSizeKey = "drawer-size";
     if (element_drawer_json.isMember(kRotationKey) == true)
     {
-        this->rotation_ = improc::json::ReadElement<std::string>(element_drawer_json[kRotationKey]);
+        this->rotation_ = improc::RotationType(improc::json::ReadElement<std::string>(element_drawer_json[kRotationKey]));
     }
     if (element_drawer_json.isMember(kElemSizeKey) == true)
     {

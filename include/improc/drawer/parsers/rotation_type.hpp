@@ -26,8 +26,8 @@ namespace improc
 
         public:
             RotationType();                              
-            RotationType(const std::string& rotation_type_str);
-            constexpr                   RotationType(Value rotation_type_value): value_(rotation_type_value) {}
+            explicit RotationType(const std::string& rotation_type_str);
+            constexpr explicit          RotationType(Value rotation_type_value): value_(rotation_type_value) {}
             constexpr operator          Value()     const {return this->value_;}
 
             constexpr std::string_view  ToString()  const
