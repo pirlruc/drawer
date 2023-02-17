@@ -29,23 +29,27 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     static const std::string kFontSizeKey           = "font-size";
     if (drawer_json.isMember(kPrintingResolutionKey) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Printing resolution missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from text drawer json",kPrintingResolutionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (drawer_json.isMember(kImageTextSizeKey) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Image text size missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from text drawer json",kImageTextSizeKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (drawer_json.isMember(kFontPathKey) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: Font filepath missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from text drawer json",kFontPathKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (drawer_json.isMember(kFontSizeKey) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_04: Font size missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from text drawer json",kFontSizeKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_04: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     this->printing_resolution_ = improc::json::ReadElement<unsigned int>(drawer_json[kPrintingResolutionKey]);
     this->image_text_size_     = improc::TextDrawer::ParseMetricSize(drawer_json[kImageTextSizeKey],improc::MetricPixelConverter(this->printing_resolution_));
@@ -62,8 +66,9 @@ improc::TextDrawer& improc::TextDrawer::Load(const Json::Value& drawer_json)
     unsigned int font_size = improc::json::ReadElement<unsigned int>(drawer_json[kFontSizeKey]);
     if (font_size == 0)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_08: Font size should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Font size should be greater than zero. {} font size was gave",font_size);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_08: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     this->font_size_ = font_size;
 
@@ -85,13 +90,15 @@ cv::Size improc::TextDrawer::ParseMetricSize(const Json::Value& size_json, const
     cv::Size image_text_size = improc::MetricPixelJsonConverter::MetricSize2PixelSize(size_json,pixel_converter);
     if (image_text_size.width <= 0)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Width should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Width should be greater than zero. {} width was gave",image_text_size.width);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     if (image_text_size.height <= 0)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: Height should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Height should be greater than zero. {} height was gave",image_text_size.height);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     return image_text_size;
 }

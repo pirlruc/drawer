@@ -15,13 +15,13 @@ TEST(PointParser,TestParsing) {
 TEST(PointParser,TestNoTopLeftX) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_no_top_left_x.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    EXPECT_THROW(improc::json::ReadElement<cv::Point>(json_content["top-left"]),improc::file_processing_error);
+    EXPECT_THROW(improc::json::ReadElement<cv::Point>(json_content["top-left"]),improc::json_error);
 }
 
 TEST(PointParser,TestNoTopLeftY) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_no_top_left_y.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    EXPECT_THROW(improc::json::ReadElement<cv::Point>(json_content["top-left"]),improc::file_processing_error);
+    EXPECT_THROW(improc::json::ReadElement<cv::Point>(json_content["top-left"]),improc::json_error);
 }
 
 TEST(SizeParser,TestParsing) {
@@ -34,25 +34,25 @@ TEST(SizeParser,TestParsing) {
 TEST(SizeParser,TestNoPageWidth) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_no_page_width.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    EXPECT_THROW(improc::json::ReadElement<cv::Size>(json_content["page-size"]),improc::file_processing_error);
+    EXPECT_THROW(improc::json::ReadElement<cv::Size>(json_content["page-size"]),improc::json_error);
 }
 
 TEST(SizeParser,TestNoPageHeight) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_no_page_height.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    EXPECT_THROW(improc::json::ReadElement<cv::Size>(json_content["page-size"]),improc::file_processing_error);
+    EXPECT_THROW(improc::json::ReadElement<cv::Size>(json_content["page-size"]),improc::json_error);
 }
 
 TEST(PositiveSizeParser,TestInvalidWidth) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_invalid_page_width.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size>(json_content["page-size"]),improc::file_processing_error);
-    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size2d>(json_content["page-size"]),improc::file_processing_error);
+    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size>(json_content["page-size"]),improc::value_error);
+    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size2d>(json_content["page-size"]),improc::value_error);
 }
 
 TEST(PositiveSizeParser,TestInvalidHeight) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_drawer_invalid_page_height.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
-    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size>(json_content["page-size"]),improc::file_processing_error);
-    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size2d>(json_content["page-size"]),improc::file_processing_error);
+    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size>(json_content["page-size"]),improc::value_error);
+    EXPECT_THROW(improc::json::ReadPositiveSize<cv::Size2d>(json_content["page-size"]),improc::value_error);
 }

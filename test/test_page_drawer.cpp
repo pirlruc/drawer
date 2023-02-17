@@ -38,7 +38,7 @@ TEST(PageDrawer,TestNoPageSize) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(PageDrawer,TestNoPageWidth) {
@@ -47,7 +47,7 @@ TEST(PageDrawer,TestNoPageWidth) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(PageDrawer,TestNoPageHeight) {
@@ -56,7 +56,7 @@ TEST(PageDrawer,TestNoPageHeight) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(PageDrawer,TestInvalidPageWidth) {
@@ -65,7 +65,7 @@ TEST(PageDrawer,TestInvalidPageWidth) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(PageDrawer,TestInvalidPageHeight) {
@@ -74,7 +74,7 @@ TEST(PageDrawer,TestInvalidPageHeight) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(PageDrawer,TestLoadSingle) {

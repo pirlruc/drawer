@@ -14,8 +14,9 @@ improc::ImageFileDrawer& improc::ImageFileDrawer::Load(const Json::Value& drawer
     static const std::string kImageFileKey = "image-filepath";
     if (drawer_json.isMember(kImageFileKey) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Image filepath missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from image file drawer json",kImageFileKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     improc::File image_file {drawer_json[kImageFileKey],improc::ApplicationContext::get()->get_application_folder()};
     this->image_data_ = cv::imread(image_file.get_filepath(),improc::ImageFileDrawer::kImageReadMode);

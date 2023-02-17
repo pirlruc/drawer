@@ -34,8 +34,9 @@ unsigned int improc::ElementDrawer::GetScale(const cv::Size& current_size, const
     unsigned int scaling  = std::min(std::round(scaling_width),std::round(scaling_height)); 
     if (scaling <= 1)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Scale should be greater than 1.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Scale should be greater than 1 for element drawer. Scale obtained was {}",scaling);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     return scaling;
 }

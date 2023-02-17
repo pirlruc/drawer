@@ -11,8 +11,9 @@ std::shared_ptr<improc::BaseDrawer> improc::BaseDrawer::Create(const improc::Dra
     static const std::string kDrawerArgs = "args";
     if (drawer_json.isMember(kDrawerType) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Drawer type missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from json",kDrawerType);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     std::string drawer_type {improc::json::ReadElement<std::string>(drawer_json[kDrawerType])};
 

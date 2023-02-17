@@ -31,13 +31,15 @@ improc::LayoutDrawer& improc::LayoutDrawer::ParsePageTypeDrawer(const improc::Dr
     static const std::string kTopLeftKey        = "top-left";
     if (page_drawer_type_json.isMember(kPageDrawerTypeKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Page drawer type missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from layout drawer json",kPageDrawerTypeKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (page_drawer_type_json.isMember(kTopLeftKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Top left position missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from layout drawer json",kTopLeftKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
 
     improc::PageDrawerType page_drawer_type {improc::json::ReadElement<std::string>(page_drawer_type_json[kPageDrawerTypeKey])};
@@ -52,8 +54,9 @@ improc::LayoutDrawer& improc::LayoutDrawer::ParsePageTypeDrawer(const improc::Dr
     }
     else
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: Page drawer type not implemented.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Page drawer type {} not implemented",page_drawer_type);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
 
     cv::Point top_left    = improc::LayoutDrawer::ParsePoint(page_drawer_type_json[kTopLeftKey]);
@@ -84,13 +87,15 @@ cv::Point improc::LayoutDrawer::ParsePoint(const Json::Value& point_json)
     cv::Point point = improc::json::ReadElement<cv::Point>(point_json);
     if (improc::LayoutDrawer::IsPixelPositionValid(point.x) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Invalid x-position. It should be greater or equal than 0.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Invalid x-position. It should be greater or equal than 0. {} x-position was gave",point.x);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     if (improc::LayoutDrawer::IsPixelPositionValid(point.y) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Invalid y-position. It should be greater or equal than 0.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Invalid y-position. It should be greater or equal than 0. {} y-position was gave",point.y);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     return point;
 }

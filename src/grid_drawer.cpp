@@ -15,18 +15,21 @@ improc::GridDrawer& improc::GridDrawer::Load(const improc::DrawerFactory& factor
     static const std::string kGridCellKey    = "cell-content";
     if (grid_drawer_json.isMember(kGridNumberKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Number of elements in grid missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from grid drawer json. This key corresponds to the number of elements in grid",kGridNumberKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (grid_drawer_json.isMember(kGridSpacingKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Grid spacing missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from grid drawer json",kGridSpacingKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (grid_drawer_json.isMember(kGridCellKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: Grid cell content missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from grid drawer json",kGridCellKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     cv::Point grid_number  = improc::GridDrawer::ParseGridNumber (grid_drawer_json[kGridNumberKey] );
     cv::Point grid_spacing = improc::GridDrawer::ParseGridSpacing(grid_drawer_json[kGridSpacingKey]);
@@ -57,13 +60,15 @@ cv::Point improc::GridDrawer::ParseGridNumber(const Json::Value& grid_number_jso
     cv::Point point = improc::json::ReadElement<cv::Point>(grid_number_json);
     if (improc::GridDrawer::IsNumberValid(point.x) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Number of cells in x should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Number of cells in x should be greater than zero. {} cells were gave",point.x);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     if (improc::GridDrawer::IsNumberValid(point.y) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Number of cells in y should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Number of cells in y should be greater than zero. {} cells were gave",point.y);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     return point;
 }
@@ -74,13 +79,15 @@ cv::Point improc::GridDrawer::ParseGridSpacing(const Json::Value& grid_spacing_j
     cv::Point point = improc::json::ReadElement<cv::Point>(grid_spacing_json);
     if (improc::GridDrawer::IsSpacingValid(point.x) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Spacing in x should be positive");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Spacing in x should be positive. {} x-spacing was gave",point.x);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     if (improc::GridDrawer::IsSpacingValid(point.y) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Spacing in y should be positive");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Spacing in y should be positive. {} y-spacing was gave",point.y);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     return point;
 }

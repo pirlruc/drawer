@@ -28,8 +28,9 @@ improc::QrCodeDrawer& improc::QrCodeDrawer::Load(const Json::Value& drawer_json)
     static const std::string kErrorCorrectionKey = "error-correction-level";
     if (drawer_json.isMember(kErrorCorrectionKey) == false) 
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Error correction level missing for qr-code.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from qr-code drawer json",kErrorCorrectionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     this->error_correction_level_ = improc::qrcode::ErrorCorrectionLevel(improc::json::ReadElement<std::string>(drawer_json[kErrorCorrectionKey]));
     return (*this);

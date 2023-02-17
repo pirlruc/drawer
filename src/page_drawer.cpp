@@ -16,8 +16,9 @@ improc::PageDrawer& improc::PageDrawer::Load(const improc::DrawerFactory& factor
     static const std::string kElementsKey = "elements";
     if (page_drawer_json.isMember(kPageSizeKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Page size missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from page drawer json",kPageSizeKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     this->page_size_ = improc::json::ReadPositiveSize<cv::Size>(page_drawer_json[kPageSizeKey]);
 

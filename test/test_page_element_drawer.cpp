@@ -46,7 +46,7 @@ TEST(PageElementDrawer,TestNoTopLeft) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestNoTopLeftX) {
@@ -56,7 +56,7 @@ TEST(PageElementDrawer,TestNoTopLeftX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestNoTopLeftY) {
@@ -66,7 +66,7 @@ TEST(PageElementDrawer,TestNoTopLeftY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestInvalidTopLeftX) {
@@ -76,7 +76,7 @@ TEST(PageElementDrawer,TestInvalidTopLeftX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::value_error);
 }
 
 TEST(PageElementDrawer,TestInvalidTopLeftY) {
@@ -86,7 +86,7 @@ TEST(PageElementDrawer,TestInvalidTopLeftY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::value_error);
 }
 
 TEST(PageElementDrawer,TestInvalidStaticDynamic) {
@@ -96,7 +96,7 @@ TEST(PageElementDrawer,TestInvalidStaticDynamic) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestDrawOutsidePage) {

@@ -52,7 +52,7 @@ TEST(BaseDrawer,TestNoDrawerType)
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
-    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::json_error);
 }
 
 TEST(BaseDrawer,TestNoDrawerInFactory)
@@ -61,7 +61,7 @@ TEST(BaseDrawer,TestNoDrawerInFactory)
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
-    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::not_found_in_factory);
+    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::key_error);
 }
 
 TEST(BaseDrawer,TestDrawerInFactory)

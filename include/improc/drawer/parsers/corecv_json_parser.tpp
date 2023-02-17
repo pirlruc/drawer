@@ -7,13 +7,15 @@ inline cv::Point improc::json::ReadElement(const Json::Value& json_elem)
     static const std::string kYPositionKey = "y";
     if (json_elem.isMember(kXPositionKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: x-position missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {}-position is missing from json",kXPositionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (json_elem.isMember(kYPositionKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: y-position missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {}-position is missing from json",kYPositionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     return cv::Point( improc::json::ReadElement<int>(json_elem[kXPositionKey])
                     , improc::json::ReadElement<int>(json_elem[kYPositionKey]) );
@@ -27,13 +29,15 @@ inline cv::Point2d improc::json::ReadElement(const Json::Value& json_elem)
     static const std::string kYPositionKey = "y";
     if (json_elem.isMember(kXPositionKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: x-position missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {}-position is missing from json",kXPositionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (json_elem.isMember(kYPositionKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: y-position missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {}-position is missing from json",kYPositionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     return cv::Point2d( improc::json::ReadElement<double>(json_elem[kXPositionKey])
                       , improc::json::ReadElement<double>(json_elem[kYPositionKey]) );
@@ -47,13 +51,15 @@ inline cv::Size improc::json::ReadElement(const Json::Value& json_elem)
     static const std::string kHeightKey = "height";
     if (json_elem.isMember(kWidthKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Width missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from json",kWidthKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (json_elem.isMember(kHeightKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from json",kHeightKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     return cv::Size ( improc::json::ReadElement<int>(json_elem[kWidthKey])
                     , improc::json::ReadElement<int>(json_elem[kHeightKey]) );
@@ -67,13 +73,15 @@ inline cv::Size2d improc::json::ReadElement(const Json::Value& json_elem)
     static const std::string kHeightKey = "height";
     if (json_elem.isMember(kWidthKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Width missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from json",kWidthKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (json_elem.isMember(kHeightKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from json",kHeightKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     return cv::Size2d( improc::json::ReadElement<double>(json_elem[kWidthKey])
                      , improc::json::ReadElement<double>(json_elem[kHeightKey]) );
@@ -86,13 +94,15 @@ inline KeyType improc::json::ReadPositiveSize(const Json::Value& json_size)
     KeyType size = improc::json::ReadElement<KeyType>(json_size);
     if (size.width <= 0.0)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Width should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Width should be greater than zero. Width gave was {}",size.width);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     if (size.height <= 0.0)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Height should be greater than zero");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Height should be greater than zero. Height gave was {}",size.height);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     return size;
 }

@@ -19,13 +19,15 @@ improc::PageElementDrawer& improc::PageElementDrawer::Load(const improc::DrawerF
     static const std::string kContentKey = "content";
     if (page_element_drawer_json.isMember(kTopLeftKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Top left position missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from page element drawer json",kTopLeftKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (page_element_drawer_json.isMember(kStaticKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Page element must be static or dynamic.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from page element drawer json",kStaticKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
 
     this->improc::ElementDrawer::Load(factory,page_element_drawer_json);
@@ -51,13 +53,15 @@ void improc::PageElementDrawer::ValidatePoint(const cv::Point& point, const cv::
     IMPROC_DRAWER_LOGGER_TRACE("Validating point...");
     if (improc::PageElementDrawer::IsPixelPositionValid(point.x,page_size.width) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Invalid x-position. It should be between 0 and {}.",page_size.width);
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Invalid x-position for page element drawer top left point. It should be between 0 and {}. Position gave was {}",page_size.width,point.x);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
     if (improc::PageElementDrawer::IsPixelPositionValid(point.y,page_size.height) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Invalid y-position. It should be between 0 and {}.",page_size.height);
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Invalid y-position for page element drawer top left point. It should be between 0 and {}. Position gave was {}",page_size.height,point.y);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
 }
 

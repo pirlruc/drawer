@@ -9,13 +9,15 @@ Json::Value improc::MetricPixelJsonConverter::Convert(const Json::Value& metric_
     static const std::string kLayoutKey             = "layout";
     if (metric_json.isMember(kPrintingResolutionKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Printing resolution missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from metric pixel json converter json",kPrintingResolutionKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     if (metric_json.isMember(kLayoutKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: Layout information missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from metric pixel json converter json",kLayoutKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_02: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     improc::MetricPixelConverter pixel_converter {improc::json::ReadElement<unsigned int>(metric_json[kPrintingResolutionKey])};
 
@@ -68,8 +70,9 @@ cv::Size improc::MetricPixelJsonConverter::MetricSize2PixelSize(const Json::Valu
     static const std::string kMetricUnitKey         = "metric-unit";
     if (metric_size_json.isMember(kMetricUnitKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric size missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from metric to pixel size json",kMetricUnitKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     improc::MetricUnit metric = improc::MetricUnit(improc::json::ReadElement<std::string>(metric_size_json[kMetricUnitKey]));
     cv::Size2d metric_size    = improc::json::ReadElement<cv::Size2d>(metric_size_json);
@@ -82,8 +85,9 @@ cv::Point improc::MetricPixelJsonConverter::MetricPoint2PixelPoint(const Json::V
     static const std::string kMetricUnitKey         = "metric-unit";
     if (metric_point_json.isMember(kMetricUnitKey) == false)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: Metric units for metric point missing.");
-        throw improc::file_processing_error();
+        std::string error_message = fmt::format("Key {} is missing from metric to pixel point json",kMetricUnitKey);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::json_error(std::move(error_message));
     }
     improc::MetricUnit metric = improc::MetricUnit(improc::json::ReadElement<std::string>(metric_point_json[kMetricUnitKey]));
     cv::Point2d metric_point  = improc::json::ReadElement<cv::Point2d>(metric_point_json);
