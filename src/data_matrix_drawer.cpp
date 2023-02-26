@@ -25,19 +25,23 @@ cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message
     ZXing::BitMatrix matrix_data = this->writer_.encode ( converter.from_bytes(message.value())
                                                         , improc::DataMatrixDrawer::kMinWidth
                                                         , improc::DataMatrixDrawer::kMinHeight );
-    cv::Mat data_matrix = 255 * cv::Mat::ones(matrix_data.height(),matrix_data.width(),improc::DataMatrixDrawer::kImageDataType);
-    // TODO: Improve method to draw barcode using threads
+    cv::Mat data_matrix (matrix_data.height(),matrix_data.width(),improc::BaseDrawer::kImageDataType);
     // TODO: Move image conversion method to a base image class
-    for (size_t pixel_x = 0; pixel_x < matrix_data.width(); pixel_x++)
-    {
-        for (size_t pixel_y = 0; pixel_y < matrix_data.height(); pixel_y++)
-        {
-            if (matrix_data.get(pixel_x,pixel_y) == true)
-            {
-                data_matrix.at<uint8_t>(cv::Point(pixel_x,pixel_y)) = 0;
-            }
-        }
-    }
+    auto bitmatrix_begin = matrix_data.row(0).begin();
+    auto bitmatrix_end   = matrix_data.row(matrix_data.height()).end();
+    std::transform  ( bitmatrix_begin,bitmatrix_end,data_matrix.begin<uint8_t>()
+                    , [] (const uint8_t& bitmatrix_item) 
+                        {
+                            if (bitmatrix_item != 0)
+                            {
+                                return improc::BaseDrawer::kBlackValue;
+                            }
+                            else
+                            {
+                                return improc::BaseDrawer::kWhiteValue;
+                            }
+                        }
+                    );
     return data_matrix;
 };
 

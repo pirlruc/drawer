@@ -1,5 +1,8 @@
 #include <improc/drawer/drawer_types/barcode_drawer.hpp>
 
+/**
+ * @brief Construct a new improc::BarcodeDrawer object
+ */
 improc::BarcodeDrawer::BarcodeDrawer()  : improc::BaseDrawer() 
                                         , writer_(ZXing::OneD::Code128Writer())
                                         , hints_(ZXing::DecodeHints())
@@ -12,11 +15,21 @@ improc::BarcodeDrawer::BarcodeDrawer()  : improc::BaseDrawer()
     this->hints_.setFormats(improc::BarcodeDrawer::kBarcodeFormat);
 }
 
+/**
+ * @brief Construct a new improc::BarcodeDrawer object
+ * 
+ * @param drawer_json - configuration json for barcode drawer
+ */
 improc::BarcodeDrawer::BarcodeDrawer(const Json::Value& drawer_json) : improc::BarcodeDrawer() 
 {
-    this->Load(drawer_json);
+    this->Load(std::move(drawer_json));
 }
 
+/**
+ * @brief Load configuration for a improc::BarcodeDrawer object
+ * 
+ * @param drawer_json - configuration json for barcode drawer
+ */
 improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value& drawer_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating barcode drawer...");
@@ -24,6 +37,12 @@ improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value& drawer_jso
     return (*this);
 };
 
+/**
+ * @brief Draw barcode
+ * 
+ * @param message - message to be encoded in barcode
+ * @return cv::Mat - barcode image with encoded message
+ */
 cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing barcode...");
@@ -31,21 +50,32 @@ cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message)
     ZXing::BitMatrix barcode_data = this->writer_.encode( converter.from_bytes(message.value())
                                                         , improc::BarcodeDrawer::kMinWidth
                                                         , improc::BarcodeDrawer::kMinHeight );
-    cv::Mat barcode = 255 * cv::Mat::ones(barcode_data.height(),barcode_data.width(),improc::BarcodeDrawer::kImageDataType);
-    // TODO: Improve method to draw barcode using threads
-    for (size_t pixel_x = 0; pixel_x < barcode_data.width(); pixel_x++)
-    {
-        for (size_t pixel_y = 0; pixel_y < barcode_data.height(); pixel_y++)
-        {
-            if (barcode_data.get(pixel_x,pixel_y) == true)
-            {
-                barcode.at<uint8_t>(cv::Point(pixel_x,pixel_y)) = 0;
-            }
-        }
-    }
+    cv::Mat barcode (barcode_data.height(),barcode_data.width(),improc::BaseDrawer::kImageDataType);
+    auto bitmatrix_begin = barcode_data.row(0).begin();
+    auto bitmatrix_end   = barcode_data.row(barcode_data.height()).end();
+    std::transform  ( bitmatrix_begin,bitmatrix_end,barcode.begin<uint8_t>()
+                    , [] (const uint8_t& bitmatrix_item) 
+                        {
+                            if (bitmatrix_item != 0)
+                            {
+                                return improc::BaseDrawer::kBlackValue;
+                            }
+                            else
+                            {
+                                return improc::BaseDrawer::kWhiteValue;
+                            }
+                        }
+                    );
     return barcode;
 };
 
+/**
+ * @brief Verify message encoded in barcode
+ * 
+ * @param drawer_output - barcode image
+ * @param message - message encoded in barcode
+ * @return bool - true if message and message recovered from the barcode image is the same, false otherwise.
+ */
 bool improc::BarcodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying barcode content...");
