@@ -108,7 +108,6 @@ set(
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/engine/page_element_drawer.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/parsers/corecv_json_parser.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/parsers/corecv_json_parser.tpp
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/parsers/rotation_type.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/layout_drawer.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/logger_drawer.hpp
 
@@ -116,7 +115,6 @@ set(
   ${PROJECT_SOURCE_DIR}/src/element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/page_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/src/rotation_type.cpp
   ${PROJECT_SOURCE_DIR}/src/image_file_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/src/layout_drawer.cpp
