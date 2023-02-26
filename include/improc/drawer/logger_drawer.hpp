@@ -6,6 +6,10 @@
 
 namespace improc 
 {
+    /**
+     * @brief Logger used for drawer library
+     * 
+     */
     class IMPROC_API DrawerLogger final: public LoggerSingleton<DrawerLogger>
     {
         friend std::shared_ptr<DrawerLogger> LoggerSingleton::get(const std::string& logger_name);

@@ -12,7 +12,7 @@
 
 namespace improc 
 {
-    class IMPROC_API PageElementDrawer : private improc::ElementDrawer
+    class IMPROC_API PageElementDrawer final: private improc::ElementDrawer
     {
         private:
             cv::Point                   top_left_;

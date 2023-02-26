@@ -11,7 +11,7 @@
 
 namespace improc 
 {
-    class GridDrawer : public improc::PageDrawer
+    class GridDrawer final: public improc::PageDrawer
     {
         public:
             GridDrawer();

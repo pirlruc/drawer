@@ -3,6 +3,7 @@
 #include <improc_drawer_test_config.hpp>
 #include <base_drawers_def.hpp>
 #include <improc/drawer/engine/page_element_drawer.hpp>
+//TODO: Replace qr-code tests
 #include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 

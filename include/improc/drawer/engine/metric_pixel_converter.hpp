@@ -9,7 +9,7 @@
 
 namespace improc 
 {
-    class IMPROC_API MetricUnit
+    class IMPROC_API MetricUnit final
     {
         public:
             enum Value : int
@@ -60,7 +60,7 @@ namespace improc
             }
     };
 
-    class IMPROC_API MetricPixelConverter
+    class IMPROC_API MetricPixelConverter final
     {
         private:
             static constexpr double             kInchToMilimeter = 25.4;

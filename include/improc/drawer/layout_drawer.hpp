@@ -13,7 +13,7 @@
 
 namespace improc 
 {
-    class LayoutDrawer : protected improc::PageDrawer
+    class LayoutDrawer final: protected improc::PageDrawer
     {
         public:
             LayoutDrawer();

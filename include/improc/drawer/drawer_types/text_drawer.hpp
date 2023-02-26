@@ -13,7 +13,7 @@
 
 namespace improc 
 {
-    class IMPROC_API TextDrawer : public improc::BaseDrawer
+    class IMPROC_API TextDrawer final: public improc::BaseDrawer
     {
         private:
             static constexpr int            kImageDataType         = CV_8UC1;

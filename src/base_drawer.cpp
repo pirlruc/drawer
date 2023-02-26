@@ -1,9 +1,24 @@
 #include <improc/drawer/engine/base_drawer.hpp>
 
+/**
+ * @brief Construct a new improc::BaseDrawer object
+ */
 improc::BaseDrawer::BaseDrawer() {};
 
+/**
+ * @brief Construct a new improc::BaseDrawer object
+ * 
+ * @param drawer_json - configuration json for drawer
+ */
 improc::BaseDrawer::BaseDrawer(const Json::Value& drawer_json) : improc::BaseDrawer() {};
 
+/**
+ * @brief Construct a new improc::BaseDrawer object
+ * 
+ * @param factory - drawer factory
+ * @param drawer_json - configuration json for drawer
+ * @return std::shared_ptr<improc::BaseDrawer> - drawer object pointer
+ */
 std::shared_ptr<improc::BaseDrawer> improc::BaseDrawer::Create(const improc::DrawerFactory& factory, const Json::Value& drawer_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating drawer using factory...");
@@ -22,5 +37,5 @@ std::shared_ptr<improc::BaseDrawer> improc::BaseDrawer::Create(const improc::Dra
     {
         drawer_args = drawer_json[kDrawerArgs];
     }
-    return factory.Create(std::move(drawer_type),std::move(drawer_args));
+    return std::move(factory).Create(std::move(drawer_type),std::move(drawer_args));
 }

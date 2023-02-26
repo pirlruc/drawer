@@ -16,10 +16,12 @@
 
 namespace improc 
 {
-    class IMPROC_API BarcodeDrawer : public improc::BaseDrawer
+    /**
+     * @brief Barcode drawer methods and utilities
+     */
+    class IMPROC_API BarcodeDrawer final: public improc::BaseDrawer
     {
         private:
-            static constexpr int                    kImageDataType = CV_8UC1;
             static constexpr int                    kMargin        = 0;
             static constexpr int                    kMinWidth      = 0;
             static constexpr int                    kMinHeight     = 10;

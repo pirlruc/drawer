@@ -3,7 +3,7 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
-#include <improc/drawer/parsers/rotation_type.hpp>
+#include <improc/corecv/structures/rotation_type.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 #include <improc/drawer/parsers/corecv_json_parser.hpp>
 

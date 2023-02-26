@@ -17,12 +17,11 @@
 
 namespace improc 
 {
-    class IMPROC_API DataMatrixDrawer : public improc::BaseDrawer
+    class IMPROC_API DataMatrixDrawer final: public improc::BaseDrawer
     {
         private:
             static constexpr ZXing::ImageFormat             kImageFormat        = ZXing::ImageFormat::Lum;
             static constexpr ZXing::DataMatrix::SymbolShape kSquareSymbolShape  = ZXing::DataMatrix::SymbolShape::SQUARE;
-            static constexpr int                            kImageDataType      = CV_8UC1;
             static constexpr int                            kMargin             = 0;
             static constexpr int                            kMinWidth           = 0;
             static constexpr int                            kMinHeight          = 0;

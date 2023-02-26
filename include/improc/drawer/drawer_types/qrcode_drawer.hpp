@@ -19,7 +19,7 @@ namespace improc
 {
     namespace qrcode
     {
-        class IMPROC_API ErrorCorrectionLevel
+        class IMPROC_API ErrorCorrectionLevel final
         {
             public:
                 enum Value : IMPROC_ENUM_KEY_TYPE
@@ -63,7 +63,7 @@ namespace improc
         };
     };
 
-    class IMPROC_API QrCodeDrawer : public improc::BaseDrawer
+    class IMPROC_API QrCodeDrawer final: public improc::BaseDrawer
     {
         private:
             static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;

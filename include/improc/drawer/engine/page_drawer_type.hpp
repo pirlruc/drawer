@@ -9,7 +9,7 @@
 
 namespace improc 
 {
-    class IMPROC_API PageDrawerType
+    class IMPROC_API PageDrawerType final
     {
         public:
             enum Value : IMPROC_ENUM_KEY_TYPE
