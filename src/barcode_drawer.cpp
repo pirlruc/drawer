@@ -50,10 +50,10 @@ cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message)
     ZXing::BitMatrix barcode_data = this->writer_.encode( converter.from_bytes(message.value())
                                                         , improc::BarcodeDrawer::kMinWidth
                                                         , improc::BarcodeDrawer::kMinHeight );
-    cv::Mat barcode (barcode_data.height(),barcode_data.width(),improc::BaseDrawer::kImageDataType);
-    auto bitmatrix_begin = barcode_data.row(0).begin();
-    auto bitmatrix_end   = barcode_data.row(barcode_data.height()).end();
-    std::transform  ( bitmatrix_begin,bitmatrix_end,barcode.begin<uint8_t>()
+    cv::Mat barcode ( barcode_data.height(),barcode_data.width(),improc::BaseDrawer::kImageDataType );
+    std::transform  ( barcode_data.row(0).begin()
+                    , barcode_data.row(barcode_data.height()).end()
+                    , barcode.begin<uint8_t>()
                     , [] (const uint8_t& bitmatrix_item) 
                         {
                             if (bitmatrix_item != 0)

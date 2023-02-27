@@ -22,14 +22,14 @@ namespace improc
     class IMPROC_API BarcodeDrawer final: public improc::BaseDrawer
     {
         private:
+            static constexpr ZXing::BarcodeFormat   kBarcodeFormat = ZXing::BarcodeFormat::Code128;
+            static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;
             static constexpr int                    kMargin        = 0;
             static constexpr int                    kMinWidth      = 0;
             static constexpr int                    kMinHeight     = 10;
             static constexpr bool                   kTryHarder     = true;
             static constexpr bool                   kDoNotRotate   = false;
             static constexpr bool                   kNotPure       = false;
-            static constexpr ZXing::BarcodeFormat   kBarcodeFormat = ZXing::BarcodeFormat::Code128;
-            static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;
             ZXing::OneD::Code128Writer              writer_;
             ZXing::DecodeHints                      hints_;
             

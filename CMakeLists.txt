@@ -106,8 +106,6 @@ set(
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/engine/page_drawer_type.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/engine/page_drawer.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/engine/page_element_drawer.hpp
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/parsers/corecv_json_parser.hpp
-  ${PROJECT_SOURCE_DIR}/include/improc/drawer/parsers/corecv_json_parser.tpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/layout_drawer.hpp
   ${PROJECT_SOURCE_DIR}/include/improc/drawer/logger_drawer.hpp
 

@@ -93,8 +93,8 @@ TEST(PageDrawer,TestDrawWithoutContext) {
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer {};
     drawer.Load(factory,json_content);
-    EXPECT_THROW(drawer.Allocate().Draw(),improc::context_elem_diff_page_elem);
-    EXPECT_THROW(drawer.Allocate().Verify(),improc::context_elem_diff_page_elem);
+    EXPECT_THROW(drawer.Allocate().Draw(),improc::value_error);
+    EXPECT_THROW(drawer.Allocate().Verify(),improc::value_error);
 }
 
 TEST(PageDrawer,TestLoadMultiple) {
@@ -126,9 +126,9 @@ TEST(PageDrawer,TestDrawWithoutAllocation) {
     context.push_back("test_a");
     context.emplace_back();
     context.emplace_back();    
-    EXPECT_THROW(drawer.Draw(context),cv::Exception);
-    EXPECT_FALSE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::page_drawer_not_allocated);
+    EXPECT_THROW(drawer.Draw(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::processing_flow_error);
 }
 
 TEST(PageDrawer,TestDrawWithAllocation) {
@@ -143,7 +143,7 @@ TEST(PageDrawer,TestDrawWithAllocation) {
     context.emplace_back();    
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
     EXPECT_TRUE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::invalid_page_image);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::value_error);
     EXPECT_TRUE(drawer.Verify(drawer.Allocate().Draw(context),context));
 }
 

@@ -12,6 +12,9 @@
 
 namespace improc 
 {
+    /**
+     * @brief Image file drawer methods and utilities
+     */
     class IMPROC_API ImageFileDrawer final: public improc::BaseDrawer
     {
         private:

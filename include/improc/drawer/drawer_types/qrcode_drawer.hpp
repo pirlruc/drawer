@@ -19,6 +19,9 @@ namespace improc
 {
     namespace qrcode
     {
+        /**
+         * @brief QR-Code error correction methods and utilities
+         */
         class IMPROC_API ErrorCorrectionLevel final
         {
             public:
@@ -36,9 +39,22 @@ namespace improc
             public:
                 ErrorCorrectionLevel();                              
                 explicit ErrorCorrectionLevel(const std::string& error_correction_level_str);
-                constexpr explicit                  ErrorCorrectionLevel(Value error_correction_level_value): value_(error_correction_level_value) {}
+
+                /**
+                 * @brief Construct a new improc::ErrorCorrectionLevel object
+                 * 
+                 * @param error_correction_level_value - error correction level value
+                 */
+                constexpr explicit                  ErrorCorrectionLevel(Value error_correction_level_value): value_(std::move(error_correction_level_value)) {}
+
+                /**
+                 * @brief Obtain error correction level value
+                 */
                 constexpr operator                  Value()     const {return this->value_;}
 
+                /**
+                 * @brief Obtain error correction level string description
+                 */
                 constexpr std::string_view          ToString()  const
                 {
                     switch (this->value_)
@@ -50,6 +66,9 @@ namespace improc
                     }
                 }
 
+                /**
+                 * @brief Obtain error correction level qrcodegen code
+                 */
                 constexpr qrcodegen::QrCode::Ecc    ToQrCodeGen()  const
                 {
                     switch (this->value_)
@@ -63,11 +82,13 @@ namespace improc
         };
     };
 
+    /**
+     * @brief QR-Code drawer methods and utilities
+     */
     class IMPROC_API QrCodeDrawer final: public improc::BaseDrawer
     {
         private:
             static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;
-            static constexpr int                    kImageDataType = CV_8UC1;
             improc::qrcode::ErrorCorrectionLevel    error_correction_level_;
             ZXing::DecodeHints                      hints_;
             

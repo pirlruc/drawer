@@ -118,9 +118,9 @@ TEST(GridDrawer,TestDrawWithoutAllocation) {
         context.emplace_back("example");
         context.emplace_back();
     }
-    EXPECT_THROW(drawer.Draw(context),cv::Exception);
-    EXPECT_FALSE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::page_drawer_not_allocated);
+    EXPECT_THROW(drawer.Draw(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::processing_flow_error);
 }
 
 TEST(GridDrawer,TestDrawWithAllocation) {
@@ -138,6 +138,6 @@ TEST(GridDrawer,TestDrawWithAllocation) {
     }
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
     EXPECT_TRUE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::invalid_page_image);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::value_error);
     EXPECT_TRUE(drawer.Verify(drawer.Allocate().Draw(context),context));
 }

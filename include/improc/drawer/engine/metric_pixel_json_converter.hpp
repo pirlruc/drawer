@@ -3,15 +3,18 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
+#include <improc/corecv/parsers/json_parser.hpp>
 #include <improc/drawer/logger_drawer.hpp>
 #include <improc/drawer/engine/metric_pixel_converter.hpp>
-#include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
 
 namespace improc 
 {
+    /**
+     * @brief Metric to pixel json converter utilities. 
+     */
     class IMPROC_API MetricPixelJsonConverter final
     {
         public:

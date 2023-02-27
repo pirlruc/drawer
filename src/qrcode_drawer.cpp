@@ -1,7 +1,15 @@
 #include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 
+/**
+ * @brief Construct a new improc::ErrorCorrectionLevel object
+ */
 improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(): value_(improc::qrcode::ErrorCorrectionLevel::kLow) {};
 
+/**
+ * @brief Construct a new improc::ErrorCorrectionLevel object
+ * 
+ * @param error_correction_level_str - error correction level description as string
+ */
 improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& error_correction_level_str)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining error correction level from string {}...",error_correction_level_str);
@@ -10,18 +18,31 @@ improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& er
                                                                                             , {"quartile",ErrorCorrectionLevel::Value::kQuartile}
                                                                                             , {"high"    ,ErrorCorrectionLevel::Value::kHigh    }
                                                                                             };
-    this->value_ = kToElemType.at(improc::String::ToLower(error_correction_level_str));
+    this->value_ = kToElemType.at(improc::String::ToLower(std::move(error_correction_level_str)));
 }
 
+/**
+ * @brief Construct a new improc::QrCodeDrawer object
+ */
 improc::QrCodeDrawer::QrCodeDrawer(): improc::BaseDrawer()
                                     , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) 
                                     , hints_(ZXing::DecodeHints()) {};
 
+/**
+ * @brief Construct a new improc::QrCodeDrawer object
+ * 
+ * @param drawer_json - configuration json for qr-code drawer
+ */
 improc::QrCodeDrawer::QrCodeDrawer(const Json::Value& drawer_json) : improc::QrCodeDrawer() 
 {
-    this->Load(drawer_json);
+    this->Load(std::move(drawer_json));
 }
 
+/**
+ * @brief Load configuration for a improc::QrCodeDrawer object
+ * 
+ * @param drawer_json - configuration json for qr-code drawer
+ */
 improc::QrCodeDrawer& improc::QrCodeDrawer::Load(const Json::Value& drawer_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating qr-code drawer...");
@@ -36,26 +57,39 @@ improc::QrCodeDrawer& improc::QrCodeDrawer::Load(const Json::Value& drawer_json)
     return (*this);
 };
 
+/**
+ * @brief Draw QR-Code
+ * 
+ * @param message - message to be encoded in qr-code
+ * @return cv::Mat - qr-code image with encoded message
+ */
 cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing qrcode...");
     qrcodegen::QrCode qrcode_data = qrcodegen::QrCode::encodeText(message.value().c_str(),this->error_correction_level_.ToQrCodeGen());
     int qrcode_size = qrcode_data.getSize();
-    cv::Mat qrcode = 255 * cv::Mat::ones(qrcode_size,qrcode_size,improc::QrCodeDrawer::kImageDataType);
-    // TODO: Improve method to draw qr-code using threads
-    for (size_t pixel_x = 0; pixel_x < qrcode_size; pixel_x++)
+    cv::Mat qrcode (qrcode_size,qrcode_size,improc::BaseDrawer::kImageDataType,improc::BaseDrawer::kWhiteValue);
+    for (size_t pixel_y = 0; pixel_y < qrcode_size; pixel_y++)
     {
-        for (size_t pixel_y = 0; pixel_y < qrcode_size; pixel_y++)
+        auto qrcode_row_ptr = qrcode.ptr<uint8_t>(pixel_y);
+        for (size_t pixel_x = 0; pixel_x < qrcode_size; pixel_x++)
         {
             if (qrcode_data.getModule(pixel_x,pixel_y) == true)
             {
-                qrcode.at<uint8_t>(cv::Point(pixel_x,pixel_y)) = 0;
+                qrcode_row_ptr[pixel_x] = improc::BaseDrawer::kBlackValue;
             }
         }
     }
     return qrcode;
 };
 
+/**
+ * @brief Verify message encoded in qr-code
+ * 
+ * @param drawer_output - qr-code image
+ * @param message - message encoded in qr-code
+ * @return bool - true if message and message recovered from the qr-code image is the same, false otherwise.
+ */
 bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying qr-code content...");
@@ -68,7 +102,6 @@ bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optio
     ZXing::DecoderResult result = ZXing::QRCode::Decode(*(data_matrix_bitmap->getBitMatrix()),this->hints_.characterSet());
     if (result.isValid() == true)
     {
-        // TODO: Add functionality to convert strings in string object
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
         return converter.to_bytes(result.text()) == message.value();
     }

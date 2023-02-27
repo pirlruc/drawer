@@ -75,7 +75,6 @@ set(
   ${PROJECT_SOURCE_DIR}/test/test_element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_corecv_json_parser.cpp
   ${PROJECT_SOURCE_DIR}/test/test_image_file_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_layout_drawer.cpp

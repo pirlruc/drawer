@@ -1,14 +1,27 @@
 #include <improc/drawer/drawer_types/data_matrix_drawer.hpp>
 
+/**
+ * @brief Construct a new improc::DataMatrixDrawer object
+ */
 improc::DataMatrixDrawer::DataMatrixDrawer(): improc::BaseDrawer() 
                                             , writer_(ZXing::DataMatrix::Writer()) 
                                             , hints_(ZXing::DecodeHints()) {}
 
+/**
+ * @brief Construct a new improc::DataMatrixDrawer object
+ * 
+ * @param drawer_json - configuration json for data matrix drawer
+ */
 improc::DataMatrixDrawer::DataMatrixDrawer(const Json::Value& drawer_json) : improc::DataMatrixDrawer() 
 {
-    this->Load(drawer_json);
+    this->Load(std::move(drawer_json));
 }
 
+/**
+ * @brief Load configuration for a improc::DataMatrixDrawer object
+ * 
+ * @param drawer_json - configuration json for data matrix drawer
+ */
 improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value& drawer_json)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating data matrix drawer...");
@@ -17,19 +30,23 @@ improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value& draw
     return (*this);
 };
 
+/**
+ * @brief Draw data matrix
+ * 
+ * @param message - message to be encoded in data matrix
+ * @return cv::Mat - data matrix image with encoded message
+ */
 cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing data matrix...");
-    // TODO: Add functionality to convert strings in string object
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
     ZXing::BitMatrix matrix_data = this->writer_.encode ( converter.from_bytes(message.value())
                                                         , improc::DataMatrixDrawer::kMinWidth
                                                         , improc::DataMatrixDrawer::kMinHeight );
     cv::Mat data_matrix (matrix_data.height(),matrix_data.width(),improc::BaseDrawer::kImageDataType);
-    // TODO: Move image conversion method to a base image class
-    auto bitmatrix_begin = matrix_data.row(0).begin();
-    auto bitmatrix_end   = matrix_data.row(matrix_data.height()).end();
-    std::transform  ( bitmatrix_begin,bitmatrix_end,data_matrix.begin<uint8_t>()
+    std::transform  ( matrix_data.row(0).begin()
+                    , matrix_data.row(matrix_data.height()).end()
+                    , data_matrix.begin<uint8_t>()
                     , [] (const uint8_t& bitmatrix_item) 
                         {
                             if (bitmatrix_item != 0)
@@ -45,6 +62,13 @@ cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message
     return data_matrix;
 };
 
+/**
+ * @brief Verify message encoded in data matrix
+ * 
+ * @param drawer_output - data matrix image
+ * @param message - message encoded in data matrix
+ * @return bool - true if message and message recovered from the data matrix image is the same, false otherwise.
+ */
 bool improc::DataMatrixDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying data matrix content...");

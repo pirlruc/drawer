@@ -11,8 +11,8 @@ TEST(ElementDrawer,TestConstructor) {
 
 TEST(ElementDrawer,TestEmptyDraw) {
     improc::ElementDrawer drawer {};
-    EXPECT_THROW(drawer.Draw(),improc::drawer_not_defined);
-    EXPECT_THROW(drawer.Verify(cv::Mat()),improc::drawer_not_defined);
+    EXPECT_THROW(drawer.Draw(),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(cv::Mat()),improc::processing_flow_error);
 }
 
 TEST(ElementDrawer,TestConstructorWithLoad) {

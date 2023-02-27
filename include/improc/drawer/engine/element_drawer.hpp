@@ -4,8 +4,8 @@
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
 #include <improc/corecv/structures/rotation_type.hpp>
+#include <improc/corecv/parsers/json_parser.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
-#include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/imgproc.hpp>
 #include <json/json.h>
@@ -13,6 +13,10 @@
 
 namespace improc 
 {
+    /**
+     * @brief Element drawer object for drawer factory. 
+     * This class applies a rotation and a resizing operation to a base drawer. 
+     */
     class IMPROC_API ElementDrawer
     {
         private:
@@ -22,7 +26,7 @@ namespace improc
 
         public:
             ElementDrawer();
-            ElementDrawer(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json);
+            explicit ElementDrawer(const improc::DrawerFactory& factory, const Json::Value& element_drawer_json);
 
             ElementDrawer&              Load    (const improc::DrawerFactory& factory, const Json::Value& element_drawer_json);
             cv::Mat                     Draw    (const std::optional<std::string>& message = std::optional<std::string>()) const;

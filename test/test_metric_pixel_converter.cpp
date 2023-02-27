@@ -83,12 +83,13 @@ TEST(MetricPixelConverter,TestSetPrintingResolution) {
 
 TEST(MetricPixelConverter,TestInvalidPrintingResolution) {
     improc::MetricPixelConverter converter {};
-    EXPECT_THROW(converter.set_printing_resolution(0),improc::printing_resolution_not_positive);
+    EXPECT_THROW(converter.set_printing_resolution(0),improc::value_error);
 }
 
 TEST(MetricPixelConverter,TestConverters) {
     improc::MetricPixelConverter converter {};
     converter.set_printing_resolution(500);
     EXPECT_EQ(converter.Pixel2Metric(converter.Metric2Pixel(25.4)),25.4);
+    EXPECT_EQ(converter.Pixel2Metric(converter.Metric2Pixel(-25.4)),-25.4);
     EXPECT_EQ(converter.Pixel2Metric(converter.Metric2Pixel(25.4),improc::MetricUnit::kCentimeter),2.54);
 }

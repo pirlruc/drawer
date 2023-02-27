@@ -15,8 +15,8 @@ TEST(PageElementDrawer,TestConstructor) {
 TEST(PageElementDrawer,TestEmptyDraw) {
     improc::PageElementDrawer drawer {};
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
-    EXPECT_THROW(drawer.Draw(page),improc::drawer_not_defined);
-    EXPECT_THROW(drawer.Verify(page),improc::drawer_not_defined);
+    EXPECT_THROW(drawer.Draw(page),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(page),improc::processing_flow_error);
 }
 
 TEST(PageElementDrawer,TestConstructorWithLoad) {
@@ -118,8 +118,8 @@ TEST(PageElementDrawer,TestDrawWithoutAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
-    EXPECT_THROW(drawer.Draw(page),cv::Exception);
-    EXPECT_FALSE(drawer.Verify(page));
+    EXPECT_THROW(drawer.Draw(page),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(page),improc::processing_flow_error);
 }
 
 TEST(PageElementDrawer,TestDrawWithAllocation) {

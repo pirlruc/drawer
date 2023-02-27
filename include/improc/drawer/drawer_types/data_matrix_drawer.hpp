@@ -17,6 +17,9 @@
 
 namespace improc 
 {
+    /**
+     * @brief Data matrix drawer methods and utilities
+     */
     class IMPROC_API DataMatrixDrawer final: public improc::BaseDrawer
     {
         private:

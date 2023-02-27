@@ -11,8 +11,8 @@ TEST(TextDrawer,TestConstructor) {
 
 TEST(TextDrawer,TestEmptyDraw) {
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Draw(),improc::freetype_lib_error);
-    EXPECT_THROW(drawer.Draw("test_message"),improc::freetype_lib_error);
+    EXPECT_THROW(drawer.Draw(),improc::value_error);
+    EXPECT_THROW(drawer.Draw("test_message"),improc::value_error);
     EXPECT_TRUE(drawer.Verify(cv::Mat()));
 }
 

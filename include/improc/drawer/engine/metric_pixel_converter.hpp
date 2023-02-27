@@ -9,6 +9,9 @@
 
 namespace improc 
 {
+    /**
+     * @brief Metric unit methods and utilities
+     */
     class IMPROC_API MetricUnit final
     {
         public:
@@ -26,9 +29,22 @@ namespace improc
         public:
             MetricUnit();                              
             explicit MetricUnit(const std::string& metric_unit_str);
-            constexpr explicit          MetricUnit(Value metric_unit_value): value_(metric_unit_value) {}
+
+            /**
+             * @brief Construct a new improc::MetricUnit object
+             * 
+             * @param metric_unit_value - metric unit value
+             */
+            constexpr explicit          MetricUnit(Value metric_unit_value): value_(std::move(metric_unit_value)) {}
+
+            /**
+             * @brief Obtain metric unit value
+             */
             constexpr operator          Value()     const {return this->value_;}
 
+            /**
+             * @brief Obtain metric unit string description
+             */
             constexpr std::string_view  ToString()  const
             {
                 switch (this->value_)
@@ -40,6 +56,13 @@ namespace improc
                 };
             }
 
+            /**
+             * @brief Obtain conversion factor
+             * 
+             * @tparam MetricUnitType - metric unit data type: improc::MetricUnit or improc::MetricUnit::Value
+             * @param to_metric_unit - target metric unit
+             * @return double - conversion factor between metric units
+             */
             template <typename MetricUnitType>
             double                      GetConversionFactor(const MetricUnitType& to_metric_unit) const
             {
@@ -51,7 +74,7 @@ namespace improc
                 else if constexpr (std::is_same_v<MetricUnitType,improc::MetricUnit::Value>)
                 {
                     IMPROC_DRAWER_LOGGER_TRACE("Obtaining conversion factor from {} to {}...",this->ToString(),improc::MetricUnit(to_metric_unit).ToString());
-                    return std::pow(10,to_metric_unit - this->value_);
+                    return std::pow(10,std::move(to_metric_unit) - this->value_);
                 }
                 else
                 {
@@ -60,6 +83,9 @@ namespace improc
             }
     };
 
+    /**
+     * @brief Metric pixel conversion methods and utilities
+     */
     class IMPROC_API MetricPixelConverter final
     {
         private:
@@ -73,17 +99,25 @@ namespace improc
 
             MetricPixelConverter&       set_printing_resolution(unsigned int printing_resolution_dpi);
 
+            /**
+             * @brief Convert metric unit to pixel
+             * 
+             * @tparam MetricUnitType - metric unit data type: improc::MetricUnit or improc::MetricUnit::Value
+             * @param metric - measure in metric units
+             * @param from_metric_unit - source metric unit
+             * @return int - measure in pixels
+             */
             template <typename MetricUnitType = improc::MetricUnit::Value>
-            unsigned int                Metric2Pixel(double       metric, const MetricUnitType& from_metric_unit = improc::MetricUnit::kMilimiter) const
+            int                         Metric2Pixel(double       metric, const MetricUnitType& from_metric_unit = improc::MetricUnit::kMilimiter) const
             {
                 IMPROC_DRAWER_LOGGER_TRACE("Converting metric to pixel units...");
                 if constexpr (std::is_same_v<MetricUnitType,improc::MetricUnit>)
                 {
-                    return std::round(metric * (this->metric_to_pixel_factor_ * from_metric_unit.GetConversionFactor(improc::MetricPixelConverter::kMilimeter)));
+                    return std::round(std::move(metric) * (this->metric_to_pixel_factor_ * from_metric_unit.GetConversionFactor(improc::MetricPixelConverter::kMilimeter)));
                 }
                 else if constexpr (std::is_same_v<MetricUnitType,improc::MetricUnit::Value>)
                 {
-                    return std::round(metric * (this->metric_to_pixel_factor_ * improc::MetricUnit(from_metric_unit).GetConversionFactor(improc::MetricPixelConverter::kMilimeter)));
+                    return std::round(std::move(metric) * (this->metric_to_pixel_factor_ * improc::MetricUnit(std::move(from_metric_unit)).GetConversionFactor(improc::MetricPixelConverter::kMilimeter)));
                 }
                 else
                 {
@@ -91,17 +125,25 @@ namespace improc
                 }
             }
 
+            /**
+             * @brief Convert pixel unit to metric
+             * 
+             * @tparam MetricUnitType - metric unit data type: improc::MetricUnit or improc::MetricUnit::Value
+             * @param pixel - measure in pixels
+             * @param to_metric_unit - target metric unit
+             * @return double - measure in metric units
+             */
             template <typename MetricUnitType = improc::MetricUnit::Value>
-            double                      Pixel2Metric(unsigned int pixel , const MetricUnitType& to_metric_unit   = improc::MetricUnit::kMilimiter) const
+            double                      Pixel2Metric(int pixel , const MetricUnitType& to_metric_unit   = improc::MetricUnit::kMilimiter) const
             {
                 IMPROC_DRAWER_LOGGER_TRACE("Converting pixel to metric units...");
                 if constexpr (std::is_same_v<MetricUnitType,improc::MetricUnit>)
                 {
-                    return static_cast<double>(pixel) / (this->metric_to_pixel_factor_ * to_metric_unit.GetConversionFactor(improc::MetricPixelConverter::kMilimeter));
+                    return static_cast<double>(std::move(pixel)) / (this->metric_to_pixel_factor_ * to_metric_unit.GetConversionFactor(improc::MetricPixelConverter::kMilimeter));
                 }
                 else if constexpr (std::is_same_v<MetricUnitType,improc::MetricUnit::Value>)
                 {
-                    return static_cast<double>(pixel) / (this->metric_to_pixel_factor_ * improc::MetricUnit(to_metric_unit).GetConversionFactor(improc::MetricPixelConverter::kMilimeter));
+                    return static_cast<double>(std::move(pixel)) / (this->metric_to_pixel_factor_ * improc::MetricUnit(std::move(to_metric_unit)).GetConversionFactor(improc::MetricPixelConverter::kMilimeter));
                 }
                 else
                 {
