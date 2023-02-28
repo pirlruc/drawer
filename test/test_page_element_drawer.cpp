@@ -3,8 +3,6 @@
 #include <improc_drawer_test_config.hpp>
 #include <base_drawers_def.hpp>
 #include <improc/drawer/engine/page_element_drawer.hpp>
-//TODO: Replace qr-code tests
-#include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
 
 TEST(PageElementDrawer,TestConstructor) {
@@ -134,22 +132,22 @@ TEST(PageElementDrawer,TestDrawWithAllocation) {
     EXPECT_TRUE(drawer.Verify(page));
 }
 
-TEST(PageElementDrawer,TestInvalidAllocationQrCode) {
+TEST(PageElementDrawer,TestInvalidAllocationDrawerWithMessage) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
-    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<improc::QrCodeDrawer>});
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawerWithMessage>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     EXPECT_THROW(drawer.Allocate(),std::bad_optional_access);
 }
 
-TEST(PageElementDrawer,TestValidAllocationQrCode) {
-    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_qrcode_config.json";
+TEST(PageElementDrawer,TestValidAllocationDrawerWithMessage) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_content_config.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
-    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<improc::QrCodeDrawer>});
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawerWithMessage>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     EXPECT_NO_THROW(drawer.Allocate());
 }
