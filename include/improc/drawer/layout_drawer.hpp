@@ -17,7 +17,7 @@ namespace improc
      * @brief Layout drawer object for drawer factory. 
      * This is an interface class to define different types of layouts in a page.
      */
-    class LayoutDrawer final: protected improc::PageDrawer
+    class IMPROC_API LayoutDrawer final: protected improc::PageDrawer
     {
         public:
             LayoutDrawer();

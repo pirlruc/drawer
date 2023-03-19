@@ -16,7 +16,7 @@ namespace improc
      * @brief Page drawer object for drawer factory. 
      * This class defines page element drawers within a page.
      */
-    class PageDrawer
+    class IMPROC_API PageDrawer
     {
         protected:
             std::list<PageElementDrawer>        elements_;

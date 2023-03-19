@@ -33,7 +33,10 @@ jobs:
             archiver: "7z a",
             artifact: "ubuntu_gcc.7z",
             boost: "OFF",
-            coverage: "OFF"
+            coverage: "OFF",
+            qrcode: "ON",
+            barcode: "ON",
+            text: "ON"
           }
         - {
             name: "ubuntu-latest-clang-boost-off",
@@ -45,7 +48,10 @@ jobs:
             archiver: "7z a",
             artifact: "ubuntu_clang.7z",
             boost: "OFF",
-            coverage: "OFF"
+            coverage: "OFF",
+            qrcode: "ON",
+            barcode: "ON",
+            text: "ON"
           }
         - {
             name: "windows-latest-gcc-boost-off",
@@ -57,7 +63,10 @@ jobs:
             archiver: "7z a",
             artifact: "windows_gcc.7z",
             boost: "OFF",
-            coverage: "OFF"
+            coverage: "OFF",
+            qrcode: "ON",
+            barcode: "ON",
+            text: "ON"
           }
         - {
             name: "windows-latest-clang-boost-off",
@@ -69,7 +78,10 @@ jobs:
             archiver: "7z a",
             artifact: "windows_clang.7z",
             boost: "OFF",
-            coverage: "OFF"
+            coverage: "OFF",
+            qrcode: "ON",
+            barcode: "ON",
+            text: "OFF"
           }
           
     steps:
@@ -132,11 +144,11 @@ jobs:
             -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
             -DCMAKE_INSTALL_PREFIX:PATH=install \
             -DIMPROC_WITH_BOOST=${{ matrix.config.boost }} \
+            -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=${{ matrix.config.qrcode }} \
+            -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=${{ matrix.config.barcode }} \
+            -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=${{ matrix.config.text }} \
             -DIMPROC_WITH_COVERAGE=${{ matrix.config.coverage }} \
             -DIMPROC_DRAWER_WITH_TESTS=ON \
-            -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=ON \
-            -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=ON \
-            -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=ON \
             -G "${{ matrix.config.generator }}"
       
       - name: Build
