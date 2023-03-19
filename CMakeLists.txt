@@ -8,6 +8,10 @@ if(NOT DEFINED IMPROC_SUPERPROJECT_VERSION)
   set(IMPROC_SUPERPROJECT_VERSION 1.0.0)
 endif()
 
+if(NOT DEFINED IMPROC_DRAWER_WITH_TESTS)
+  set(IMPROC_DRAWER_WITH_TESTS OFF)
+endif()
+
 project(
   improc_drawer
   VERSION     ${IMPROC_SUPERPROJECT_VERSION}
@@ -176,7 +180,7 @@ target_link_libraries       (${PROJECT_NAME}   INTERFACE  ${IMPROC_DRAWER_EXTRA_
 target_link_libraries       (${PROJECT_NAME}   INTERFACE  improc::corecv)
 
 # Tests configuration
-if(IMPROC_WITH_TESTS)
+if(IMPROC_WITH_TESTS OR IMPROC_DRAWER_WITH_TESTS)
   add_subdirectory(${PROJECT_SOURCE_DIR}/test     ${CMAKE_BINARY_DIR}/improc_drawer_test)
 endif()
 
@@ -188,7 +192,7 @@ install(
   EXPORT      ${PROJECT_NAME}_target 
 )
 if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  # install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/LICENSE  DESTINATION share/licenses/improc/qrcodegen)
+  install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/Readme.markdown  DESTINATION share/licenses/improc/qrcodegen)
 endif()
 
 if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
