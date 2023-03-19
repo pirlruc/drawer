@@ -6,6 +6,7 @@ on:
     branches: 
     - main
     - developer
+    - feature-workflow
   pull_request:
     branches: 
     - main
@@ -57,9 +58,9 @@ jobs:
           lcov     --version
 
           cd ..
-          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/infrastructure.git
-          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/services.git
-          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/corecv.git
+          git clone --recurse-submodules -b developer https://github.com/pirlruc/infrastructure.git
+          git clone --recurse-submodules -b developer https://github.com/pirlruc/services.git
+          git clone --recurse-submodules -b developer https://github.com/pirlruc/corecv.git
 
       - name: Configure
         shell: bash
@@ -74,7 +75,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
             -DIMPROC_WITH_BOOST=${{ matrix.config.boost }} \
             -DIMPROC_WITH_COVERAGE=${{ matrix.config.coverage }} \
-            -DIMPROC_CORECV_WITH_TESTS=ON \
+            -DIMPROC_DRAWER_WITH_TESTS=ON \
             -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=ON \
             -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=ON \
             -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=ON \

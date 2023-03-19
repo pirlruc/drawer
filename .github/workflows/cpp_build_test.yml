@@ -132,7 +132,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX:PATH=install \
             -DIMPROC_WITH_BOOST=${{ matrix.config.boost }} \
             -DIMPROC_WITH_COVERAGE=${{ matrix.config.coverage }} \
-            -DIMPROC_CORECV_WITH_TESTS=ON \
+            -DIMPROC_DRAWER_WITH_TESTS=ON \
             -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=ON \
             -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=ON \
             -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=ON \
