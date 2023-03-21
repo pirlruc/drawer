@@ -79,7 +79,7 @@ jobs:
             artifact: "windows_clang.7z",
             boost: "OFF",
             coverage: "OFF",
-            qrcode: "ON",
+            qrcode: "OFF",
             barcode: "ON",
             text: "OFF"
           }
