@@ -120,6 +120,9 @@ jobs:
             build/*
             external/*
             test/external/*
+            ../infrastructure/external/*
+            ../services/external/*
+            ../corecv/external/*
           key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.barcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_OFF-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
           restore-keys: |
             ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.barcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_OFF-
@@ -161,6 +164,9 @@ jobs:
             build/*
             external/*
             test/external/*
+            ../infrastructure/external/*
+            ../services/external/*
+            ../corecv/external/*
           key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.barcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_OFF-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
 
       - name: Install Strip
