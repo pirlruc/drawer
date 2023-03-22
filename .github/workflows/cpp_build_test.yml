@@ -10,6 +10,7 @@ on:
   pull_request:
     branches: 
     - main
+    - developer
 
   # Runs this workflow manually from the Actions tab
   workflow_dispatch:
@@ -131,11 +132,28 @@ jobs:
           git clone --recurse-submodules -b developer https://github.com/pirlruc/services.git
           git clone --recurse-submodules -b developer https://github.com/pirlruc/corecv.git
           
-      - name: Configure
+      - name: Restore Build Cache
+        id: restore-build-cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            build/*
+            external/*
+            test/external/*
+          key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.barcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_ON-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
+          restore-keys: |
+            ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.barcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_ON-
+
+      - name: Clean Build Folder
+        if: steps.restore-build-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           rm -rf build
           mkdir build
+
+      - name: Configure
+        shell: bash
+        run: |
           cmake \
             -S . \
             -B build \
@@ -154,6 +172,16 @@ jobs:
       - name: Build
         shell: bash
         run: cmake --build build --config ${{ matrix.config.build_type }} --target all
+
+      - name: Save Build Cache
+        id: save-build-cache
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            build/*
+            external/*
+            test/external/*
+          key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.barcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_ON-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
 
       - name: Test
         if: startsWith(matrix.config.coverage, 'OFF')
