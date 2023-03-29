@@ -6,7 +6,6 @@ on:
     branches: 
     - main
     - developer
-    - feature-workflow
   pull_request:
     branches: 
     - main
@@ -29,7 +28,10 @@ jobs:
             cxx: "clang++-14",
             generator: "Unix Makefiles",
             boost: "OFF",
-            coverage: "ON"
+            coverage: "ON",
+            qrcode: "ON",
+            barcode: "ON",
+            text: "ON"
           }
 
     steps:
@@ -58,9 +60,9 @@ jobs:
           gcc-11   --version
           clang-14 --version
           lcov     --version
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/infrastructure.git modules/infrastructure
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/services.git       modules/services
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/corecv.git         modules/corecv
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/infrastructure.git modules/infrastructure
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/services.git       modules/services
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/corecv.git         modules/corecv
 
       - name: Restore Build Cache
         id: restore-build-cache
@@ -94,11 +96,11 @@ jobs:
             -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
             -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
             -DIMPROC_WITH_BOOST=${{ matrix.config.boost }} \
+            -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=${{ matrix.config.qrcode }} \
+            -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=${{ matrix.config.barcode }} \
+            -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=${{ matrix.config.text }} \
             -DIMPROC_WITH_COVERAGE=${{ matrix.config.coverage }} \
             -DIMPROC_DRAWER_WITH_TESTS=ON \
-            -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=ON \
-            -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=ON \
-            -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=ON \
             -G "${{ matrix.config.generator }}"
 
       - name: Build
@@ -116,7 +118,7 @@ jobs:
             modules/infrastructure/external/*
             modules/services/external/*
             modules/corecv/external/*
-          key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_ON-zxingcpp_ON-freetype_ON-coverage_${{ matrix.config.coverage }}-tests_ON-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
+          key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.qrcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_ON-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
 
       - name: Code Coverage Report
         shell: bash

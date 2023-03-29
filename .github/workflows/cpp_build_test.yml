@@ -6,7 +6,6 @@ on:
     branches: 
     - main
     - developer
-    - feature-workflow
   pull_request:
     branches: 
     - main
@@ -106,9 +105,9 @@ jobs:
           gcc-11   --version
           clang-14 --version
           lcov     --version
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/infrastructure.git modules/infrastructure
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/services.git       modules/services
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/corecv.git         modules/corecv
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/infrastructure.git modules/infrastructure
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/services.git       modules/services
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/corecv.git         modules/corecv
 
       - name: Install Dependencies Windows
         if: startsWith(matrix.config.name, 'windows-latest')
@@ -118,9 +117,9 @@ jobs:
           cmake    --version
           gcc      --version
           clang    --version
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/infrastructure.git modules/infrastructure
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/services.git       modules/services
-          git clone --recurse-submodules -b developer https://github.com/pirlruc/corecv.git         modules/corecv
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/infrastructure.git modules/infrastructure
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/services.git       modules/services
+          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/corecv.git         modules/corecv
           
       - name: Restore Build Cache
         id: restore-build-cache
