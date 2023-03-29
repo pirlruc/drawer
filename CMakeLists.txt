@@ -192,14 +192,14 @@ install(
   EXPORT      ${PROJECT_NAME}_target 
 )
 if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/Readme.markdown  DESTINATION share/licenses/improc/qrcodegen)
+  install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen/Readme.markdown  DESTINATION share/licenses/improc/qrcodegen)
 endif()
 
 if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
-  install(FILES     ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE         DESTINATION share/licenses/improc/ZXing)
+  install(FILES     ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE                     DESTINATION share/licenses/improc/ZXing)
 endif()
 
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
-  install(FILES     ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT  DESTINATION share/licenses/improc/freetype)
+  install(FILES     ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT              DESTINATION share/licenses/improc/freetype)
 endif()
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                      DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                                  DESTINATION include)
