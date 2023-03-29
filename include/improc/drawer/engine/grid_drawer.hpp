@@ -15,7 +15,7 @@ namespace improc
      * @brief Grid drawer object for drawer factory. 
      * This is an utility class to define a grid of page element drawers in a page.
      */
-    class GridDrawer final: public improc::PageDrawer
+    class IMPROC_API GridDrawer final: public improc::PageDrawer
     {
         public:
             GridDrawer();

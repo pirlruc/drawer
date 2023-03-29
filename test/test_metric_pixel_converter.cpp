@@ -58,10 +58,10 @@ TEST(MetricUnit,TestToString) {
 
 TEST(MetricUnit,TestConversionFactor) {
     improc::MetricUnit metric_cm {"cm"};
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMilimiter),10);
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kCentimeter),1);
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kDecimeter),0.1);
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMeter),0.01);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMilimiter),10.0);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kCentimeter),1.0);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kDecimeter),0.1);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMeter),0.01);
 }
 
 TEST(MetricPixelConverter,TestEmptyConstructor) {
