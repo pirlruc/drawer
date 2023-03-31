@@ -13,10 +13,12 @@
 
 namespace improc 
 {
-    class IMPROC_API TextDrawer : public improc::BaseDrawer
+    /**
+     * @brief Text drawer methods and utilities
+     */
+    class IMPROC_API TextDrawer final: public improc::BaseDrawer
     {
         private:
-            static constexpr int            kImageDataType         = CV_8UC1;
             static constexpr unsigned int   kFontSizePointFraction = 64; 
             static constexpr unsigned int   kLoadFirstFont         = 0; 
             bool                            font_loaded_;
@@ -28,7 +30,7 @@ namespace improc
             
         public:
             TextDrawer();
-            TextDrawer(const Json::Value& drawer_json);
+            explicit TextDrawer(const Json::Value& drawer_json);
 
             TextDrawer&                     Load    (const Json::Value& drawer_json);
             cv::Mat                         Draw    (const std::optional<std::string>& message = std::optional<std::string>());
@@ -36,7 +38,6 @@ namespace improc
 
         private:
             static cv::Size                 ParseMetricSize(const Json::Value& size_json, const improc::MetricPixelConverter& pixel_converter);
-            cv::Mat                         Bitmap2Mat(const FT_Bitmap& char_bitmap) const;
     };
 }
 

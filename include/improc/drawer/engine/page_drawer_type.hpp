@@ -9,7 +9,10 @@
 
 namespace improc 
 {
-    class IMPROC_API PageDrawerType
+    /**
+     * @brief Page drawer type methods and utilities
+     */
+    class IMPROC_API PageDrawerType final
     {
         public:
             enum Value : IMPROC_ENUM_KEY_TYPE
@@ -23,10 +26,23 @@ namespace improc
 
         public:
             PageDrawerType();                              
-            PageDrawerType(const std::string& page_drawer_type_str);
-            constexpr                   PageDrawerType(Value page_drawer_type_value): value_(page_drawer_type_value) {}
+            explicit PageDrawerType(const std::string& page_drawer_type_str);
+
+            /**
+             * @brief Construct a new improc::PageDrawerType object
+             * 
+             * @param page_drawer_type_value - page drawer type value
+             */
+            constexpr explicit          PageDrawerType(Value page_drawer_type_value): value_(std::move(page_drawer_type_value)) {}
+
+            /**
+             * @brief Obtain page drawer type value
+             */
             constexpr operator          Value()     const {return this->value_;}
 
+            /**
+             * @brief Obtain page drawer type string description
+             */
             constexpr std::string_view  ToString()  const
             {
                 switch (this->value_)

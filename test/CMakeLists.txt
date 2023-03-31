@@ -40,7 +40,8 @@ if(IMPROC_WITH_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     COMMAND ${LLVM_PROFDATA} merge --sparse ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/default.profraw 
                                    -o ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_coverage.profdata
-    COMMAND ${LLVM_COV} export --format=lcov --instr-profile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_coverage.profdata 
+    COMMAND ${LLVM_COV} export  --ignore-filename-regex="external/*" 
+                                --format=lcov --instr-profile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_coverage.profdata 
                                                              ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}_testd 
                                                            > ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_coverage.lcov
     COMMAND ${GENHTML} --demangle-cpp -o ${PROJECT_NAME}_coverage ${CMAKE_BINARY_DIR}/${PROJECT_NAME}_coverage.lcov
@@ -67,27 +68,53 @@ if(IMPROC_WITH_COVERAGE AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   )
 endif()
 
-add_executable(
-  ${PROJECT_NAME}_test
-    
+set(
+  IMPROC_DRAWER_CORE_TEST_FILES
+
   ${PROJECT_SOURCE_DIR}/test/test_logger_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_base_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_element_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_rotation_type.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_corecv_json_parser.cpp
   ${PROJECT_SOURCE_DIR}/test/test_image_file_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_qrcode_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_barcode_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_data_matrix_drawer.cpp
-  ${PROJECT_SOURCE_DIR}/test/test_text_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_grid_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_layout_drawer.cpp
   ${PROJECT_SOURCE_DIR}/test/test_page_drawer_type.cpp
   ${PROJECT_SOURCE_DIR}/test/test_metric_pixel_converter.cpp
   ${PROJECT_SOURCE_DIR}/test/test_metric_pixel_json_converter.cpp
 )
+
+set(
+  IMPROC_DRAWER_QRCODE_TEST_FILES
+
+  ${PROJECT_SOURCE_DIR}/test/test_qrcode_drawer.cpp
+)
+
+set(
+  IMPROC_DRAWER_BARCODE_DATA_MATRIX_TEST_FILES
+
+  ${PROJECT_SOURCE_DIR}/test/test_barcode_drawer.cpp
+  ${PROJECT_SOURCE_DIR}/test/test_data_matrix_drawer.cpp
+)
+
+set(
+  IMPROC_DRAWER_TEXT_TEST_FILES
+
+  ${PROJECT_SOURCE_DIR}/test/test_text_drawer.cpp
+)
+
+set(IMPROC_DRAWER_TEST_FILES ${IMPROC_DRAWER_CORE_TEST_FILES})
+if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+  set(IMPROC_DRAWER_TEST_FILES ${IMPROC_DRAWER_TEST_FILES} ${IMPROC_DRAWER_QRCODE_TEST_FILES})
+endif()
+if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
+  set(IMPROC_DRAWER_TEST_FILES ${IMPROC_DRAWER_TEST_FILES} ${IMPROC_DRAWER_BARCODE_DATA_MATRIX_TEST_FILES})
+endif()
+if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
+  set(IMPROC_DRAWER_TEST_FILES ${IMPROC_DRAWER_TEST_FILES} ${IMPROC_DRAWER_TEXT_TEST_FILES})
+endif()
+
+add_executable(${PROJECT_NAME}_test ${IMPROC_DRAWER_TEST_FILES})
 set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD           17)
 set_target_properties(${PROJECT_NAME}_test PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
 set_target_properties(${PROJECT_NAME}_test PROPERTIES LINKER_LANGUAGE        CXX)

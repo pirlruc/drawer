@@ -3,19 +3,23 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
+#include <improc/corecv/parsers/json_parser.hpp>
 #include <improc/drawer/engine/page_drawer.hpp>
-#include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
 
 namespace improc 
 {
-    class GridDrawer : public improc::PageDrawer
+    /**
+     * @brief Grid drawer object for drawer factory. 
+     * This is an utility class to define a grid of page element drawers in a page.
+     */
+    class IMPROC_API GridDrawer final: public improc::PageDrawer
     {
         public:
             GridDrawer();
-            GridDrawer(const improc::DrawerFactory& factory, const Json::Value& grid_drawer_json);
+            explicit GridDrawer(const improc::DrawerFactory& factory, const Json::Value& grid_drawer_json);
 
             GridDrawer&         Load    (const improc::DrawerFactory& factory, const Json::Value& grid_drawer_json);
             GridDrawer&         Allocate();
@@ -23,8 +27,8 @@ namespace improc
         private:
             static cv::Point    ParseGridNumber (const Json::Value& grid_number_json);
             static cv::Point    ParseGridSpacing(const Json::Value& grid_spacing_json);
-            static bool         IsNumberValid   (int number);
-            static bool         IsSpacingValid  (int spacing);
+            static inline bool  IsNumberValid   (int number);
+            static inline bool  IsSpacingValid  (int spacing);
     };
 }
 

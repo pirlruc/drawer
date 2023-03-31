@@ -1,7 +1,15 @@
 #include <improc/drawer/engine/metric_pixel_converter.hpp>
 
+/**
+ * @brief Construct a new improc::MetricUnit object
+ */
 improc::MetricUnit::MetricUnit() : value_(improc::MetricUnit::kMilimiter) {};
 
+/**
+ * @brief Construct a new improc::MetricUnit object
+ * 
+ * @param metric_unit_str - metric unit description as string
+ */
 improc::MetricUnit::MetricUnit(const std::string& metric_unit_str)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Obtaining metric unit from string {}...",metric_unit_str);
@@ -10,43 +18,38 @@ improc::MetricUnit::MetricUnit(const std::string& metric_unit_str)
                                                                                  , {"cm",MetricUnit::Value::kCentimeter}
                                                                                  , {"mm",MetricUnit::Value::kMilimiter }
                                                                                  };
-    this->value_ = kToElemType.at(improc::String::ToLower(metric_unit_str));
+    this->value_ = kToElemType.at(improc::String::ToLower(std::move(metric_unit_str)));
 }
 
-double improc::MetricUnit::GetConversionFactor(const improc::MetricUnit& to_metric_unit) const
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Obtaining conversion factor from {} to {}...",this->ToString(),to_metric_unit.ToString());
-    return std::pow(10,to_metric_unit.operator improc::MetricUnit::Value() - this->value_);
-}
-
+/**
+ * @brief Construct a new improc::MetricPixelConverter object
+ */
 improc::MetricPixelConverter::MetricPixelConverter() : metric_to_pixel_factor_(600.0 / MetricPixelConverter::kInchToMilimeter) {};
 
+/**
+ * @brief Construct a new improc::MetricPixelConverter object
+ * 
+ * @param printing_resolution_dpi - printing resolution in dpis.
+ */
 improc::MetricPixelConverter::MetricPixelConverter(unsigned int printing_resolution_dpi)
 {
-    this->set_printing_resolution(printing_resolution_dpi);
+    this->set_printing_resolution(std::move(printing_resolution_dpi));
 }
 
+/**
+ * @brief Set printing resolution
+ * 
+ * @param printing_resolution_dpi - printing resolution in dpis.S
+ */
 improc::MetricPixelConverter& improc::MetricPixelConverter::set_printing_resolution(unsigned int printing_resolution_dpi)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Setting printing resolution...");
     if (printing_resolution_dpi == 0)
     {
-        IMPROC_DRAWER_LOGGER_ERROR("Printing resolution should be positive");
-        throw improc::printing_resolution_not_positive();
+        std::string error_message = fmt::format("Printing resolution should be positive and not {}",printing_resolution_dpi);
+        IMPROC_DRAWER_LOGGER_ERROR("ERROR_01: " + error_message);
+        throw improc::value_error(std::move(error_message));
     }
-
     this->metric_to_pixel_factor_ = static_cast<double>(printing_resolution_dpi) / MetricPixelConverter::kInchToMilimeter;
     return (*this);
-}
-
-unsigned int improc::MetricPixelConverter::Metric2Pixel(double metric, improc::MetricUnit from_metric_unit) const
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Converting metric to pixel units...");
-    return std::round(metric * (this->metric_to_pixel_factor_ * from_metric_unit.GetConversionFactor(improc::MetricPixelConverter::kMilimeter)));
-}
-
-double improc::MetricPixelConverter::Pixel2Metric(unsigned int pixel, improc::MetricUnit to_metric_unit) const
-{
-    IMPROC_DRAWER_LOGGER_TRACE("Converting pixel to metric units...");
-    return static_cast<double>(pixel) / (this->metric_to_pixel_factor_ * to_metric_unit.GetConversionFactor(improc::MetricPixelConverter::kMilimeter));
 }

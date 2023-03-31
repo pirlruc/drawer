@@ -1,34 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <improc_drawer_test_config.hpp>
-
+#include <base_drawers_def.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
-
-class TestDrawer : public improc::BaseDrawer
-{
-    public:
-        TestDrawer() {};
-        TestDrawer(const Json::Value& drawer_json)
-        {
-            this->Load(drawer_json);
-        }
-
-        TestDrawer& Load(const Json::Value& drawer_json)
-        {
-            return (*this);
-        }
-
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return cv::Mat::ones(10,20,CV_8UC1);
-        }
-
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return drawer_output.rows == 10 && drawer_output.cols == 20;
-        }
-};
 
 TEST(BaseDrawer,TestConstructor) {
     EXPECT_NO_THROW(TestDrawer());
@@ -77,7 +52,7 @@ TEST(BaseDrawer,TestNoDrawerType)
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
-    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::json_error);
 }
 
 TEST(BaseDrawer,TestNoDrawerInFactory)
@@ -86,7 +61,7 @@ TEST(BaseDrawer,TestNoDrawerInFactory)
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
-    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::not_found_in_factory);
+    EXPECT_THROW(improc::BaseDrawer::Create(factory,json_content),improc::key_error);
 }
 
 TEST(BaseDrawer,TestDrawerInFactory)

@@ -1,34 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <improc_drawer_test_config.hpp>
-
+#include <base_drawers_def.hpp>
 #include <improc/drawer/engine/grid_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
-
-class TestGridDrawer : public improc::BaseDrawer
-{
-    public:
-        TestGridDrawer() {};
-        TestGridDrawer(const Json::Value& drawer_json)
-        {
-            this->Load(drawer_json);
-        }
-
-        TestGridDrawer& Load(const Json::Value& drawer_json)
-        {
-            return (*this);
-        }
-
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) 
-        {
-            return cv::Mat::zeros(50,100,CV_8UC1);
-        }
-
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return drawer_output.rows == 50 && drawer_output.cols == 100;
-        }
-};
 
 TEST(GridDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::GridDrawer());
@@ -63,7 +38,7 @@ TEST(GridDrawer,TestNoGridNumber) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(GridDrawer,TestNoGridSpacing) {
@@ -72,7 +47,7 @@ TEST(GridDrawer,TestNoGridSpacing) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(GridDrawer,TestNoCellContent) {
@@ -81,7 +56,7 @@ TEST(GridDrawer,TestNoCellContent) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(GridDrawer,TestInvalidNumberX) {
@@ -90,7 +65,7 @@ TEST(GridDrawer,TestInvalidNumberX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(GridDrawer,TestInvalidNumberY) {
@@ -99,7 +74,7 @@ TEST(GridDrawer,TestInvalidNumberY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(GridDrawer,TestInvalidSpacingX) {
@@ -108,7 +83,7 @@ TEST(GridDrawer,TestInvalidSpacingX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(GridDrawer,TestInvalidSpacingY) {
@@ -117,7 +92,7 @@ TEST(GridDrawer,TestInvalidSpacingY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(GridDrawer,TestDrawOutsidePage) {
@@ -143,9 +118,9 @@ TEST(GridDrawer,TestDrawWithoutAllocation) {
         context.emplace_back("example");
         context.emplace_back();
     }
-    EXPECT_THROW(drawer.Draw(context),cv::Exception);
-    EXPECT_FALSE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::page_drawer_not_allocated);
+    EXPECT_THROW(drawer.Draw(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::processing_flow_error);
 }
 
 TEST(GridDrawer,TestDrawWithAllocation) {
@@ -163,6 +138,6 @@ TEST(GridDrawer,TestDrawWithAllocation) {
     }
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
     EXPECT_TRUE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::invalid_page_image);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::value_error);
     EXPECT_TRUE(drawer.Verify(drawer.Allocate().Draw(context),context));
 }

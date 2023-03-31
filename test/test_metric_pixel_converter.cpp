@@ -58,10 +58,10 @@ TEST(MetricUnit,TestToString) {
 
 TEST(MetricUnit,TestConversionFactor) {
     improc::MetricUnit metric_cm {"cm"};
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMilimiter),10);
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kCentimeter),1);
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kDecimeter),0.1);
-    EXPECT_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMeter),0.01);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMilimiter),10.0);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kCentimeter),1.0);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kDecimeter),0.1);
+    EXPECT_DOUBLE_EQ(metric_cm.GetConversionFactor(improc::MetricUnit::kMeter),0.01);
 }
 
 TEST(MetricPixelConverter,TestEmptyConstructor) {
@@ -83,12 +83,13 @@ TEST(MetricPixelConverter,TestSetPrintingResolution) {
 
 TEST(MetricPixelConverter,TestInvalidPrintingResolution) {
     improc::MetricPixelConverter converter {};
-    EXPECT_THROW(converter.set_printing_resolution(0),improc::printing_resolution_not_positive);
+    EXPECT_THROW(converter.set_printing_resolution(0),improc::value_error);
 }
 
 TEST(MetricPixelConverter,TestConverters) {
     improc::MetricPixelConverter converter {};
     converter.set_printing_resolution(500);
     EXPECT_EQ(converter.Pixel2Metric(converter.Metric2Pixel(25.4)),25.4);
+    EXPECT_EQ(converter.Pixel2Metric(converter.Metric2Pixel(-25.4)),-25.4);
     EXPECT_EQ(converter.Pixel2Metric(converter.Metric2Pixel(25.4),improc::MetricUnit::kCentimeter),2.54);
 }

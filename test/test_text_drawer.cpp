@@ -11,8 +11,8 @@ TEST(TextDrawer,TestConstructor) {
 
 TEST(TextDrawer,TestEmptyDraw) {
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Draw(),improc::freetype_lib_error);
-    EXPECT_THROW(drawer.Draw("test_message"),improc::freetype_lib_error);
+    EXPECT_THROW(drawer.Draw(),improc::value_error);
+    EXPECT_THROW(drawer.Draw("test_message"),improc::value_error);
     EXPECT_TRUE(drawer.Verify(cv::Mat()));
 }
 
@@ -33,63 +33,63 @@ TEST(TextDrawer,TestNoPrintingResolution) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_printing_resolution.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::json_error);
 }
 
 TEST(TextDrawer,TestNoImageTextSize) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_image_text_size.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::json_error);
 }
 
 TEST(TextDrawer,TestNoFontPath) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_font_filepath.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::json_error);
 }
 
 TEST(TextDrawer,TestNoFontSize) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_font_size.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::json_error);
 }
 
 TEST(TextDrawer,TestNoMetricUnit) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_no_metric_unit.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::json_error);
 }
 
 TEST(TextDrawer,TestInvalidWidth) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_invalid_width.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::value_error);
 }
 
 TEST(TextDrawer,TestInvalidHeight) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_invalid_height.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::value_error);
 }
 
 TEST(TextDrawer,TestInvalidFontFilepath) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_invalid_font_filepath.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::invalid_filepath);
+    EXPECT_THROW(drawer.Load(json_content),improc::value_error);
 }
 
 TEST(TextDrawer,TestInvalidFontSize) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/text_drawer_invalid_font_size.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::TextDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::value_error);
 }
 
 TEST(TextDrawer,TestDrawOutsideImage) {

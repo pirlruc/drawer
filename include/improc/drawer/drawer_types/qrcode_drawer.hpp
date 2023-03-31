@@ -19,7 +19,10 @@ namespace improc
 {
     namespace qrcode
     {
-        class IMPROC_API ErrorCorrectionLevel
+        /**
+         * @brief QR-Code error correction methods and utilities
+         */
+        class IMPROC_API ErrorCorrectionLevel final
         {
             public:
                 enum Value : IMPROC_ENUM_KEY_TYPE
@@ -35,10 +38,23 @@ namespace improc
 
             public:
                 ErrorCorrectionLevel();                              
-                ErrorCorrectionLevel(const std::string& error_correction_level_str);
-                constexpr                           ErrorCorrectionLevel(Value error_correction_level_value): value_(error_correction_level_value) {}
+                explicit ErrorCorrectionLevel(const std::string& error_correction_level_str);
+
+                /**
+                 * @brief Construct a new improc::ErrorCorrectionLevel object
+                 * 
+                 * @param error_correction_level_value - error correction level value
+                 */
+                constexpr explicit                  ErrorCorrectionLevel(Value error_correction_level_value): value_(std::move(error_correction_level_value)) {}
+
+                /**
+                 * @brief Obtain error correction level value
+                 */
                 constexpr operator                  Value()     const {return this->value_;}
 
+                /**
+                 * @brief Obtain error correction level string description
+                 */
                 constexpr std::string_view          ToString()  const
                 {
                     switch (this->value_)
@@ -50,6 +66,9 @@ namespace improc
                     }
                 }
 
+                /**
+                 * @brief Obtain error correction level qrcodegen code
+                 */
                 constexpr qrcodegen::QrCode::Ecc    ToQrCodeGen()  const
                 {
                     switch (this->value_)
@@ -63,17 +82,19 @@ namespace improc
         };
     };
 
-    class IMPROC_API QrCodeDrawer : public improc::BaseDrawer
+    /**
+     * @brief QR-Code drawer methods and utilities
+     */
+    class IMPROC_API QrCodeDrawer final: public improc::BaseDrawer
     {
         private:
             static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;
-            static constexpr int                    kImageDataType = CV_8UC1;
             improc::qrcode::ErrorCorrectionLevel    error_correction_level_;
             ZXing::DecodeHints                      hints_;
             
         public:
             QrCodeDrawer();
-            QrCodeDrawer(const Json::Value& drawer_json);
+            explicit QrCodeDrawer(const Json::Value& drawer_json);
 
             QrCodeDrawer&                           Load    (const Json::Value& drawer_json);
             cv::Mat                                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());

@@ -1,34 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <improc_drawer_test_config.hpp>
-
+#include <base_drawers_def.hpp>
 #include <improc/drawer/layout_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
-
-class TestLayoutDrawer : public improc::BaseDrawer
-{
-    public:
-        TestLayoutDrawer() {};
-        TestLayoutDrawer(const Json::Value& drawer_json)
-        {
-            this->Load(drawer_json);
-        }
-
-        TestLayoutDrawer& Load(const Json::Value& drawer_json)
-        {
-            return (*this);
-        }
-
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) 
-        {
-            return cv::Mat::zeros(50,100,CV_8UC1);
-        }
-
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return drawer_output.rows == 50 && drawer_output.cols == 100;
-        }
-};
 
 TEST(LayoutDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::LayoutDrawer());
@@ -63,7 +38,7 @@ TEST(LayoutDrawer,TestNoPageDrawerType) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestLayoutDrawer>});
     improc::LayoutDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(LayoutDrawer,TestNoTopLeft) {
@@ -72,7 +47,7 @@ TEST(LayoutDrawer,TestNoTopLeft) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestLayoutDrawer>});
     improc::LayoutDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::json_error);
 }
 
 TEST(LayoutDrawer,TestInvalidPointX) {
@@ -81,7 +56,7 @@ TEST(LayoutDrawer,TestInvalidPointX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestLayoutDrawer>});
     improc::LayoutDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(LayoutDrawer,TestInvalidPointY) {
@@ -90,7 +65,7 @@ TEST(LayoutDrawer,TestInvalidPointY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestLayoutDrawer>});
     improc::LayoutDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(LayoutDrawer,TestLoadSingle) {
@@ -128,9 +103,9 @@ TEST(LayoutDrawer,TestDrawWithoutAllocation) {
     context.emplace_back();
     context.emplace_back("example");
     context.emplace_back();
-    EXPECT_THROW(drawer.Draw(context),cv::Exception);
-    EXPECT_FALSE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::page_drawer_not_allocated);
+    EXPECT_THROW(drawer.Draw(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(context),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::processing_flow_error);
 }
 
 TEST(LayoutDrawer,TestDrawWithAllocation) {
@@ -151,6 +126,6 @@ TEST(LayoutDrawer,TestDrawWithAllocation) {
     context.emplace_back();
     EXPECT_NO_THROW(drawer.Allocate().Draw(context));
     EXPECT_TRUE(drawer.Verify(context));
-    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::invalid_page_image);
+    EXPECT_THROW(drawer.Verify(cv::Mat(),context),improc::value_error);
     EXPECT_TRUE(drawer.Verify(drawer.Allocate().Draw(context),context));
 }

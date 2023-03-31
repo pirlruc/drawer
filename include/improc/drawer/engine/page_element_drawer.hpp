@@ -3,8 +3,8 @@
 
 #include <improc/improc_defs.hpp>
 #include <improc/exception.hpp>
+#include <improc/corecv/parsers/json_parser.hpp>
 #include <improc/drawer/engine/element_drawer.hpp>
-#include <improc/drawer/parsers/corecv_json_parser.hpp>
 
 #include <opencv2/core.hpp>
 #include <json/json.h>
@@ -12,7 +12,11 @@
 
 namespace improc 
 {
-    class IMPROC_API PageElementDrawer : private improc::ElementDrawer
+    /**
+     * @brief Page element drawer object for drawer factory. 
+     * This class defines an element drawer within a page.
+     */
+    class IMPROC_API PageElementDrawer final: private improc::ElementDrawer
     {
         private:
             cv::Point                   top_left_;
@@ -22,7 +26,7 @@ namespace improc
 
         public:
             PageElementDrawer();
-            PageElementDrawer(const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size);
+            explicit PageElementDrawer(const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size);
 
             PageElementDrawer&          Load    (const improc::DrawerFactory& factory, const Json::Value& page_element_drawer_json, const cv::Size& page_size);
             PageElementDrawer&          Allocate();
@@ -35,12 +39,18 @@ namespace improc
                                                                     , const cv::Point& increment_top_left
                                                                     , const cv::Size& page_size );
 
-            bool                        is_element_static() const;
+            /**
+             * @brief Obtain page element static property
+             */
+            inline bool                 is_element_static() const
+            {
+                return this->static_;
+            }
 
         private:
             static cv::Point            ParsePoint          (const Json::Value& point_json, const cv::Size& page_size);
             static void                 ValidatePoint       (const cv::Point&   point     , const cv::Size& page_size);
-            static bool                 IsPixelPositionValid(int pixel_position, int max_pixel_size);
+            static inline bool          IsPixelPositionValid(int pixel_position, int max_pixel_size);
     };
 }
 

@@ -1,35 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <improc_drawer_test_config.hpp>
-
+#include <base_drawers_def.hpp>
 #include <improc/drawer/engine/page_element_drawer.hpp>
-#include <improc/drawer/drawer_types/qrcode_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
-
-class TestPageElemDrawer : public improc::BaseDrawer
-{
-    public:
-        TestPageElemDrawer() {};
-        TestPageElemDrawer(const Json::Value& drawer_json)
-        {
-            this->Load(drawer_json);
-        }
-
-        TestPageElemDrawer& Load(const Json::Value& drawer_json)
-        {
-            return (*this);
-        }
-
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return 255 * cv::Mat::ones(50,100,CV_8UC1);
-        }
-
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return drawer_output.rows == 50 && drawer_output.cols == 100;
-        }
-};
 
 TEST(PageElementDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::PageElementDrawer());
@@ -39,8 +13,8 @@ TEST(PageElementDrawer,TestConstructor) {
 TEST(PageElementDrawer,TestEmptyDraw) {
     improc::PageElementDrawer drawer {};
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
-    EXPECT_THROW(drawer.Draw(page),improc::drawer_not_defined);
-    EXPECT_THROW(drawer.Verify(page),improc::drawer_not_defined);
+    EXPECT_THROW(drawer.Draw(page),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(page),improc::processing_flow_error);
 }
 
 TEST(PageElementDrawer,TestConstructorWithLoad) {
@@ -71,7 +45,7 @@ TEST(PageElementDrawer,TestNoTopLeft) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestNoTopLeftX) {
@@ -81,7 +55,7 @@ TEST(PageElementDrawer,TestNoTopLeftX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestNoTopLeftY) {
@@ -91,7 +65,7 @@ TEST(PageElementDrawer,TestNoTopLeftY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestInvalidTopLeftX) {
@@ -101,7 +75,7 @@ TEST(PageElementDrawer,TestInvalidTopLeftX) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::value_error);
 }
 
 TEST(PageElementDrawer,TestInvalidTopLeftY) {
@@ -111,7 +85,7 @@ TEST(PageElementDrawer,TestInvalidTopLeftY) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::value_error);
 }
 
 TEST(PageElementDrawer,TestInvalidStaticDynamic) {
@@ -121,7 +95,7 @@ TEST(PageElementDrawer,TestInvalidStaticDynamic) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content,page.size()),improc::json_error);
 }
 
 TEST(PageElementDrawer,TestDrawOutsidePage) {
@@ -142,8 +116,8 @@ TEST(PageElementDrawer,TestDrawWithoutAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageElemDrawer>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
-    EXPECT_THROW(drawer.Draw(page),cv::Exception);
-    EXPECT_FALSE(drawer.Verify(page));
+    EXPECT_THROW(drawer.Draw(page),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(page),improc::processing_flow_error);
 }
 
 TEST(PageElementDrawer,TestDrawWithAllocation) {
@@ -158,22 +132,22 @@ TEST(PageElementDrawer,TestDrawWithAllocation) {
     EXPECT_TRUE(drawer.Verify(page));
 }
 
-TEST(PageElementDrawer,TestInvalidAllocationQrCode) {
+TEST(PageElementDrawer,TestInvalidAllocationDrawerWithMessage) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_config.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
-    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<improc::QrCodeDrawer>});
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawerWithMessage>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     EXPECT_THROW(drawer.Allocate(),std::bad_optional_access);
 }
 
-TEST(PageElementDrawer,TestValidAllocationQrCode) {
-    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_qrcode_config.json";
+TEST(PageElementDrawer,TestValidAllocationDrawerWithMessage) {
+    std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/page_element_drawer_content_config.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     cv::Mat page = cv::Mat::zeros(200,100,CV_8UC1);
     improc::DrawerFactory factory {};
-    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<improc::QrCodeDrawer>});
+    factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawerWithMessage>});
     improc::PageElementDrawer drawer = improc::PageElementDrawer(factory,json_content,page.size());
     EXPECT_NO_THROW(drawer.Allocate());
 }

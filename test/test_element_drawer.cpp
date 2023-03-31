@@ -1,34 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <improc_drawer_test_config.hpp>
-
+#include <base_drawers_def.hpp>
 #include <improc/drawer/engine/element_drawer.hpp>
 #include <improc/infrastructure/filesystem/file.hpp>
-
-class TestDrawer : public improc::BaseDrawer
-{
-    public:
-        TestDrawer() {};
-        TestDrawer(const Json::Value& drawer_json)
-        {
-            this->Load(drawer_json);
-        }
-
-        TestDrawer& Load(const Json::Value& drawer_json)
-        {
-            return (*this);
-        }
-
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return cv::Mat::ones(10,20,CV_8UC1);
-        }
-
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
-        {
-            return drawer_output.rows == 10 && drawer_output.cols == 20;
-        }
-};
 
 TEST(ElementDrawer,TestConstructor) {
     EXPECT_NO_THROW(improc::ElementDrawer());
@@ -36,8 +11,8 @@ TEST(ElementDrawer,TestConstructor) {
 
 TEST(ElementDrawer,TestEmptyDraw) {
     improc::ElementDrawer drawer {};
-    EXPECT_THROW(drawer.Draw(),improc::drawer_not_defined);
-    EXPECT_THROW(drawer.Verify(cv::Mat()),improc::drawer_not_defined);
+    EXPECT_THROW(drawer.Draw(),improc::processing_flow_error);
+    EXPECT_THROW(drawer.Verify(cv::Mat()),improc::processing_flow_error);
 }
 
 TEST(ElementDrawer,TestConstructorWithLoad) {
@@ -72,7 +47,7 @@ TEST(ElementDrawer,TestInvalidWidth) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
     improc::ElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(ElementDrawer,TestInvalidHeight) {
@@ -81,7 +56,7 @@ TEST(ElementDrawer,TestInvalidHeight) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
     improc::ElementDrawer drawer {};
-    EXPECT_THROW(drawer.Load(factory,json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(factory,json_content),improc::value_error);
 }
 
 TEST(ElementDrawer,TestInvalidScale) {
@@ -91,7 +66,7 @@ TEST(ElementDrawer,TestInvalidScale) {
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestDrawer>});
     improc::ElementDrawer drawer {};
     drawer.Load(factory,json_content);
-    EXPECT_THROW(drawer.Draw(),improc::file_processing_error);
+    EXPECT_THROW(drawer.Draw(),improc::value_error);
 }
 
 TEST(ElementDrawer,TestDrawWithoutTransforms) {

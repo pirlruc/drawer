@@ -12,7 +12,10 @@
 
 namespace improc 
 {
-    class IMPROC_API ImageFileDrawer : public improc::BaseDrawer
+    /**
+     * @brief Image file drawer methods and utilities
+     */
+    class IMPROC_API ImageFileDrawer final: public improc::BaseDrawer
     {
         private:
             static constexpr int    kImageReadMode = cv::IMREAD_GRAYSCALE;
@@ -21,7 +24,7 @@ namespace improc
 
         public:
             ImageFileDrawer();
-            ImageFileDrawer(const Json::Value& drawer_json);
+            explicit ImageFileDrawer(const Json::Value& drawer_json);
 
             ImageFileDrawer&        Load    (const Json::Value& drawer_json);
             cv::Mat                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());

@@ -36,7 +36,7 @@ TEST(ImageFileDrawer,TestNoImageFile) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/image_file_drawer_no_image_file.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::ImageFileDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::file_processing_error);
+    EXPECT_THROW(drawer.Load(json_content),improc::json_error);
 }
 
 TEST(ImageFileDrawer,TestInvalidImageFile) {
@@ -44,7 +44,7 @@ TEST(ImageFileDrawer,TestInvalidImageFile) {
     std::string json_filepath = std::string(IMPROC_DRAWER_TEST_FOLDER) + "/test/data/image_file_drawer_invalid_image_file.json";
     Json::Value json_content  = improc::JsonFile::Read(json_filepath);
     improc::ImageFileDrawer drawer {};
-    EXPECT_THROW(drawer.Load(json_content),improc::invalid_filepath);
+    EXPECT_THROW(drawer.Load(json_content),improc::value_error);
 }
 
 TEST(ImageFileDrawer,TestDraw) {
