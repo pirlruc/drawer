@@ -97,8 +97,8 @@ namespace improc
             explicit QrCodeDrawer(const Json::Value& drawer_json);
 
             QrCodeDrawer&                           Load    (const Json::Value& drawer_json);
-            cv::Mat                                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());
-            bool                                    Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>());
+            cv::Mat                                 Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
+            bool                                    Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
     };
 }
 

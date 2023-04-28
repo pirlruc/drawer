@@ -80,7 +80,7 @@ improc::PageDrawer& improc::PageDrawer::Allocate()
  * @param context - list of messages to be considered in page
  * @return cv::Mat - page image with page elements drawed
  */
-cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& context)
+cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<improc::DrawerVariant>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing page...");
     if (this->elements_.size() != context.size())
@@ -94,7 +94,7 @@ cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& co
     std::vector<bool> dummy = std::vector<bool>(this->elements_.size());
     // TODO: Implement with foreach whenever the second iterator is available on STL
     std::transform  ( this->elements_.begin(),this->elements_.end(),context.begin(),dummy.begin()
-                    , [this] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
+                    , [this] (const improc::PageElementDrawer& elem, const std::optional<improc::DrawerVariant>& message) -> bool
                         {
                             if (elem.is_element_static() == false)
                             {
@@ -112,7 +112,7 @@ cv::Mat improc::PageDrawer::Draw(const std::list<std::optional<std::string>>& co
  * @param context - list of messages to be considered in page
  * @return bool - true if page is correct, false otherwise.
  */
-bool improc::PageDrawer::Verify(const std::list<std::optional<std::string>>& context)
+bool improc::PageDrawer::Verify(const std::list<std::optional<improc::DrawerVariant>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying page...");
     if (this->elements_.size() != context.size())
@@ -126,7 +126,7 @@ bool improc::PageDrawer::Verify(const std::list<std::optional<std::string>>& con
     std::vector<bool> are_valid = std::vector<bool>(this->elements_.size());
     // TODO: Implement with foreach whenever the second iterator is available on STL
     std::transform  ( this->elements_.begin(),this->elements_.end(),context.begin(),are_valid.begin()
-                    , [this] (const improc::PageElementDrawer& elem, const std::optional<std::string>& message) -> bool
+                    , [this] (const improc::PageElementDrawer& elem, const std::optional<improc::DrawerVariant>& message) -> bool
                         {
                             return elem.Verify(this->page_image_,std::move(message));
                         } 
@@ -141,7 +141,7 @@ bool improc::PageDrawer::Verify(const std::list<std::optional<std::string>>& con
  * @param context - list of messages to be considered in page
  * @return bool - true if page is correct, false otherwise.
  */
-bool improc::PageDrawer::Verify(const cv::Mat& page_image,const std::list<std::optional<std::string>>& context)
+bool improc::PageDrawer::Verify(const cv::Mat& page_image,const std::list<std::optional<improc::DrawerVariant>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying page given as input...");
     return this->set_page_image(std::move(page_image)).Verify(std::move(context));

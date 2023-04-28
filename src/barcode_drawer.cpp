@@ -43,11 +43,11 @@ improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value& drawer_jso
  * @param message - message to be encoded in barcode
  * @return cv::Mat - barcode image with encoded message
  */
-cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message)
+cv::Mat improc::BarcodeDrawer::Draw(const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing barcode...");
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-    ZXing::BitMatrix barcode_data = this->writer_.encode( converter.from_bytes(message.value())
+    ZXing::BitMatrix barcode_data = this->writer_.encode( converter.from_bytes(std::get<std::string>(message.value()))
                                                         , improc::BarcodeDrawer::kMinWidth
                                                         , improc::BarcodeDrawer::kMinHeight );
     cv::Mat barcode ( barcode_data.height(),barcode_data.width(),improc::BaseDrawer::kImageDataType );
@@ -76,7 +76,7 @@ cv::Mat improc::BarcodeDrawer::Draw(const std::optional<std::string>& message)
  * @param message - message encoded in barcode
  * @return bool - true if message and message recovered from the barcode image is the same, false otherwise.
  */
-bool improc::BarcodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
+bool improc::BarcodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying barcode content...");
     ZXing::OneD::Reader reader {this->hints_};
@@ -90,7 +90,7 @@ bool improc::BarcodeDrawer::Verify(const cv::Mat& drawer_output, const std::opti
     if (result.isValid() == true)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-        return converter.to_bytes(result.text()) == message.value();
+        return converter.to_bytes(result.text()) == std::get<std::string>(message.value());
     }
     else
     {

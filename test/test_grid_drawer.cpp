@@ -111,7 +111,7 @@ TEST(GridDrawer,TestDrawWithoutAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer = improc::GridDrawer(factory,json_content);
-    std::list<std::optional<std::string>> context {};
+    std::list<std::optional<improc::DrawerVariant>> context {};
     for (size_t idx = 0; idx < drawer.get_page_elements().size()/3; idx++)
     {
         context.emplace_back();
@@ -129,7 +129,7 @@ TEST(GridDrawer,TestDrawWithAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestGridDrawer>});
     improc::GridDrawer drawer = improc::GridDrawer(factory,json_content);
-    std::list<std::optional<std::string>> context {};
+    std::list<std::optional<improc::DrawerVariant>> context {};
     for (size_t idx = 0; idx < drawer.get_page_elements().size()/3; idx++)
     {
         context.emplace_back();

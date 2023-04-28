@@ -122,7 +122,7 @@ TEST(PageDrawer,TestDrawWithoutAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    std::list<std::optional<std::string>> context {};
+    std::list<std::optional<improc::DrawerVariant>> context {};
     context.push_back("test_a");
     context.emplace_back();
     context.emplace_back();    
@@ -137,7 +137,7 @@ TEST(PageDrawer,TestDrawWithAllocation) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    std::list<std::optional<std::string>> context {};
+    std::list<std::optional<improc::DrawerVariant>> context {};
     context.push_back("test_a");
     context.emplace_back();
     context.emplace_back();    
@@ -153,7 +153,7 @@ TEST(PageDrawer,TestOverlayedDraw) {
     improc::DrawerFactory factory {};
     factory.Register("test_drawer",std::function<std::shared_ptr<improc::BaseDrawer>(const Json::Value&)> {&improc::CreateDrawer<TestPageDrawer>});
     improc::PageDrawer drawer = improc::PageDrawer(factory,json_content);
-    std::list<std::optional<std::string>> context {};
+    std::list<std::optional<improc::DrawerVariant>> context {};
     context.push_back("test_a");
     context.emplace_back();
     context.emplace_back();    

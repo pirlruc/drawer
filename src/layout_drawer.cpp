@@ -159,7 +159,7 @@ improc::LayoutDrawer& improc::LayoutDrawer::Allocate()
  * @param context - list of messages to be considered in layout
  * @return cv::Mat - page image with layout elements drawed
  */
-cv::Mat improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& context)
+cv::Mat improc::LayoutDrawer::Draw(const std::list<std::optional<improc::DrawerVariant>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing layout...");
     return this->improc::PageDrawer::Draw(std::move(context));
@@ -171,7 +171,7 @@ cv::Mat improc::LayoutDrawer::Draw(const std::list<std::optional<std::string>>& 
  * @param context - list of messages to be considered in layout
  * @return bool - true if layout is correct, false otherwise.
  */
-bool improc::LayoutDrawer::Verify(const std::list<std::optional<std::string>>& context)
+bool improc::LayoutDrawer::Verify(const std::list<std::optional<improc::DrawerVariant>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying layout...");
     return this->improc::PageDrawer::Verify(std::move(context));
@@ -184,7 +184,7 @@ bool improc::LayoutDrawer::Verify(const std::list<std::optional<std::string>>& c
  * @param context - list of messages to be considered in layout
  * @return bool - true if layout is correct, false otherwise.
  */
-bool improc::LayoutDrawer::Verify(const cv::Mat& page_image,const std::list<std::optional<std::string>>& context)
+bool improc::LayoutDrawer::Verify(const cv::Mat& page_image,const std::list<std::optional<improc::DrawerVariant>>& context)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying layout given as input...");
     return this->improc::PageDrawer::Verify(std::move(page_image),std::move(context));

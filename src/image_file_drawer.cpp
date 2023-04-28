@@ -42,7 +42,7 @@ improc::ImageFileDrawer& improc::ImageFileDrawer::Load(const Json::Value& drawer
  * @param message - message for image file
  * @return cv::Mat - image with content of image file
  */
-cv::Mat improc::ImageFileDrawer::Draw(const std::optional<std::string>& message)
+cv::Mat improc::ImageFileDrawer::Draw(const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing image file content...");
     return this->image_data_;
@@ -55,7 +55,7 @@ cv::Mat improc::ImageFileDrawer::Draw(const std::optional<std::string>& message)
  * @param message - message for image file
  * @return bool - true if image content and image file content are the same, false otherwise.
  */
-bool improc::ImageFileDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
+bool improc::ImageFileDrawer::Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying image file content...");
     // TODO: Move this logic to an image class object

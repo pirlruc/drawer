@@ -132,7 +132,7 @@ cv::Size improc::TextDrawer::ParseMetricSize(const Json::Value& size_json, const
  * @param message - message to draw
  * @return cv::Mat - image with message
  */
-cv::Mat improc::TextDrawer::Draw(const std::optional<std::string>& message)
+cv::Mat improc::TextDrawer::Draw(const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing text...");
     if (this->font_loaded_ == false)
@@ -144,7 +144,7 @@ cv::Mat improc::TextDrawer::Draw(const std::optional<std::string>& message)
 
     cv::Mat text_image (this->image_text_size_,improc::BaseDrawer::kImageDataType,improc::BaseDrawer::kWhiteValue);
     IMPROC_DRAWER_LOGGER_DEBUG("Text image with size width = {}, height = {}", text_image.cols, text_image.rows);
-    std::string message_data = std::move(message).value();
+    std::string message_data = std::get<std::string>(message.value());
     FT_Pos position_x = 0;
     std::for_each   ( message_data.begin(),message_data.end()
                     , [this,&text_image,&position_x] (const FT_ULong& char_code)

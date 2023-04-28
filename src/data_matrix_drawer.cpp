@@ -36,11 +36,11 @@ improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value& draw
  * @param message - message to be encoded in data matrix
  * @return cv::Mat - data matrix image with encoded message
  */
-cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message)
+cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing data matrix...");
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-    ZXing::BitMatrix matrix_data = this->writer_.encode ( converter.from_bytes(message.value())
+    ZXing::BitMatrix matrix_data = this->writer_.encode ( converter.from_bytes(std::get<std::string>(message.value()))
                                                         , improc::DataMatrixDrawer::kMinWidth
                                                         , improc::DataMatrixDrawer::kMinHeight );
     cv::Mat data_matrix (matrix_data.height(),matrix_data.width(),improc::BaseDrawer::kImageDataType);
@@ -69,7 +69,7 @@ cv::Mat improc::DataMatrixDrawer::Draw(const std::optional<std::string>& message
  * @param message - message encoded in data matrix
  * @return bool - true if message and message recovered from the data matrix image is the same, false otherwise.
  */
-bool improc::DataMatrixDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
+bool improc::DataMatrixDrawer::Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying data matrix content...");
     std::unique_ptr<ZXing::BinaryBitmap> data_matrix_bitmap = 
@@ -82,7 +82,7 @@ bool improc::DataMatrixDrawer::Verify(const cv::Mat& drawer_output, const std::o
     if (result.isValid() == true)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-        return converter.to_bytes(result.text()) == message.value();
+        return converter.to_bytes(result.text()) == std::get<std::string>(message.value());
     }
     else
     {

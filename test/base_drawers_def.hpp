@@ -17,12 +17,12 @@ class TestPageDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) 
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>()) 
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 50 && drawer_output.cols == 100;
         }
@@ -42,12 +42,12 @@ class TestPageElemDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>())
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
         {
             return 255 * cv::Mat::ones(50,100,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 50 && drawer_output.cols == 100;
         }
@@ -67,12 +67,12 @@ class TestDrawer : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) 
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>()) 
         {
             return cv::Mat::ones(10,20,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 10 && drawer_output.cols == 20;
         }
@@ -92,13 +92,13 @@ class TestDrawerWithMessage : public improc::BaseDrawer
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<std::string>& message = std::optional<std::string>()) 
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>()) 
         {
-            std::cout << message.value() << std::endl;
+            std::cout << std::get<std::string>(message.value()) << std::endl;
             return cv::Mat::ones(10,20,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 10 && drawer_output.cols == 20;
         }
