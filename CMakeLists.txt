@@ -72,7 +72,7 @@ endif()
 FetchContent_Declare(
   zxingcpp
   GIT_REPOSITORY  https://github.com/nu-book/zxing-cpp
-  GIT_TAG         v1.3.0
+  GIT_TAG         v2.1.0
   SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
 )
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)

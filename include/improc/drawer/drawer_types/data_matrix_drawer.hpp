@@ -6,7 +6,6 @@
 
 #include <BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <DecodeHints.h>
 #include <DecoderResult.h>
 #include <ThresholdBinarizer.h>
 #include <datamatrix/DMWriter.h>
@@ -29,7 +28,6 @@ namespace improc
             static constexpr int                            kMinWidth           = 0;
             static constexpr int                            kMinHeight          = 0;
             ZXing::DataMatrix::Writer                       writer_;
-            ZXing::DecodeHints                              hints_;
             
         public:
             DataMatrixDrawer();

@@ -4,8 +4,7 @@
  * @brief Construct a new improc::DataMatrixDrawer object
  */
 improc::DataMatrixDrawer::DataMatrixDrawer(): improc::BaseDrawer() 
-                                            , writer_(ZXing::DataMatrix::Writer()) 
-                                            , hints_(ZXing::DecodeHints()) {}
+                                            , writer_(ZXing::DataMatrix::Writer()) {}
 
 /**
  * @brief Construct a new improc::DataMatrixDrawer object
@@ -78,7 +77,7 @@ bool improc::DataMatrixDrawer::Verify(const cv::Mat& drawer_output, const std::o
                                                                         , drawer_output.rows
                                                                         , improc::DataMatrixDrawer::kImageFormat
                                                     ), 0 );
-    ZXing::DecoderResult result = ZXing::DataMatrix::Decode(*(data_matrix_bitmap->getBitMatrix()),this->hints_.characterSet());
+    ZXing::DecoderResult result = ZXing::DataMatrix::Decode(*(data_matrix_bitmap->getBitMatrix()));
     if (result.isValid() == true)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};

@@ -8,7 +8,6 @@
 #include <qrcodegen/cpp/qrcodegen.hpp>
 #include <BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <DecodeHints.h>
 #include <DecoderResult.h>
 #include <ThresholdBinarizer.h>
 #include <qrcode/QRDecoder.h>
@@ -90,7 +89,6 @@ namespace improc
         private:
             static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;
             improc::qrcode::ErrorCorrectionLevel    error_correction_level_;
-            ZXing::DecodeHints                      hints_;
             
         public:
             QrCodeDrawer();

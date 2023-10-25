@@ -46,8 +46,7 @@ improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value& drawer_jso
 cv::Mat improc::BarcodeDrawer::Draw(const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing barcode...");
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-    ZXing::BitMatrix barcode_data = this->writer_.encode( converter.from_bytes(std::get<std::string>(message.value()))
+    ZXing::BitMatrix barcode_data = this->writer_.encode( std::get<std::string>(message.value())
                                                         , improc::BarcodeDrawer::kMinWidth
                                                         , improc::BarcodeDrawer::kMinHeight );
     cv::Mat barcode ( barcode_data.height(),barcode_data.width(),improc::BaseDrawer::kImageDataType );
@@ -89,8 +88,7 @@ bool improc::BarcodeDrawer::Verify(const cv::Mat& drawer_output, const std::opti
     ZXing::Result result = reader.decode(*barcode_bitmap);
     if (result.isValid() == true)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-        return converter.to_bytes(result.text()) == std::get<std::string>(message.value());
+        return result.text() == std::get<std::string>(message.value());
     }
     else
     {

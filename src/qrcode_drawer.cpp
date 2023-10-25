@@ -25,8 +25,7 @@ improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& er
  * @brief Construct a new improc::QrCodeDrawer object
  */
 improc::QrCodeDrawer::QrCodeDrawer(): improc::BaseDrawer()
-                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) 
-                                    , hints_(ZXing::DecodeHints()) {};
+                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) {};
 
 /**
  * @brief Construct a new improc::QrCodeDrawer object
@@ -99,7 +98,7 @@ bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optio
                                                                         , drawer_output.rows
                                                                         , improc::QrCodeDrawer::kImageFormat
                                                     ), 0 );
-    ZXing::DecoderResult result = ZXing::QRCode::Decode(*(data_matrix_bitmap->getBitMatrix()),this->hints_.characterSet());
+    ZXing::DecoderResult result = ZXing::QRCode::Decode(*(data_matrix_bitmap->getBitMatrix()));
     if (result.isValid() == true)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
