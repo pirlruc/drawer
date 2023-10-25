@@ -86,7 +86,7 @@ endif()
 FetchContent_Declare(
   freetype
   GIT_REPOSITORY  https://gitlab.freedesktop.org/freetype/freetype
-  GIT_TAG         VER-2-12-1
+  GIT_TAG         VER-2-13-2
   SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
 )
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
