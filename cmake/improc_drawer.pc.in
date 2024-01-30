@@ -1,0 +1,12 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=@PKG_CONFIG_INCLUDEDIR@
+libdir=@PKG_CONFIG_LIBDIR@
+
+Name: lib@PROJECT_NAME@
+Description: Drawer module of image-proc library
+URL: https://github.com/pirlruc/drawer
+Version: @IMPROC_SUPERPROJECT_VERSION@
+Libs: -L${libdir} -limproc_corecv -lqrcodegen -lZxing -lfreetype
+CFlags: -I${includedir} @PKG_CONFIG_DEFINES@
+Requires: @PKG_CONFIG_REQUIRES@

@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+find_package(qrcodegen  REQUIRED)
+find_package(ZXing      REQUIRED)
+find_package(freetype   REQUIRED)
+
+set(config_targets_file @CONFIG_TARGETS_FILE@)
+
+include("${CMAKE_CURRENT_LIST_DIR}/${config_targets_file}")
+
+check_required_components(improc_corecv)

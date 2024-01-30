@@ -4,10 +4,10 @@
 #include <improc/improc_defs.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 
-#include <BitMatrix.h>
+#include <ZXing/BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <DecodeHints.h>
-#include <Result.h>
+#include <ZXing/DecodeHints.h>
+#include <ZXing/Result.h>
 #include <ThresholdBinarizer.h>
 #include <oned/ODCode128Writer.h>
 #include <oned/ODReader.h>

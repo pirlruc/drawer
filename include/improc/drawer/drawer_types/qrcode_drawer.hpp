@@ -5,8 +5,8 @@
 #include <improc/infrastructure/string.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 
-#include <qrcodegen/cpp/qrcodegen.hpp>
-#include <BitMatrix.h>
+#include <qrcodegen.hpp>
+#include <ZXing/BitMatrix.h>
 #include <BinaryBitmap.h>
 #include <DecoderResult.h>
 #include <ThresholdBinarizer.h>

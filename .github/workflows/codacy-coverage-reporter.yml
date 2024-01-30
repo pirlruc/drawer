@@ -7,8 +7,13 @@ on:
     - main
     - developer
 
+  # Runs this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
   codacy-coverage-reporter:
+    env:
+      VCPKG_ROOT: /usr/local/share/vcpkg
     # The type of runner that the job will run on
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -19,21 +24,15 @@ jobs:
         - {
             name: codacy-coverage-reporter,
             os: ubuntu-latest,
-            build_type: "Debug",
-            cc: "clang-14",
-            cxx: "clang++-14",
-            generator: "Unix Makefiles",
-            boost: "OFF",
-            coverage: "ON",
-            qrcode: "ON",
-            barcode: "ON",
-            text: "ON"
+            preset_name: "clang-coverage",
+            binary_dir: "out/build/clang-coverage"
           }
 
     steps:
       - name: Get Branch Name
         id: branch-name
-        uses: tj-actions/branch-names@v7.0.5
+        shell: bash
+        run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
 
       - uses: actions/checkout@v4.1.1
         with:
@@ -43,87 +42,78 @@ jobs:
         run: |
           echo github.event.action: ${{ github.event.action }}
           echo github.event_name: ${{ github.event_name }}
+          echo github.branch: ${{ steps.branch-name.outputs.branch }}
 
       - name: Install Dependencies Linux
         run: |
-          sudo apt-get update
-          sudo apt-get install cmake
-          sudo apt-get install gcc-11 g++-11
-          sudo apt-get install clang-14
+          sudo apt-get install ninja-build
           sudo apt-get install lcov
+          sudo apt-get install libx11-dev libxft-dev libxext-dev libgles2-mesa-dev libxi-dev libxtst-dev libxrandr-dev libomp-14-dev
+          ninja    --version
           cmake    --version
           gcc      --version
           gcc-11   --version
+          clang    --version
           clang-14 --version
           lcov     --version
-          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/infrastructure.git modules/infrastructure
-          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/services.git       modules/services
-          git clone --recurse-submodules -b ${{ steps.branch-name.outputs.current_branch }} https://github.com/pirlruc/corecv.git         modules/corecv
+          vcpkg    --version
 
       - name: Restore Build Cache
         id: restore-build-cache
         uses: actions/cache/restore@v3.3.2
         with:
           path: |
+            out/*
             build/*
             external/*
             test/external/*
             modules/infrastructure/external/*
             modules/services/external/*
             modules/corecv/external/*
-          key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_ON-zxingcpp_ON-freetype_ON-coverage_${{ matrix.config.coverage }}-tests_ON-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
+          key: ${{ matrix.config.os }}-build-${{ matrix.config.preset_name }}-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
           restore-keys: |
-            ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_ON-zxingcpp_ON-freetype_ON-coverage_${{ matrix.config.coverage }}-tests_ON-
+            ${{ matrix.config.os }}-build-${{ matrix.config.preset_name }}
 
       - name: Clean Build Folder
         if: steps.restore-build-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
+          rm -rf out
           rm -rf build
           mkdir build
 
       - name: Configure
         shell: bash
         run: |
-          cmake \
-            -S . \
-            -B build \
-            -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
-            -DCMAKE_C_COMPILER=${{ matrix.config.cc }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.config.cxx }} \
-            -DIMPROC_WITH_BOOST=${{ matrix.config.boost }} \
-            -DIMPROC_DRAWER_WITH_QRCODE_SUPPORT=${{ matrix.config.qrcode }} \
-            -DIMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT=${{ matrix.config.barcode }} \
-            -DIMPROC_DRAWER_WITH_TEXT_SUPPORT=${{ matrix.config.text }} \
-            -DIMPROC_WITH_COVERAGE=${{ matrix.config.coverage }} \
-            -DIMPROC_DRAWER_WITH_TESTS=ON \
-            -G "${{ matrix.config.generator }}"
+          cmake --preset ${{ matrix.config.preset_name }}
 
       - name: Build
         shell: bash
-        run: cmake --build build --config ${{ matrix.config.build_type }} --target all
+        run: cmake --build --preset ${{ matrix.config.preset_name }} --target all
 
-      - if: ${{ steps.branch-name.outputs.current_branch == 'developer' }}
+      - if: ${{ steps.branch-name.outputs.branch == 'developer' }}
         name: Save Build Cache
         id: save-build-cache
         uses: actions/cache/save@v3.3.2
         with:
           path: |
+            out/*
             build/*
             external/*
             test/external/*
             modules/infrastructure/external/*
             modules/services/external/*
             modules/corecv/external/*
-          key: ${{ matrix.config.os }}-build-${{ matrix.config.cxx }}-${{ matrix.config.build_type }}-boost_${{ matrix.config.boost }}-qrcode_${{ matrix.config.qrcode }}-zxingcpp_${{ matrix.config.qrcode }}-freetype_${{ matrix.config.text }}-coverage_${{ matrix.config.coverage }}-tests_ON-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
+          key: ${{ matrix.config.os }}-build-${{ matrix.config.preset_name }}-${{ hashFiles('CMakeLists.txt','test/CMakeLists.txt') }}
 
       - name: Code Coverage Report
         shell: bash
         run: |
-          cd build/bin
+          HOME_DIRECTORY=$(pwd)
+          cd ${{ matrix.config.binary_dir }}/bin
           ./improc_drawer_testd --gtest_output="xml:improc_drawer_tests.xml"
-          cd ..
-          make improc_drawer_coverage
+          cd "$HOME_DIRECTORY"
+          cmake --build --preset ${{ matrix.config.preset_name }} --target improc_drawer_coverage
 
       - name: Unit Tests Report 
         uses: EnricoMi/publish-unit-test-result-action@v2.11.0
@@ -132,10 +122,10 @@ jobs:
           check_name: "unit-tests-report"
           time_unit: milliseconds
           files: |
-            build/**/improc_drawer_tests.xml
+            **/improc_drawer_tests.xml
 
       - name: Run codacy-coverage-reporter
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: ./build/improc_drawer_coverage.lcov
+          coverage-reports: ./${{ matrix.config.binary_dir }}/improc_drawer_coverage.lcov
