@@ -66,14 +66,14 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
       qrcodegen
       GIT_REPOSITORY  https://github.com/nayuki/QR-Code-generator
       GIT_TAG         v1.8.0
-      SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen
+      SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/qrcodegen
     )
     FetchContent_MakeAvailable(qrcodegen)
     add_library(
       qrcodegen
       
-      ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen/cpp/qrcodegen.hpp
-      ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen/cpp/qrcodegen.cpp
+      ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.hpp
+      ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.cpp
     )
     set_target_properties(qrcodegen PROPERTIES CXX_STANDARD           11)
     set_target_properties(qrcodegen PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
@@ -81,7 +81,7 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
     set_target_properties(qrcodegen PROPERTIES VERSION                1.8.0)
     set_target_properties(qrcodegen PROPERTIES DEBUG_POSTFIX          ${CMAKE_DEBUG_POSTFIX})
 
-    target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen>
+    target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp>
                                                       $<INSTALL_INTERFACE:include> )
     message(STATUS "Build qrcodegen Version: 1.8.0")
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS qrcodegen)
@@ -89,10 +89,11 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
 endif()
 
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  if(DEFINED CMAKE_TOOLCHAIN_FILE)
-    find_package(ZXing CONFIG REQUIRED)
-    list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
-  else()
+  # TODO: Do not consider whiele vcpkg has support for 2.2.1
+  # if(DEFINED CMAKE_TOOLCHAIN_FILE)
+  #   find_package(ZXing CONFIG REQUIRED)
+  #   list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
+  # else()
     # zxing-cpp
     FetchContent_Declare(
       zxingcpp
@@ -104,7 +105,7 @@ if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_S
     set(BUILD_BLACKBOX_TESTS  OFF)
     FetchContent_MakeAvailable(zxingcpp)
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
-  endif()
+  # endif()
 endif()
 
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)

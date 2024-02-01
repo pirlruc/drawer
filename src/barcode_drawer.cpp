@@ -5,14 +5,14 @@
  */
 improc::BarcodeDrawer::BarcodeDrawer()  : improc::BaseDrawer() 
                                         , writer_(ZXing::OneD::Code128Writer())
-                                        , hints_(ZXing::DecodeHints())
+                                        , reader_options_(ZXing::ReaderOptions())
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating default barcode drawer...");
-    this->hints_.setTryHarder(improc::BarcodeDrawer::kTryHarder);
-    this->hints_.setTryRotate(improc::BarcodeDrawer::kDoNotRotate);
-    this->hints_.setIsPure(improc::BarcodeDrawer::kNotPure);
-    this->hints_.setMinLineCount(improc::BarcodeDrawer::kMinHeight);
-    this->hints_.setFormats(improc::BarcodeDrawer::kBarcodeFormat);
+    this->reader_options_.setTryHarder(improc::BarcodeDrawer::kTryHarder);
+    this->reader_options_.setTryRotate(improc::BarcodeDrawer::kDoNotRotate);
+    this->reader_options_.setIsPure(improc::BarcodeDrawer::kNotPure);
+    this->reader_options_.setMinLineCount(improc::BarcodeDrawer::kMinHeight);
+    this->reader_options_.setFormats(improc::BarcodeDrawer::kBarcodeFormat);
 }
 
 /**
@@ -78,7 +78,7 @@ cv::Mat improc::BarcodeDrawer::Draw(const std::optional<improc::DrawerVariant>& 
 bool improc::BarcodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying barcode content...");
-    ZXing::OneD::Reader reader {this->hints_};
+    ZXing::OneD::Reader reader {this->reader_options_};
     std::unique_ptr<ZXing::BinaryBitmap> barcode_bitmap = 
         std::make_unique<ZXing::ThresholdBinarizer> ( ZXing::ImageView  ( drawer_output.data
                                                                         , drawer_output.cols

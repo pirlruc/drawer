@@ -4,10 +4,10 @@
 #include <improc/improc_defs.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 
-#include <ZXing/BitMatrix.h>
+#include <BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <ZXing/DecodeHints.h>
-#include <ZXing/Result.h>
+#include <ReaderOptions.h>
+#include <Result.h>
 #include <ThresholdBinarizer.h>
 #include <oned/ODCode128Writer.h>
 #include <oned/ODReader.h>
@@ -31,7 +31,7 @@ namespace improc
             static constexpr bool                   kDoNotRotate   = false;
             static constexpr bool                   kNotPure       = false;
             ZXing::OneD::Code128Writer              writer_;
-            ZXing::DecodeHints                      hints_;
+            ZXing::ReaderOptions                    reader_options_;
             
         public:
             BarcodeDrawer();

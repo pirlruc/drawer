@@ -131,7 +131,7 @@ set_target_properties(${PROJECT_NAME}_test PROPERTIES DEBUG_POSTFIX          ${C
 target_include_directories(${PROJECT_NAME}_test   PRIVATE   ${PROJECT_SOURCE_DIR}/test)
 
 target_link_libraries(${PROJECT_NAME}_test  PRIVATE ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME}_test  PRIVATE gtest gtest_main)
+target_link_libraries(${PROJECT_NAME}_test  PRIVATE GTest::gtest GTest::gtest_main)
 
 gtest_discover_tests(
   ${PROJECT_NAME}_test

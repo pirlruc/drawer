@@ -75,7 +75,7 @@ improc::LayoutDrawer& improc::LayoutDrawer::ParsePageTypeDrawer(const improc::Dr
     }
     else
     {
-        std::string error_message = fmt::format("Page drawer type {} not implemented",std::move(page_drawer_type));
+        std::string error_message = fmt::format("Page drawer type {} not implemented",std::move(page_drawer_type).ToString());
         IMPROC_DRAWER_LOGGER_ERROR("ERROR_03: " + error_message);
         throw improc::value_error(std::move(error_message));
     }

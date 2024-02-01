@@ -4,7 +4,7 @@
 #include <improc/improc_defs.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 
-#include <ZXing/BitMatrix.h>
+#include <BitMatrix.h>
 #include <BinaryBitmap.h>
 #include <DecoderResult.h>
 #include <ThresholdBinarizer.h>
