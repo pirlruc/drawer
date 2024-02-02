@@ -292,11 +292,3 @@ write_basic_package_version_file(
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
         DESTINATION ${EXPORT_DESTINATION_DIR})
-
-# # # Install configuration
-# # set(${PROJECT_NAME}_libs ${PROJECT_NAME} improc_corecv ${IMPROC_DRAWER_EXTRA_LIBS})
-# # install(
-# #   TARGETS     ${${PROJECT_NAME}_libs}
-# #   DESTINATION lib
-# #   EXPORT      ${PROJECT_NAME}_target 
-# # )
