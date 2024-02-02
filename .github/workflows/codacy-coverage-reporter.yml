@@ -49,7 +49,7 @@ jobs:
         run: |
           sudo apt-get install ninja-build
           sudo apt-get install lcov
-          sudo apt-get install libx11-dev libxft-dev libxext-dev libgles2-mesa-dev libxi-dev libxtst-dev libxrandr-dev libomp-14-dev
+          sudo apt-get install libx11-dev libxft-dev libxext-dev libgles2-mesa-dev libxi-dev libxtst-dev libxrandr-dev libomp-14-dev libharfbuzz-dev
           ninja    --version
           cmake    --version
           gcc      --version

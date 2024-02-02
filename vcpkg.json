@@ -53,7 +53,7 @@
         {
           "name": "freetype",
           "version>=": "2.12.1",
-          "features": ["zlib","png","error-strings"]
+          "features": ["bzip2","zlib","png","error-strings"]
         }
       ]
     },
