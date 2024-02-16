@@ -75,6 +75,13 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
       ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.hpp
       ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.cpp
     )
+
+    if (WIN32)
+      include(GenerateExportHeader)
+      generate_export_header(qrcodegen)
+      set_target_properties(qrcodegen PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    endif()
+    
     set_target_properties(qrcodegen PROPERTIES CXX_STANDARD           11)
     set_target_properties(qrcodegen PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
     set_target_properties(qrcodegen PROPERTIES LINKER_LANGUAGE        CXX)
@@ -116,7 +123,7 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
     # FreeType
     FetchContent_Declare(
       freetype
-      GIT_REPOSITORY  https://gitlab.freedesktop.org/freetype/freetype
+      GIT_REPOSITORY  https://github.com/freetype/freetype
       GIT_TAG         VER-2-13-2
       SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
     )
