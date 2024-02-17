@@ -6,7 +6,7 @@
 
 #include <BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <DecodeHints.h>
+#include <ReaderOptions.h>
 #include <Result.h>
 #include <ThresholdBinarizer.h>
 #include <oned/ODCode128Writer.h>
@@ -31,15 +31,15 @@ namespace improc
             static constexpr bool                   kDoNotRotate   = false;
             static constexpr bool                   kNotPure       = false;
             ZXing::OneD::Code128Writer              writer_;
-            ZXing::DecodeHints                      hints_;
+            ZXing::ReaderOptions                    reader_options_;
             
         public:
             BarcodeDrawer();
             explicit BarcodeDrawer(const Json::Value& drawer_json);
 
             BarcodeDrawer&                          Load    (const Json::Value& drawer_json);
-            cv::Mat                                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());
-            bool                                    Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>());
+            cv::Mat                                 Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
+            bool                                    Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
     };
 }
 

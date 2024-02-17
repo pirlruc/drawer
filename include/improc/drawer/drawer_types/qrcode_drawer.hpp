@@ -5,10 +5,9 @@
 #include <improc/infrastructure/string.hpp>
 #include <improc/drawer/engine/base_drawer.hpp>
 
-#include <qrcodegen/cpp/qrcodegen.hpp>
+#include <qrcodegen.hpp>
 #include <BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <DecodeHints.h>
 #include <DecoderResult.h>
 #include <ThresholdBinarizer.h>
 #include <qrcode/QRDecoder.h>
@@ -90,15 +89,14 @@ namespace improc
         private:
             static constexpr ZXing::ImageFormat     kImageFormat   = ZXing::ImageFormat::Lum;
             improc::qrcode::ErrorCorrectionLevel    error_correction_level_;
-            ZXing::DecodeHints                      hints_;
             
         public:
             QrCodeDrawer();
             explicit QrCodeDrawer(const Json::Value& drawer_json);
 
             QrCodeDrawer&                           Load    (const Json::Value& drawer_json);
-            cv::Mat                                 Draw    (const std::optional<std::string>& message = std::optional<std::string>());
-            bool                                    Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>());
+            cv::Mat                                 Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
+            bool                                    Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
     };
 }
 

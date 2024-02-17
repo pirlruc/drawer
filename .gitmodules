@@ -1,0 +1,9 @@
+[submodule "modules/infrastructure"]
+	path = modules/infrastructure
+	url = https://github.com/pirlruc/infrastructure.git
+[submodule "modules/services"]
+	path = modules/services
+	url = https://github.com/pirlruc/services.git
+[submodule "modules/corecv"]
+	path = modules/corecv
+	url = https://github.com/pirlruc/corecv.git

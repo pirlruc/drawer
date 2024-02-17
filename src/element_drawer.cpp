@@ -69,7 +69,7 @@ unsigned int improc::ElementDrawer::GetScale(const cv::Size& current_size, const
  * @param message - message to be considered in element
  * @return cv::Mat - element image
  */
-cv::Mat improc::ElementDrawer::Draw(const std::optional<std::string>& message) const
+cv::Mat improc::ElementDrawer::Draw(const std::optional<improc::DrawerVariant>& message) const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing element...");
     if (this->drawer_ == nullptr)
@@ -100,7 +100,7 @@ cv::Mat improc::ElementDrawer::Draw(const std::optional<std::string>& message) c
  * @param message - message to be considered in element
  * @return bool - true if element is correct, false otherwise.
  */
-bool improc::ElementDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message) const
+bool improc::ElementDrawer::Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message) const
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying element...");
     if (this->drawer_ == nullptr)

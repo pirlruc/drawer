@@ -6,7 +6,6 @@
 
 #include <BitMatrix.h>
 #include <BinaryBitmap.h>
-#include <DecodeHints.h>
 #include <DecoderResult.h>
 #include <ThresholdBinarizer.h>
 #include <datamatrix/DMWriter.h>
@@ -29,15 +28,14 @@ namespace improc
             static constexpr int                            kMinWidth           = 0;
             static constexpr int                            kMinHeight          = 0;
             ZXing::DataMatrix::Writer                       writer_;
-            ZXing::DecodeHints                              hints_;
             
         public:
             DataMatrixDrawer();
             explicit DataMatrixDrawer(const Json::Value& drawer_json);
 
             DataMatrixDrawer&               Load    (const Json::Value& drawer_json);
-            cv::Mat                         Draw    (const std::optional<std::string>& message = std::optional<std::string>());
-            bool                            Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>());
+            cv::Mat                         Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
+            bool                            Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
     };
 }
 

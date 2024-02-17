@@ -12,6 +12,22 @@ if(NOT DEFINED IMPROC_DRAWER_WITH_TESTS)
   set(IMPROC_DRAWER_WITH_TESTS OFF)
 endif()
 
+if(IMPROC_WITH_TESTS OR IMPROC_DRAWER_WITH_TESTS)
+  list(APPEND VCPKG_MANIFEST_FEATURES "tests")
+endif()
+
+if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+  list(APPEND VCPKG_MANIFEST_FEATURES "qrcode")
+endif()
+
+if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
+  list(APPEND VCPKG_MANIFEST_FEATURES "data-matrix")
+endif()
+
+if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
+  list(APPEND VCPKG_MANIFEST_FEATURES "text")
+endif()
+
 project(
   improc_drawer
   VERSION     ${IMPROC_SUPERPROJECT_VERSION}
@@ -40,61 +56,84 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
 endif()
 
 # Add external dependencies
-# qrcodegen
-FetchContent_Declare(
-  qrcodegen
-  GIT_REPOSITORY  https://github.com/nayuki/QR-Code-generator
-  GIT_TAG         v1.8.0
-  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen
-)
 if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  FetchContent_MakeAvailable(qrcodegen)
-  add_library(
-    qrcodegen
+  if(DEFINED CMAKE_TOOLCHAIN_FILE)
+    find_package(unofficial-nayuki-qr-code-generator CONFIG REQUIRED)
+    list(APPEND IMPROC_DRAWER_EXTRA_LIBS unofficial::nayuki-qr-code-generator::nayuki-qr-code-generator)
+  else()
+    # qrcodegen
+    FetchContent_Declare(
+      qrcodegen
+      GIT_REPOSITORY  https://github.com/nayuki/QR-Code-generator
+      GIT_TAG         v1.8.0
+      SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/qrcodegen
+    )
+    FetchContent_MakeAvailable(qrcodegen)
+    add_library(
+      qrcodegen
+      
+      ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.hpp
+      ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.cpp
+    )
+
+    if (WIN32)
+      include(GenerateExportHeader)
+      generate_export_header(qrcodegen)
+      set_target_properties(qrcodegen PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    endif()
     
-    ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen/cpp/qrcodegen.hpp
-    ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen/cpp/qrcodegen.cpp
-  )
-  set_target_properties(qrcodegen PROPERTIES CXX_STANDARD           11)
-  set_target_properties(qrcodegen PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
-  set_target_properties(qrcodegen PROPERTIES LINKER_LANGUAGE        CXX)
-  set_target_properties(qrcodegen PROPERTIES VERSION                1.8.0)
-  set_target_properties(qrcodegen PROPERTIES DEBUG_POSTFIX          ${CMAKE_DEBUG_POSTFIX})
+    set_target_properties(qrcodegen PROPERTIES CXX_STANDARD           11)
+    set_target_properties(qrcodegen PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
+    set_target_properties(qrcodegen PROPERTIES LINKER_LANGUAGE        CXX)
+    set_target_properties(qrcodegen PROPERTIES VERSION                1.8.0)
+    set_target_properties(qrcodegen PROPERTIES DEBUG_POSTFIX          ${CMAKE_DEBUG_POSTFIX})
 
-  target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen>
-                                                    $<INSTALL_INTERFACE:include> )
-  message(STATUS "Build qrcodegen Version: 1.8.0")
-
-  list(APPEND IMPROC_DRAWER_EXTRA_LIBS qrcodegen)
+    target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp>
+                                                      $<INSTALL_INTERFACE:include> )
+    message(STATUS "Build qrcodegen Version: 1.8.0")
+    list(APPEND IMPROC_DRAWER_EXTRA_LIBS qrcodegen)
+  endif()
 endif()
 
-# zxing-cpp
-FetchContent_Declare(
-  zxingcpp
-  GIT_REPOSITORY  https://github.com/nu-book/zxing-cpp
-  GIT_TAG         v1.3.0
-  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
-)
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  set(BUILD_EXAMPLES        OFF)
-  set(BUILD_BLACKBOX_TESTS  OFF)
-  FetchContent_MakeAvailable(zxingcpp)
-  list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
+  # TODO: Do not consider whiele vcpkg has support for 2.2.1
+  # if(DEFINED CMAKE_TOOLCHAIN_FILE)
+  #   find_package(ZXing CONFIG REQUIRED)
+  #   list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
+  # else()
+    # zxing-cpp
+    FetchContent_Declare(
+      zxingcpp
+      GIT_REPOSITORY  https://github.com/nu-book/zxing-cpp
+      GIT_TAG         v2.2.1
+      SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
+    )
+    set(BUILD_EXAMPLES        OFF)
+    set(BUILD_BLACKBOX_TESTS  OFF)
+    FetchContent_MakeAvailable(zxingcpp)
+    list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
+  # endif()
 endif()
 
-# FreeType
-FetchContent_Declare(
-  freetype
-  GIT_REPOSITORY  https://gitlab.freedesktop.org/freetype/freetype
-  GIT_TAG         VER-2-12-1
-  SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
-)
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
-  FetchContent_MakeAvailable(freetype)
-  list(APPEND IMPROC_DRAWER_EXTRA_LIBS freetype)
+  if(DEFINED CMAKE_TOOLCHAIN_FILE)
+    find_package(Freetype REQUIRED)
+    list(APPEND IMPROC_DRAWER_EXTRA_LIBS Freetype::Freetype)
+  else()
+    # FreeType
+    FetchContent_Declare(
+      freetype
+      GIT_REPOSITORY  https://github.com/freetype/freetype
+      GIT_TAG         VER-2-13-2
+      SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
+    )
+    FetchContent_MakeAvailable(freetype)
+    list(APPEND IMPROC_DRAWER_EXTRA_LIBS freetype)
+  endif()
 endif()
 
 message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
+message(STATUS "CMake Toolchain File: ${CMAKE_TOOLCHAIN_FILE}")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 message(STATUS "Install Dir: ${CMAKE_INSTALL_PREFIX}")
 
@@ -185,21 +224,78 @@ if(IMPROC_WITH_TESTS OR IMPROC_DRAWER_WITH_TESTS)
 endif()
 
 # Install configuration
-set(${PROJECT_NAME}_libs ${PROJECT_NAME} improc_corecv ${IMPROC_DRAWER_EXTRA_LIBS})
+if (NOT DEFINED CMAKE_INSTALL_LIBDIR)
+  set(CMAKE_INSTALL_LIBDIR "lib")
+endif()
+if (NOT DEFINED CMAKE_INSTALL_BINDIR)
+  set(CMAKE_INSTALL_BINDIR "bin")
+endif()
+if (NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
+  set(CMAKE_INSTALL_INCLUDEDIR "include")
+endif()
+
+# Include files
+list(APPEND IMPROC_DRAWER_TARGETS ${PROJECT_NAME})
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+  list(APPEND IMPROC_DRAWER_TARGETS ${IMPROC_DRAWER_EXTRA_LIBS})
+endif()
+
 install(
-  TARGETS     ${${PROJECT_NAME}_libs}
-  DESTINATION lib
-  EXPORT      ${PROJECT_NAME}_target 
+  TARGETS     ${IMPROC_DRAWER_TARGETS}
+  EXPORT      ${PROJECT_NAME}_targets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  install(FILES     ${PROJECT_SOURCE_DIR}/external/qrcodegen/qrcodegen/Readme.markdown  DESTINATION share/licenses/improc/qrcodegen)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES     ${PROJECT_SOURCE_DIR}/LICENSE                         DESTINATION share/licenses/improc/drawer)
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+  if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+    install(FILES ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.hpp  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+    install(FILES ${PROJECT_SOURCE_DIR}/external/qrcodegen/Readme.markdown    DESTINATION share/licenses/improc/qrcodegen)
+  endif()
+
+  if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
+    install(FILES ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE                     DESTINATION share/licenses/improc/ZXing)
+  endif()
+
+  if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
+    install(FILES ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT              DESTINATION share/licenses/improc/freetype)
+  endif()
 endif()
 
-if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
-  install(FILES     ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE                     DESTINATION share/licenses/improc/ZXing)
+# pkg-config files
+if(IS_ABSOLUTE ${CMAKE_INSTALL_INCLUDEDIR})
+  set(PKG_CONFIG_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR})
+else()
+  set(PKG_CONFIG_INCLUDEDIR "\${prefix}/${CMAKE_INSTALL_INCLUDEDIR}")
 endif()
+if(IS_ABSOLUTE ${CMAKE_INSTALL_LIBDIR})
+  set(PKG_CONFIG_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+else()
+  set(PKG_CONFIG_LIBDIR "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
+endif()
+configure_file(
+  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}.pc.in
+  ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc 
+  @ONLY )
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
-if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
-  install(FILES     ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT              DESTINATION share/licenses/improc/freetype)
-endif()
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                                  DESTINATION include)
+# CMake config files
+set(CONFIG_TARGETS_FILE "${PROJECT_NAME}ConfigTargets.cmake")
+set(EXPORT_DESTINATION_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+install(EXPORT ${PROJECT_NAME}_targets FILE ${CONFIG_TARGETS_FILE} DESTINATION ${EXPORT_DESTINATION_DIR})
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_config.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
+  INSTALL_DESTINATION ${EXPORT_DESTINATION_DIR} )
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  VERSION ${IMPROC_SUPERPROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
+              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+        DESTINATION ${EXPORT_DESTINATION_DIR})

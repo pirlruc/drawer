@@ -14,6 +14,8 @@
 
 namespace improc 
 {
+    typedef std::variant<std::string,std::vector<std::byte>,std::vector<unsigned int>> DrawerVariant;
+
     class DrawerFactory;
 
     /**
@@ -32,8 +34,8 @@ namespace improc
             explicit BaseDrawer(const Json::Value& drawer_json);
 
             virtual BaseDrawer&     Load    (const Json::Value& drawer_json) = 0;
-            virtual cv::Mat         Draw    (const std::optional<std::string>& message = std::optional<std::string>()) = 0;
-            virtual bool            Verify  (const cv::Mat& drawer_output, const std::optional<std::string>& message = std::optional<std::string>()) = 0;
+            virtual cv::Mat         Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>()) = 0;
+            virtual bool            Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>()) = 0;
 
             static std::shared_ptr<BaseDrawer> Create(const DrawerFactory& factory, const Json::Value& drawer_json);
     };

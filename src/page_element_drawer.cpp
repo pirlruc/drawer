@@ -7,7 +7,7 @@ improc::PageElementDrawer::PageElementDrawer()  : improc::ElementDrawer()
                                                 , top_left_(cv::Point())
                                                 , element_box_(cv::Rect()) 
                                                 , static_(false) 
-                                                , content_(std::optional<std::string>()) {};
+                                                , content_(std::optional<improc::DrawerVariant>()) {};
 
 /**
  * @brief Construct a new improc::PageElementDrawer object
@@ -128,7 +128,7 @@ improc::PageElementDrawer& improc::PageElementDrawer::Allocate()
  * @param message - message to be considered in page element
  * @return page_image
  */
-void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<std::string>& message) const
+void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<improc::DrawerVariant>& message) const
 {
     IMPROC_DRAWER_LOGGER_TRACE  ( "Drawing page element..." );
     if (this->element_box_.empty() == true)
@@ -157,7 +157,7 @@ void improc::PageElementDrawer::Draw(cv::Mat& page_image, const std::optional<st
  * @param message - message to be considered in page element
  * @return bool - true if page element is correct, false otherwise.
  */
-bool improc::PageElementDrawer::Verify(const cv::Mat& page_image, const std::optional<std::string>& message) const
+bool improc::PageElementDrawer::Verify(const cv::Mat& page_image, const std::optional<improc::DrawerVariant>& message) const
 {
     IMPROC_DRAWER_LOGGER_TRACE  ( "Verifying page element..." );
     if (this->element_box_.empty() == true)

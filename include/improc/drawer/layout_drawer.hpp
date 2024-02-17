@@ -25,9 +25,9 @@ namespace improc
 
             LayoutDrawer&       Load    (const improc::DrawerFactory& factory, const Json::Value& layout_drawer_json);
             LayoutDrawer&       Allocate();
-            cv::Mat             Draw    (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
-            bool                Verify  (const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
-            bool                Verify  (const cv::Mat& page_image, const std::list<std::optional<std::string>>& context = std::list<std::optional<std::string>>());
+            cv::Mat             Draw    (const std::list<std::optional<DrawerVariant>>& context = std::list<std::optional<DrawerVariant>>());
+            bool                Verify  (const std::list<std::optional<DrawerVariant>>& context = std::list<std::optional<DrawerVariant>>());
+            bool                Verify  (const cv::Mat& page_image, const std::list<std::optional<DrawerVariant>>& context = std::list<std::optional<DrawerVariant>>());
 
             /**
              * @brief Obtain page size

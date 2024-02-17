@@ -25,8 +25,7 @@ improc::qrcode::ErrorCorrectionLevel::ErrorCorrectionLevel(const std::string& er
  * @brief Construct a new improc::QrCodeDrawer object
  */
 improc::QrCodeDrawer::QrCodeDrawer(): improc::BaseDrawer()
-                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) 
-                                    , hints_(ZXing::DecodeHints()) {};
+                                    , error_correction_level_(improc::qrcode::ErrorCorrectionLevel()) {};
 
 /**
  * @brief Construct a new improc::QrCodeDrawer object
@@ -63,10 +62,10 @@ improc::QrCodeDrawer& improc::QrCodeDrawer::Load(const Json::Value& drawer_json)
  * @param message - message to be encoded in qr-code
  * @return cv::Mat - qr-code image with encoded message
  */
-cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message)
+cv::Mat improc::QrCodeDrawer::Draw(const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Drawing qrcode...");
-    qrcodegen::QrCode qrcode_data = qrcodegen::QrCode::encodeText(message.value().c_str(),this->error_correction_level_.ToQrCodeGen());
+    qrcodegen::QrCode qrcode_data = qrcodegen::QrCode::encodeText(std::get<std::string>(message.value()).c_str(),this->error_correction_level_.ToQrCodeGen());
     int qrcode_size = qrcode_data.getSize();
     cv::Mat qrcode (qrcode_size,qrcode_size,improc::BaseDrawer::kImageDataType,improc::BaseDrawer::kWhiteValue);
     for (size_t pixel_y = 0; pixel_y < qrcode_size; pixel_y++)
@@ -90,7 +89,7 @@ cv::Mat improc::QrCodeDrawer::Draw(const std::optional<std::string>& message)
  * @param message - message encoded in qr-code
  * @return bool - true if message and message recovered from the qr-code image is the same, false otherwise.
  */
-bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<std::string>& message)
+bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Verifying qr-code content...");
     std::unique_ptr<ZXing::BinaryBitmap> data_matrix_bitmap = 
@@ -99,11 +98,11 @@ bool improc::QrCodeDrawer::Verify(const cv::Mat& drawer_output, const std::optio
                                                                         , drawer_output.rows
                                                                         , improc::QrCodeDrawer::kImageFormat
                                                     ), 0 );
-    ZXing::DecoderResult result = ZXing::QRCode::Decode(*(data_matrix_bitmap->getBitMatrix()),this->hints_.characterSet());
+    ZXing::DecoderResult result = ZXing::QRCode::Decode(*(data_matrix_bitmap->getBitMatrix()));
     if (result.isValid() == true)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter {};
-        return converter.to_bytes(result.text()) == message.value();
+        return converter.to_bytes(result.text()) == std::get<std::string>(message.value());
     }
     else
     {
