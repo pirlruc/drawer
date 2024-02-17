@@ -3,10 +3,9 @@ name: Coverage Reporter
 on:
   # Triggers the workflow on push or pull request events
   push:
-    branches: 
+    branches:
     - main
     - developer
-    - feature-ci
 
   # Runs this workflow manually from the Actions tab
   workflow_dispatch:
@@ -117,7 +116,7 @@ jobs:
           cd "$HOME_DIRECTORY"
           cmake --build --preset ${{ matrix.config.preset_name }} --target improc_drawer_coverage
 
-      - name: Unit Tests Report 
+      - name: Unit Tests Report
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
