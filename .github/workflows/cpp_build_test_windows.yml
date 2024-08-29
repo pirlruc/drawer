@@ -105,4 +105,4 @@ jobs:
 
       - name: Test
         shell: bash
-        run: ./${{ matrix.config.binary_dir }}/bin/improc_drawer_testd
+        run: ./${{ matrix.config.binary_dir }}/bin/improc-drawer_testd

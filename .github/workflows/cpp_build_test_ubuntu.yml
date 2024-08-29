@@ -65,7 +65,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install ninja-build
           sudo apt-get install lcov
-          sudo apt-get install libx11-dev libxft-dev libxext-dev libgles2-mesa-dev libxi-dev libxtst-dev libxrandr-dev libomp-14-dev libharfbuzz-dev
+          sudo apt-get install libx11-dev libxft-dev libxext-dev libgles2-mesa-dev autoconf automake libtool pkg-config libxi-dev libxtst-dev libxrandr-dev libomp-14-dev libharfbuzz-dev
           ninja    --version
           cmake    --version
           gcc      --version
@@ -123,4 +123,4 @@ jobs:
 
       - name: Test
         shell: bash
-        run: ./${{ matrix.config.binary_dir }}/bin/improc_drawer_testd
+        run: ./${{ matrix.config.binary_dir }}/bin/improc-drawer_testd
