@@ -8,11 +8,21 @@ if(NOT DEFINED IMPROC_SUPERPROJECT_VERSION)
   set(IMPROC_SUPERPROJECT_VERSION 1.0.0)
 endif()
 
+if(NOT DEFINED IMPROC_COVERAGE_VERSION)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(IMPROC_COVERAGE_VERSION "14")
+  elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(IMPROC_COVERAGE_VERSION "11")
+  else()
+    set(IMPROC_COVERAGE_VERSION "14")
+  endif()
+endif()
+
 if(NOT DEFINED IMPROC_DRAWER_WITH_TESTS)
   set(IMPROC_DRAWER_WITH_TESTS OFF)
 endif()
 
-if(IMPROC_WITH_TESTS OR IMPROC_DRAWER_WITH_TESTS)
+if(IMPROC_WITH_TESTS OR IMPROC_WITH_COVERAGE OR IMPROC_DRAWER_WITH_TESTS)
   list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 endif()
 
@@ -29,30 +39,47 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
 endif()
 
 project(
-  improc_drawer
+  improc-drawer
   VERSION     ${IMPROC_SUPERPROJECT_VERSION}
   LANGUAGES   CXX
 )
+string(REPLACE "-" "_" PROJECT_NAME_FILE ${PROJECT_NAME})
 
 include(FetchContent)
 
 # Project configuration
+option(IMPROC_DRAWER_WITH_QRCODE_SUPPORT              "Building drawer module with QR-Code support"                 OFF)
+option(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT "Building drawer module with barcode and data matrix support" OFF)
+option(IMPROC_DRAWER_WITH_TEXT_SUPPORT                "Building drawer module with text generation support"         OFF)
+option(IMPROC_WITH_TESTS 			     "Building library with tests"          OFF)
+option(IMPROC_WITH_COVERAGE  	     "Building library with code coverage"  OFF)
+option(BUILD_SHARED_LIBS           "Building shared libraries"            ON)
+
 if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"      CACHE PATH "Archive output dir.")
   set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"      CACHE PATH "Library output dir.")
   set(CMAKE_PDB_OUTPUT_DIRECTORY     "${CMAKE_BINARY_DIR}/bin"      CACHE PATH "PDB (MSVC debug symbol)output dir.")
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"      CACHE PATH "Executable/dll output dir.")
   set(CMAKE_DEBUG_POSTFIX d)
-  option(IMPROC_WITH_TESTS 			     "Building library with tests"          OFF)
-  option(IMPROC_WITH_COVERAGE  	     "Building library with code coverage"  OFF)
-  option(BUILD_SHARED_LIBS           "Building shared libraries"            ON)
-  option(IMPROC_DRAWER_WITH_QRCODE_SUPPORT              "Building drawer module with QR-Code support"                 ON)
-  option(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT "Building drawer module with barcode and data matrix support" ON)
-  option(IMPROC_DRAWER_WITH_TEXT_SUPPORT                "Building drawer module with text generation support"         ON)
 
-  add_subdirectory(${PROJECT_SOURCE_DIR}/modules/infrastructure ${CMAKE_BINARY_DIR}/infrastructure)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/modules/services       ${CMAKE_BINARY_DIR}/services)
-  add_subdirectory(${PROJECT_SOURCE_DIR}/modules/corecv         ${CMAKE_BINARY_DIR}/corecv)
+  if(IMPROC_WITH_COVERAGE AND NOT IMPROC_WITH_TESTS AND NOT IMPROC_DRAWER_WITH_TESTS)
+    message(STATUS "Warning: IMPROC_COVERAGE ON but tests of image processing library is not ON")
+    message(STATUS "---------> Setting IMPROC_DRAWER_WITH_TESTS = ON")
+    set(IMPROC_DRAWER_WITH_TESTS ON)
+  endif()
+
+  if(DEFINED CMAKE_TOOLCHAIN_FILE)
+    find_package(improc-infrastructure  CONFIG REQUIRED)
+    find_package(improc-services        CONFIG REQUIRED)
+    find_package(improc-corecv          CONFIG REQUIRED)
+    add_library(improc::infrastructure  ALIAS improc::improc-infrastructure)
+    add_library(improc::services        ALIAS improc::improc-services)
+    add_library(improc::corecv          ALIAS improc::improc-corecv)
+  else()
+    add_subdirectory(${PROJECT_SOURCE_DIR}/modules/infrastructure ${CMAKE_BINARY_DIR}/infrastructure)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/modules/services       ${CMAKE_BINARY_DIR}/services)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/modules/corecv         ${CMAKE_BINARY_DIR}/corecv)
+  endif()
 endif()
 
 # Add external dependencies
@@ -96,11 +123,10 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
 endif()
 
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  # TODO: Do not consider whiele vcpkg has support for 2.2.1
-  # if(DEFINED CMAKE_TOOLCHAIN_FILE)
-  #   find_package(ZXing CONFIG REQUIRED)
-  #   list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
-  # else()
+  if(DEFINED CMAKE_TOOLCHAIN_FILE)
+    find_package(ZXing CONFIG REQUIRED)
+    list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
+  else()
     # zxing-cpp
     FetchContent_Declare(
       zxingcpp
@@ -112,19 +138,19 @@ if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_S
     set(BUILD_BLACKBOX_TESTS  OFF)
     FetchContent_MakeAvailable(zxingcpp)
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
-  # endif()
+  endif()
 endif()
 
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
   if(DEFINED CMAKE_TOOLCHAIN_FILE)
-    find_package(Freetype REQUIRED)
+    find_package(Freetype CONFIG REQUIRED)
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS Freetype::Freetype)
   else()
     # FreeType
     FetchContent_Declare(
       freetype
       GIT_REPOSITORY  https://github.com/freetype/freetype
-      GIT_TAG         VER-2-13-2
+      GIT_TAG         VER-2-13-3
       SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
     )
     FetchContent_MakeAvailable(freetype)
@@ -132,7 +158,26 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
   endif()
 endif()
 
-message(STATUS "Build ${PROJECT_NAME} Version: ${PROJECT_VERSION}")
+set(PKG_CONFIG_REQUIRES "improc-corecv")
+if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+  set(PKG_CONFIG_REQUIRES ${PKG_CONFIG_REQUIRES}" qrcodegen")
+endif()
+if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+  set(PKG_CONFIG_REQUIRES ${PKG_CONFIG_REQUIRES}" ZXing")
+endif()
+if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
+  set(PKG_CONFIG_REQUIRES ${PKG_CONFIG_REQUIRES}" freetype")
+endif()
+
+message(STATUS "Build ${PROJECT_NAME} Version                 : ${PROJECT_VERSION}")
+message(STATUS "IMPROC_OPENCV_DIR                             : ${IMPROC_OPENCV_DIR}")
+message(STATUS "IMPROC_DRAWER_WITH_QRCODE_SUPPORT             : ${IMPROC_DRAWER_WITH_QRCODE_SUPPORT}")
+message(STATUS "IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT: ${IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT}")
+message(STATUS "IMPROC_DRAWER_WITH_TEXT_SUPPORT               : ${IMPROC_DRAWER_WITH_TEXT_SUPPORT}")
+message(STATUS "IMPROC_WITH_TESTS                             : ${IMPROC_WITH_TESTS}")
+message(STATUS "IMPROC_DRAWER_WITH_TESTS                      : ${IMPROC_DRAWER_WITH_TESTS}")
+message(STATUS "IMPROC_WITH_COVERAGE                          : ${IMPROC_WITH_COVERAGE}")
+message(STATUS "IMPROC_COVERAGE_VERSION                       : ${IMPROC_COVERAGE_VERSION}")
 message(STATUS "CMake Toolchain File: ${CMAKE_TOOLCHAIN_FILE}")
 message(STATUS "Build Type : ${CMAKE_BUILD_TYPE}")
 message(STATUS "Install Dir: ${CMAKE_INSTALL_PREFIX}")
@@ -198,7 +243,11 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
   set(IMPROC_DRAWER_LIB_FILES ${IMPROC_DRAWER_LIB_FILES} ${IMPROC_DRAWER_TEXT_FILES})
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${IMPROC_DRAWER_LIB_FILES})
+if (BUILD_SHARED_LIBS)
+  add_library(${PROJECT_NAME} SHARED ${IMPROC_DRAWER_LIB_FILES})
+else()
+  add_library(${PROJECT_NAME} STATIC ${IMPROC_DRAWER_LIB_FILES})
+endif()
 add_library(improc::drawer ALIAS ${PROJECT_NAME})
 add_dependencies(${PROJECT_NAME} improc::corecv ${IMPROC_DRAWER_EXTRA_LIBS})
 
@@ -248,8 +297,8 @@ install(
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc                  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(FILES     ${PROJECT_SOURCE_DIR}/LICENSE                         DESTINATION share/licenses/improc/drawer)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/improc  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES     ${PROJECT_SOURCE_DIR}/LICENSE         DESTINATION share/licenses/improc/drawer)
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
     install(FILES ${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp/qrcodegen.hpp  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
@@ -257,11 +306,11 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 
   if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT OR IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT)
-    install(FILES ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE                     DESTINATION share/licenses/improc/ZXing)
+    install(FILES ${PROJECT_SOURCE_DIR}/external/zxingcpp/LICENSE             DESTINATION share/licenses/improc/ZXing)
   endif()
 
   if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
-    install(FILES ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT              DESTINATION share/licenses/improc/freetype)
+    install(FILES ${PROJECT_SOURCE_DIR}/external/freetype/docs/GPLv2.TXT      DESTINATION share/licenses/improc/freetype)
   endif()
 endif()
 
@@ -277,25 +326,20 @@ else()
   set(PKG_CONFIG_LIBDIR "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
 endif()
 configure_file(
-  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}.pc.in
+  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME_FILE}.pc.in
   ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc 
   @ONLY )
 install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # CMake config files
-set(CONFIG_TARGETS_FILE "${PROJECT_NAME}ConfigTargets.cmake")
-set(EXPORT_DESTINATION_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
-install(EXPORT ${PROJECT_NAME}_targets FILE ${CONFIG_TARGETS_FILE} DESTINATION ${EXPORT_DESTINATION_DIR})
-
-include(CMakePackageConfigHelpers)
-configure_package_config_file(
-  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_config.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
-  INSTALL_DESTINATION ${EXPORT_DESTINATION_DIR} )
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-  VERSION ${IMPROC_SUPERPROJECT_VERSION}
-  COMPATIBILITY SameMajorVersion)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake 
-              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+set(TARGETS_FILE "${PROJECT_NAME}-targets.cmake")
+set(EXPORT_DESTINATION_DIR share/${PROJECT_NAME})
+install(EXPORT ${PROJECT_NAME}_targets
+        FILE ${TARGETS_FILE}
+        NAMESPACE improc::
         DESTINATION ${EXPORT_DESTINATION_DIR})
+configure_file(
+  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME_FILE}_config.cmake.in
+  ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake
+  @ONLY )
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake DESTINATION ${EXPORT_DESTINATION_DIR})

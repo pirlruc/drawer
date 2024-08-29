@@ -1,27 +1,8 @@
 {
-  "name": "improc-drawer",
-  "version": "1.0.0",
-  "port-version": 0,
   "dependencies": [
     {
-      "name": "spdlog",
-      "version>=": "1.12.0"
-    },
-    {
-      "name": "jsoncpp",
-      "version>=": "1.9.5"
-    },
-    {
-      "name": "opencv",
-      "version>=": "4.8.0",
-      "features": ["default-features","ipp","tbb","openmp","opengl","jpeg","png","tiff"],
-      "platform": "windows"
-    },
-    {
-      "name": "opencv",
-      "version>=": "4.8.0",
-      "features": ["default-features","openmp","opengl","jpeg","png","tiff"],
-      "platform": "!windows"
+      "name": "improc-corecv",
+      "version>=": "45ca919fcf207db7752f11c354004162b48e65f7"
     }
   ],
   "features": {
@@ -34,7 +15,7 @@
         },
         {
           "name": "nu-book-zxing-cpp",
-          "version>=": "2.1.0"
+          "version>=": "2.2.1"
         }
       ]
     },
@@ -43,7 +24,7 @@
       "dependencies": [
         {
           "name": "nu-book-zxing-cpp",
-          "version>=": "2.1.0"
+          "version>=": "2.2.1"
         }
       ]
     },
@@ -52,8 +33,8 @@
       "dependencies": [
         {
           "name": "freetype",
-          "version>=": "2.12.1",
-          "features": ["bzip2","zlib","png","error-strings"]
+          "version>=": "2.13.2",
+          "features": ["bzip2","zlib","png","error-strings","subpixel-rendering"]
         }
       ]
     },
@@ -62,10 +43,9 @@
       "dependencies": [
         {
           "name": "gtest",
-          "version>=": "1.14.0"
+          "version>=": "1.15.2"
         }
       ]
     }
-  },
-  "builtin-baseline": "53bef8994c541b6561884a8395ea35715ece75db"
+  }
 }
