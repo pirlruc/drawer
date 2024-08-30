@@ -2,7 +2,7 @@
   "dependencies": [
     {
       "name": "improc-corecv",
-      "version>=": "45ca919fcf207db7752f11c354004162b48e65f7"
+      "version>=": "1f2705e6ad4e1d3bea6aae64c2fcc01037adc97a"
     }
   ],
   "features": {
