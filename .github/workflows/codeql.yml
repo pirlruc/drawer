@@ -15,6 +15,7 @@ on:
   push:
     branches: 
     - main
+    - feature-vcpkg
 
   pull_request:
     # The branches below must be a subset of the branches above
@@ -83,11 +84,11 @@ jobs:
 
         echo "3. Configuring compilation job..."
         export VCPKG_ROOT=/usr/local/share/vcpkg
-        cmake --preset "clang-release"
+        cmake --preset "clang-release-no-toolchain"
 
         echo "4. Building and installing library..."
-        cmake --build --preset "clang-release" --target all
-        cmake --build --preset "clang-release" --target install
+        cmake --build --preset "clang-release-no-toolchain" --target all
+        cmake --build --preset "clang-release-no-toolchain" --target install
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
