@@ -2,7 +2,7 @@
   "dependencies": [
     {
       "name": "improc-corecv",
-      "version>=": "1f2705e6ad4e1d3bea6aae64c2fcc01037adc97a"
+      "version>=": "6ce167305c824d9568a46c86e4e6746df2882809"
     }
   ],
   "features": {
@@ -12,20 +12,12 @@
         {
           "name": "nayuki-qr-code-generator",
           "version>=": "1.8.0"
-        },
-        {
-          "name": "nu-book-zxing-cpp",
-          "version>=": "2.2.1"
         }
       ]
     },
     "data-matrix": {
       "description": "Support barcode and data matrix generation and decoding",
       "dependencies": [
-        {
-          "name": "nu-book-zxing-cpp",
-          "version>=": "2.2.1"
-        }
       ]
     },
     "text": {

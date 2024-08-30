@@ -71,6 +71,11 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
   endif()
 
   if(DEFINED CMAKE_TOOLCHAIN_FILE)
+    if (NOT DEFINED IMPROC_OPENCV_DIR)
+      set(IMPROC_OPENCV_DIR ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/opencv4)
+    endif()
+    set(OpenCV_DIR ${IMPROC_OPENCV_DIR})
+    find_package(OpenCV REQUIRED)
     find_package(improc-infrastructure  CONFIG REQUIRED)
     find_package(improc-services        CONFIG REQUIRED)
     find_package(improc-corecv          CONFIG REQUIRED)
@@ -125,10 +130,11 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
 endif()
 
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  if(DEFINED CMAKE_TOOLCHAIN_FILE)
-    find_package(ZXing CONFIG REQUIRED)
-    list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
-  else()
+  # TODO: Implementation depends on files that are not in public headers
+  # if(DEFINED CMAKE_TOOLCHAIN_FILE)
+  #   find_package(ZXing CONFIG REQUIRED)
+  #   list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
+  # else()
     # zxing-cpp
     FetchContent_Declare(
       zxingcpp
@@ -140,7 +146,7 @@ if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_S
     set(BUILD_BLACKBOX_TESTS  OFF)
     FetchContent_MakeAvailable(zxingcpp)
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
-  endif()
+  # endif()
 endif()
 
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
@@ -174,6 +180,7 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
 endif()
 
 message(STATUS "Build ${PROJECT_NAME} Version                 : ${PROJECT_VERSION}")
+message(STATUS "IMPROC_OPENCV_DIR                             : ${IMPROC_OPENCV_DIR}")
 message(STATUS "IMPROC_DRAWER_WITH_QRCODE_SUPPORT             : ${IMPROC_DRAWER_WITH_QRCODE_SUPPORT}")
 message(STATUS "IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT: ${IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT}")
 message(STATUS "IMPROC_DRAWER_WITH_TEXT_SUPPORT               : ${IMPROC_DRAWER_WITH_TEXT_SUPPORT}")
