@@ -6,20 +6,6 @@
     }
   ],
   "features": {
-    "qrcode": {
-      "description": "Support QR-Code generation and decoding",
-      "dependencies": [
-        {
-          "name": "nayuki-qr-code-generator",
-          "version>=": "1.8.0"
-        }
-      ]
-    },
-    "data-matrix": {
-      "description": "Support barcode and data matrix generation and decoding",
-      "dependencies": [
-      ]
-    },
     "text": {
       "description": "Support text generation",
       "dependencies": [

@@ -91,10 +91,11 @@ endif()
 
 # Add external dependencies
 if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  if(DEFINED CMAKE_TOOLCHAIN_FILE)
-    find_package(unofficial-nayuki-qr-code-generator CONFIG REQUIRED)
-    list(APPEND IMPROC_DRAWER_EXTRA_LIBS unofficial::nayuki-qr-code-generator::nayuki-qr-code-generator)
-  else()
+  # TODO: This feature depends on solving the ZXing problem with public headers
+  # if(DEFINED CMAKE_TOOLCHAIN_FILE)
+  #   find_package(unofficial-nayuki-qr-code-generator CONFIG REQUIRED)
+  #   list(APPEND IMPROC_DRAWER_EXTRA_LIBS unofficial::nayuki-qr-code-generator::nayuki-qr-code-generator)
+  # else()
     # qrcodegen
     FetchContent_Declare(
       qrcodegen
@@ -126,7 +127,7 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
                                                       $<INSTALL_INTERFACE:include> )
     message(STATUS "Build qrcodegen Version: 1.8.0")
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS qrcodegen)
-  endif()
+  # endif()
 endif()
 
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
@@ -297,7 +298,13 @@ endif()
 list(APPEND IMPROC_DRAWER_TARGETS ${PROJECT_NAME})
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   list(APPEND IMPROC_DRAWER_TARGETS ${IMPROC_DRAWER_EXTRA_LIBS})
-endif()
+else()
+  # TODO: START - This block of code should be here while the ZXing problem with public headers is not solved
+  if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
+    list(APPEND IMPROC_DRAWER_TARGETS qrcodegen)
+  endif()
+  # TODO: END
+  endif()
 
 install(
   TARGETS     ${IMPROC_DRAWER_TARGETS}
