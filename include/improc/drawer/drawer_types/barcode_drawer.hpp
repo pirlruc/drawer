@@ -7,7 +7,7 @@
 #include <BitMatrix.h>
 #include <BinaryBitmap.h>
 #include <ReaderOptions.h>
-#include <Result.h>
+#include <Barcode.h>
 #include <ThresholdBinarizer.h>
 #include <oned/ODCode128Writer.h>
 #include <oned/ODReader.h>

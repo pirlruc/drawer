@@ -5,22 +5,22 @@
   "dependencies": [
     {
       "name": "spdlog",
-      "version>=": "1.12.0"
+      "version>=": "1.15.2"
     },
     {
       "name": "jsoncpp",
-      "version>=": "1.9.5"
+      "version>=": "1.9.6"
     },
     {
       "name": "opencv",
-      "version>=": "4.8.0",
-      "features": ["default-features","ipp","tbb","openmp","opengl","jpeg","png","tiff"],
+      "version>=": "4.11.0",
+      "features": ["default-features","ipp","tbb","thread","opencl","openmp","opengl","jpeg","png","tiff"],
       "platform": "windows"
     },
     {
       "name": "opencv",
-      "version>=": "4.8.0",
-      "features": ["default-features","openmp","opengl","jpeg","png","tiff"],
+      "version>=": "4.11.0",
+      "features": ["default-features","thread","opencl","openmp","opengl","jpeg","png","tiff"],
       "platform": "!windows"
     }
   ],
@@ -34,7 +34,7 @@
         },
         {
           "name": "nu-book-zxing-cpp",
-          "version>=": "2.1.0"
+          "version>=": "2.3.0"
         }
       ]
     },
@@ -43,7 +43,7 @@
       "dependencies": [
         {
           "name": "nu-book-zxing-cpp",
-          "version>=": "2.1.0"
+          "version>=": "2.3.0"
         }
       ]
     },
@@ -52,8 +52,8 @@
       "dependencies": [
         {
           "name": "freetype",
-          "version>=": "2.12.1",
-          "features": ["bzip2","zlib","png","error-strings"]
+          "version>=": "2.13.3",
+          "features": ["bzip2","subpixel-rendering","zlib","png","error-strings"]
         }
       ]
     },
@@ -62,7 +62,7 @@
       "dependencies": [
         {
           "name": "gtest",
-          "version>=": "1.14.0"
+          "version>=": "1.16.0"
         }
       ]
     }

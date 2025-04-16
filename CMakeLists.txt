@@ -105,11 +105,11 @@ if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_S
     FetchContent_Declare(
       zxingcpp
       GIT_REPOSITORY  https://github.com/nu-book/zxing-cpp
-      GIT_TAG         v2.2.1
+      GIT_TAG         v2.3.0
       SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/zxingcpp
     )
-    set(BUILD_EXAMPLES        OFF)
-    set(BUILD_BLACKBOX_TESTS  OFF)
+    set(ZXING_EXAMPLES        OFF)
+    set(ZXING_BLACKBOX_TESTS  OFF)
     FetchContent_MakeAvailable(zxingcpp)
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
   # endif()
@@ -124,7 +124,7 @@ if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
     FetchContent_Declare(
       freetype
       GIT_REPOSITORY  https://github.com/freetype/freetype
-      GIT_TAG         VER-2-13-2
+      GIT_TAG         VER-2-13-3
       SOURCE_DIR      ${PROJECT_SOURCE_DIR}/external/freetype
     )
     FetchContent_MakeAvailable(freetype)
