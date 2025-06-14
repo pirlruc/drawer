@@ -64,7 +64,7 @@ namespace improc
      */
     //TODO: Create template method to create objects for factories
     template<class DrawerType>
-    IMPROC_API std::shared_ptr<improc::BaseDrawer> CreateDrawer(const Json::Value& drawer_json)
+    std::shared_ptr<improc::BaseDrawer> CreateDrawer(const Json::Value& drawer_json)
     {
         IMPROC_DRAWER_LOGGER_TRACE("Creating shared pointer for drawer {}...",typeid(DrawerType).name());
         std::shared_ptr<improc::BaseDrawer> drawer 
