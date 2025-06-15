@@ -54,10 +54,10 @@ improc::GridDrawer& improc::GridDrawer::Load(const improc::DrawerFactory& factor
     this->page_size_   = cv::Size   ( grid_number.x * cell_size.width  + (grid_number.x - 1) * grid_spacing.x
                                     , grid_number.y * cell_size.height + (grid_number.y - 1) * grid_spacing.y );
     this->elements_.clear();
-    for (size_t cell_idx_x = 0; cell_idx_x < grid_number.x; cell_idx_x++)
+    for (int cell_idx_x = 0; cell_idx_x < grid_number.x; cell_idx_x++)
     {
         int top_left_x = cell_idx_x * cell_size.width + cell_idx_x * grid_spacing.x;
-        for (size_t cell_idx_y = 0; cell_idx_y < grid_number.y; cell_idx_y++)
+        for (int cell_idx_y = 0; cell_idx_y < grid_number.y; cell_idx_y++)
         {
             int top_left_y = cell_idx_y * cell_size.height + cell_idx_y * grid_spacing.y;
             std::list<improc::PageElementDrawer> grid_elements = improc::PageElementDrawer::IncrementTopLeftBy(cell.get_page_elements(),cv::Point(top_left_x,top_left_y),this->page_size_);

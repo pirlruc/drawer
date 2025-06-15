@@ -12,17 +12,17 @@ class TestPageDrawer : public improc::BaseDrawer
             this->Load(drawer_json);
         }
 
-        TestPageDrawer& Load(const Json::Value& drawer_json)
+        TestPageDrawer& Load(const Json::Value&)
         {
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>()) 
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>()) 
         {
             return cv::Mat::zeros(50,100,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 50 && drawer_output.cols == 100;
         }
@@ -37,17 +37,17 @@ class TestPageElemDrawer : public improc::BaseDrawer
             this->Load(drawer_json);
         }
 
-        TestPageElemDrawer& Load(const Json::Value& drawer_json)
+        TestPageElemDrawer& Load(const Json::Value&)
         {
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>())
         {
             return 255 * cv::Mat::ones(50,100,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 50 && drawer_output.cols == 100;
         }
@@ -62,17 +62,17 @@ class TestDrawer : public improc::BaseDrawer
             this->Load(drawer_json);
         }
 
-        TestDrawer& Load(const Json::Value& drawer_json)
+        TestDrawer& Load(const Json::Value&)
         {
             return (*this);
         }
 
-        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>()) 
+        cv::Mat     Draw(const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>()) 
         {
             return cv::Mat::ones(10,20,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 10 && drawer_output.cols == 20;
         }
@@ -87,7 +87,7 @@ class TestDrawerWithMessage : public improc::BaseDrawer
             this->Load(drawer_json);
         }
 
-        TestDrawerWithMessage& Load(const Json::Value& drawer_json)
+        TestDrawerWithMessage& Load(const Json::Value&)
         {
             return (*this);
         }
@@ -98,7 +98,7 @@ class TestDrawerWithMessage : public improc::BaseDrawer
             return cv::Mat::ones(10,20,CV_8UC1);
         }
 
-        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& message = std::optional<improc::DrawerVariant>())
+        bool        Verify(const cv::Mat& drawer_output, const std::optional<improc::DrawerVariant>& = std::optional<improc::DrawerVariant>())
         {
             return drawer_output.rows == 10 && drawer_output.cols == 20;
         }

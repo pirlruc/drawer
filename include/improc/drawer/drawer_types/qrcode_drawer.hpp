@@ -62,6 +62,8 @@ namespace improc
                         case ErrorCorrectionLevel::Value::kMedium  : return "Medium  : The QR Code can tolerate about 15% erroneous codewords";  break;
                         case ErrorCorrectionLevel::Value::kQuartile: return "Quartile: The QR Code can tolerate about 25% erroneous codewords";  break;
                         case ErrorCorrectionLevel::Value::kHigh    : return "High    : The QR Code can tolerate about 30% erroneous codewords";  break;
+                        default:
+                            throw improc::key_error("ToString method not defined for error correction level enum");
                     }
                 }
 
@@ -76,6 +78,8 @@ namespace improc
                         case ErrorCorrectionLevel::Value::kMedium  : return qrcodegen::QrCode::Ecc::MEDIUM;     break;
                         case ErrorCorrectionLevel::Value::kQuartile: return qrcodegen::QrCode::Ecc::QUARTILE;   break;
                         case ErrorCorrectionLevel::Value::kHigh    : return qrcodegen::QrCode::Ecc::HIGH;       break;
+                        default:
+                            throw improc::key_error("ToQrCodeGen method not defined for error correction level enum");
                     }
                 }
         };

@@ -37,6 +37,8 @@ namespace improc
             virtual cv::Mat         Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>()) = 0;
             virtual bool            Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>()) = 0;
 
+            virtual ~BaseDrawer() = default;
+
             static std::shared_ptr<BaseDrawer> Create(const DrawerFactory& factory, const Json::Value& drawer_json);
     };
 

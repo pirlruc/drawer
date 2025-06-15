@@ -10,7 +10,7 @@ improc::BaseDrawer::BaseDrawer() {};
  * 
  * @param drawer_json - configuration json for drawer
  */
-improc::BaseDrawer::BaseDrawer(const Json::Value& drawer_json) : improc::BaseDrawer() {};
+improc::BaseDrawer::BaseDrawer(const Json::Value&) : improc::BaseDrawer() {};
 
 /**
  * @brief Construct a new improc::BaseDrawer object

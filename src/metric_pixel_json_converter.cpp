@@ -30,7 +30,7 @@ Json::Value improc::MetricPixelJsonConverter::Convert(const Json::Value& metric_
     }
     improc::MetricPixelConverter pixel_converter {improc::json::ReadElement<unsigned int>(metric_json[kPrintingResolutionKey])};
 
-    Json::Value layout_json {std::move(metric_json[kLayoutKey])};
+    Json::Value layout_json {metric_json[kLayoutKey]};
     if (layout_json.isArray() == true)
     {
         improc::MetricPixelJsonConverter::ParseArray(std::move(pixel_converter),layout_json);

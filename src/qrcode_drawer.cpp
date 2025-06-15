@@ -68,10 +68,10 @@ cv::Mat improc::QrCodeDrawer::Draw(const std::optional<improc::DrawerVariant>& m
     qrcodegen::QrCode qrcode_data = qrcodegen::QrCode::encodeText(std::get<std::string>(message.value()).c_str(),this->error_correction_level_.ToQrCodeGen());
     int qrcode_size = qrcode_data.getSize();
     cv::Mat qrcode (qrcode_size,qrcode_size,improc::BaseDrawer::kImageDataType,improc::BaseDrawer::kWhiteValue);
-    for (size_t pixel_y = 0; pixel_y < qrcode_size; pixel_y++)
+    for (int pixel_y = 0; pixel_y < qrcode_size; pixel_y++)
     {
         auto qrcode_row_ptr = qrcode.ptr<uint8_t>(pixel_y);
-        for (size_t pixel_x = 0; pixel_x < qrcode_size; pixel_x++)
+        for (int pixel_x = 0; pixel_x < qrcode_size; pixel_x++)
         {
             if (qrcode_data.getModule(pixel_x,pixel_y) == true)
             {

@@ -53,6 +53,8 @@ namespace improc
                     case MetricUnit::Value::kDecimeter : return "Decimeter";   break;
                     case MetricUnit::Value::kCentimeter: return "Centimeter";  break;
                     case MetricUnit::Value::kMilimiter : return "Milimeter";   break;
+                    default:
+                        throw improc::key_error("ToString method not defined for metric unit enum");
                 };
             }
 

@@ -30,7 +30,7 @@ improc::BarcodeDrawer::BarcodeDrawer(const Json::Value& drawer_json) : improc::B
  * 
  * @param drawer_json - configuration json for barcode drawer
  */
-improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value& drawer_json)
+improc::BarcodeDrawer& improc::BarcodeDrawer::Load(const Json::Value&)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating barcode drawer...");
     this->writer_.setMargin(improc::BarcodeDrawer::kMargin);

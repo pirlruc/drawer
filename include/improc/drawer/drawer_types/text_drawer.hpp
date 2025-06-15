@@ -34,7 +34,7 @@ namespace improc
 
             TextDrawer&                     Load    (const Json::Value& drawer_json);
             cv::Mat                         Draw    (const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>());
-            bool                            Verify  (const cv::Mat& drawer_output, const std::optional<DrawerVariant>& message = std::optional<DrawerVariant>()) {return true;};
+            bool                            Verify  (const cv::Mat&, const std::optional<DrawerVariant>& = std::optional<DrawerVariant>()) {return true;};
 
         private:
             static cv::Size                 ParseMetricSize(const Json::Value& size_json, const improc::MetricPixelConverter& pixel_converter);

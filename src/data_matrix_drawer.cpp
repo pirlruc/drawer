@@ -21,7 +21,7 @@ improc::DataMatrixDrawer::DataMatrixDrawer(const Json::Value& drawer_json) : imp
  * 
  * @param drawer_json - configuration json for data matrix drawer
  */
-improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value& drawer_json)
+improc::DataMatrixDrawer& improc::DataMatrixDrawer::Load(const Json::Value&)
 {
     IMPROC_DRAWER_LOGGER_TRACE("Creating data matrix drawer...");
     this->writer_.setMargin(improc::DataMatrixDrawer::kMargin);

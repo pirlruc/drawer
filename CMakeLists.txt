@@ -111,16 +111,20 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
       set_target_properties(qrcodegen PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
     endif()
     
-    set_target_properties(qrcodegen PROPERTIES CXX_STANDARD           11)
-    set_target_properties(qrcodegen PROPERTIES CXX_STANDARD_REQUIRED  TRUE)
-    set_target_properties(qrcodegen PROPERTIES LINKER_LANGUAGE        CXX)
-    set_target_properties(qrcodegen PROPERTIES VERSION                1.8.0)
-    set_target_properties(qrcodegen PROPERTIES DEBUG_POSTFIX          ${CMAKE_DEBUG_POSTFIX})
+    set_target_properties(qrcodegen PROPERTIES CXX_STANDARD              11)
+    set_target_properties(qrcodegen PROPERTIES CXX_STANDARD_REQUIRED     TRUE)
+    set_target_properties(qrcodegen PROPERTIES CXX_EXTENSIONS            OFF)
+    set_target_properties(qrcodegen PROPERTIES LINKER_LANGUAGE           CXX)
+    set_target_properties(qrcodegen PROPERTIES VERSION                   1.8.0)
+    set_target_properties(qrcodegen PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+    set_target_properties(qrcodegen PROPERTIES DEBUG_POSTFIX             ${CMAKE_DEBUG_POSTFIX})
 
     target_include_directories  (qrcodegen  INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external/qrcodegen/cpp>
                                                       $<INSTALL_INTERFACE:include> )
+
     message(STATUS "Build qrcodegen Version: 1.8.0")
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS qrcodegen)
+    list(APPEND IMPROC_DRAWER_INSTALL_EXTRA_LIBS qrcodegen)
     set(IMPROC_DRAWER_EXTRA_PKG_CONFIG_REQUIRES "${IMPROC_DRAWER_EXTRA_PKG_CONFIG_REQUIRES} qrcodegen")
   endif()
 endif()
@@ -313,7 +317,7 @@ endif()
 # Include files
 list(APPEND IMPROC_DRAWER_TARGETS ${PROJECT_NAME})
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-  list(APPEND IMPROC_DRAWER_TARGETS ${IMPROC_DRAWER_EXTRA_LIBS})
+  list(APPEND IMPROC_DRAWER_TARGETS ${IMPROC_DRAWER_INSTALL_EXTRA_LIBS})
 endif()
 
 install(
@@ -353,7 +357,7 @@ else()
   set(PKG_CONFIG_LIBDIR "\${exec_prefix}/${CMAKE_INSTALL_LIBDIR}")
 endif()
 configure_file(
-  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}.pc.in
+  ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME_FILE}.pc.in
   ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc 
   @ONLY )
 install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)

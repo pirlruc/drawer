@@ -47,8 +47,10 @@ namespace improc
             {
                 switch (this->value_)
                 {
-                    case PageDrawerType::Value::kPageDrawer : return "Page Drawer";    break;
+                    case PageDrawerType::Value::kPageDrawer : return "Page Drawer";   break;
                     case PageDrawerType::Value::kGridDrawer : return "Grid Drawer";   break;
+                    default:
+                        throw improc::key_error("ToString method not defined for page drawer type enum");
                 }
             }
     };
