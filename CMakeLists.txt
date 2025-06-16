@@ -130,10 +130,12 @@ if(IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
 endif()
 
 if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_SUPPORT)
-  if(DEFINED CMAKE_TOOLCHAIN_FILE)
-    find_package(ZXing CONFIG REQUIRED)
-    list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
-  else()
+  # TODO: The ZXing library is making changes to their interface and only makes available the public headers.
+  # Integration with zint library is needed to support barcode and data matrix generation.
+  # if(DEFINED CMAKE_TOOLCHAIN_FILE)
+  #   find_package(ZXing CONFIG REQUIRED)
+  #   list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing::Core ZXing::ZXing)
+  # else()
     # zxing-cpp
     FetchContent_Declare(
       zxingcpp
@@ -146,7 +148,7 @@ if(IMPROC_DRAWER_WITH_BARCODE_DATA_MATRIX_SUPPORT OR IMPROC_DRAWER_WITH_QRCODE_S
     FetchContent_MakeAvailable(zxingcpp)
     list(APPEND IMPROC_DRAWER_EXTRA_LIBS ZXing)
     set(IMPROC_DRAWER_EXTRA_PKG_CONFIG_REQUIRES "${IMPROC_DRAWER_EXTRA_PKG_CONFIG_REQUIRES} ZXing")
-  endif()
+  # endif()
 endif()
 
 if(IMPROC_DRAWER_WITH_TEXT_SUPPORT)
