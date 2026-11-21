@@ -1,3 +1,5 @@
+> **Deprecated.** Page layout, text, barcodes, QR codes, and data matrices moved to [draupnir](https://github.com/NjordLabs/draupnir-cpp).
+
 # improc_drawer
 
 ## main
